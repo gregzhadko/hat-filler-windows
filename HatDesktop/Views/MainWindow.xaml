@@ -40,7 +40,7 @@
                     <telerik:RadComboBox.ItemTemplate>
                         <DataTemplate DataType="{x:Type model:Pack}">
                             <StackPanel Orientation="Horizontal">
-                                <Label Content="{Binding Id}" Margin="0, 0, 0, 2"/>
+                                <Label Content="{Binding Id}" Margin="0, 0, 0, 2" />
                                 <Label Content="{Binding Name}" />
                                 </StackPanel>
                         </DataTemplate>
@@ -59,7 +59,6 @@
                 <telerik:Label Content="{Binding SelectedPack.Name}" />
                 <telerik:Label Margin="20,0,0,0" Content="Description:" />
                 <telerik:Label Content="{Binding SelectedPack.Description}" />
-
             </StackPanel>
             <telerik:RadButton Grid.Column="1"
                                Padding ="10, 2"
@@ -88,7 +87,6 @@
                 <ColumnDefinition Width="10*" />
 
                 <ColumnDefinition Width="Auto" />
-
             </Grid.ColumnDefinitions>
             <telerik:RadWatermarkTextBox Grid.Column="0"
                                          Text="{Binding NewPhrase,
@@ -140,18 +138,15 @@
                                                 DataMemberBinding="{Binding Description}"
                                                 Header="Description"
                                                 TextWrapping="Wrap" />
-                    <views:ReviewColumn/>
+                    <views:ReviewColumn />
                     <telerik:GridViewDataColumn DataMemberBinding="{Binding ReviewerObjects[0].ReviewState}"
-                                                    Header="{Binding ReviewerNames[0]}"
-                                                    />
+                                                    Header="{Binding ReviewerNames[0]}" />
                     <telerik:GridViewDataColumn DataMemberBinding="{Binding ReviewerObjects[1].ReviewState}"
-                                                    Header="{Binding ReviewerNames[1]}"
-                                                   />
+                                                    Header="{Binding ReviewerNames[1]}" />
                     <telerik:GridViewDataColumn DataMemberBinding="{Binding ReviewerObjects[2].ReviewState}"
-                                                    Header="{Binding ReviewerNames[2]}"
-                                                    />
+                                                    Header="{Binding ReviewerNames[2]}" />
                     <telerik:GridViewDataColumn DataMemberBinding="{Binding ReviewerObjects[3].ReviewState}"
-                                                    Header="{Binding ReviewerNames[3]}"/>
+                                                    Header="{Binding ReviewerNames[3]}" />
                 </telerik:RadGridView.Columns>
             </telerik:RadGridView>
         </telerik:RadBusyIndicator>

@@ -6,8 +6,11 @@ namespace HatDesktop
     {
         bool? DialogResult { get; set; }
         object DataContext { get; set; }
+
         event EventHandler Closed;
+
         void Show();
+
         void Close();
     }
 }

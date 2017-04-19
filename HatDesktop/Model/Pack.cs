@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using GalaSoft.MvvmLight;
+﻿using GalaSoft.MvvmLight;
+using System.Collections.Generic;
 
 namespace HatDesktop.Model
 {

@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Faker;
+﻿using Faker;
 using HatDesktop.Model;
 using NUnit.Framework;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace HatDesktopTests.Model
 {
@@ -41,7 +41,6 @@ namespace HatDesktopTests.Model
             CollectionAssert.AreEqual(pack.Phrases.Select(p => p.Phrase), newPack.Phrases.Select(p => p.Phrase));
 
             _packService.EditPack(Id, pack.Name, pack.Description, out error);
-
         }
 
         [Test]
@@ -115,7 +114,7 @@ namespace HatDesktopTests.Model
             {
                 Phrase = oldPhrase.Phrase,
                 Description = $"{oldPhrase.Description} {Lorem.Sentence()}",
-                Complexity = oldPhrase.Complexity%5,
+                Complexity = oldPhrase.Complexity % 5,
             };
             newPhrase.UpdateAuthor(_testAuthor);
             _packService.EditPhrase(Id, oldPhrase, newPhrase, _testAuthor, out error);
@@ -137,7 +136,7 @@ namespace HatDesktopTests.Model
             {
                 Phrase = oldPhrase.Phrase + " " + Name.First(),
                 Description = oldPhrase.Description + " " + Lorem.Sentence(),
-                Complexity = oldPhrase.Complexity%5,
+                Complexity = oldPhrase.Complexity % 5,
             };
             newPhrase.UpdateAuthor(_testAuthor);
             _packService.EditPhrase(Id, oldPhrase, newPhrase, _testAuthor, out error);
@@ -175,7 +174,7 @@ namespace HatDesktopTests.Model
             string error;
             var originalPhrase = GenerateNewPhrase();
             _packService.AddPhrase(Id, originalPhrase, out error);
-            var newPhrase = new PhraseItem() { Phrase = Name.First(), Description = originalPhrase.Description, Complexity = originalPhrase.Complexity};
+            var newPhrase = new PhraseItem() { Phrase = Name.First(), Description = originalPhrase.Description, Complexity = originalPhrase.Complexity };
             newPhrase.UpdateAuthor(_testAuthor);
             _packService.EditPhrase(Id, originalPhrase, newPhrase, _testAuthor, out error);
 
@@ -246,7 +245,6 @@ namespace HatDesktopTests.Model
             //Get pack food
             var pack = _packService.GetPackById(Port, 9, out error);
             Assert.That(pack.Phrases.Count, Is.GreaterThan(50));
-
         }
     }
 }

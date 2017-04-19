@@ -1,17 +1,16 @@
-﻿using System;
+﻿using HatDesktop.Properties;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using HatDesktop.Properties;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace HatDesktop.Model
 {
     public class PackService : IPackService
     {
-
         public void AddPhrase(int packId, PhraseItem phrase, out string error)
         {
             GetResponceFromServer($"addPackWordDescription?id={packId}&word={phrase.Phrase}&description={phrase.Description}&level={phrase.Complexity}&author={phrase.ReviewedBy}", 8091, out error);
@@ -61,7 +60,7 @@ namespace HatDesktop.Model
         public IEnumerable<Pack> GetAllPacksInfo(int port, out string error)
         {
             var packsInfo = GetPacksInfo(port, out error);
-            return packsInfo.Select(p => new Pack {Id = Convert.ToInt32(p["id"]), Name = p["name"].ToString()});
+            return packsInfo.Select(p => new Pack { Id = Convert.ToInt32(p["id"]), Name = p["name"].ToString() });
         }
 
         public Pack GetPackById(int port, int id, out string error)
@@ -103,7 +102,7 @@ namespace HatDesktop.Model
             errorResponse = null;
 
             var request = WebRequest.Create($"http://{Settings.Default.ServerAddress}:{port}/" + requestUriString);
-    
+
             try
             {
                 response = (HttpWebResponse)request.GetResponse();

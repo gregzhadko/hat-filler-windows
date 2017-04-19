@@ -46,7 +46,6 @@ namespace HatDesktopTests
             Assert.That("aaaa [1] bbbb".RemoveSquareBrackets(), Is.EqualTo("aaaa bbbb"));
             Assert.That("aaaa [1] bbbb [2]".RemoveSquareBrackets(), Is.EqualTo("aaaa bbbb "));
             Assert.That("aaaa [1] bbbb [2]cccc".RemoveSquareBrackets(), Is.EqualTo("aaaa bbbb cccc"));
-
         }
 
         [Test]

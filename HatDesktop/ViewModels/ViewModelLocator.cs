@@ -1,8 +1,8 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using GalaSoft.MvvmLight.Ioc;
+﻿using GalaSoft.MvvmLight.Ioc;
 using HatDesktop.Model;
 using HatDesktop.Views;
 using Microsoft.Practices.ServiceLocation;
+using System.Diagnostics.CodeAnalysis;
 
 namespace HatDesktop.ViewModels
 {
@@ -17,7 +17,6 @@ namespace HatDesktop.ViewModels
             SimpleIoc.Default.Register<MainViewModel>();
 
             SimpleIoc.Default.Register<IModalWindow>(() => new RenamePackView(), Constants.RenamePackView);
-
         }
 
         /// <summary>
@@ -26,7 +25,6 @@ namespace HatDesktop.ViewModels
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
             Justification = "This non-static member is needed for data binding purposes.")]
         public MainViewModel Main => ServiceLocator.Current.GetInstance<MainViewModel>();
-
 
         /// <summary>
         ///     Cleans up all the resources.

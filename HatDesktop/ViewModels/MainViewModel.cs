@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Windows;
-using GalaSoft.MvvmLight.Command;
+﻿using GalaSoft.MvvmLight.Command;
 using HatDesktop.Model;
 using HatDesktop.Properties;
 using HatDesktop.Views;
 using NLog;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows;
 using Telerik.Windows.Controls;
 using Telerik.Windows.Controls.GridView;
 using ViewModelBase = GalaSoft.MvvmLight.ViewModelBase;
@@ -272,7 +272,7 @@ namespace HatDesktop.ViewModels
         public RelayCommand RenamePackCommand => _renamePackCommand ?? (_renamePackCommand = new RelayCommand(() =>
         {
             var renamePackViewModel = new RenamePackViewModel(SelectedPack);
-            var dialog = new RenamePackView {DataContext = renamePackViewModel};
+            var dialog = new RenamePackView { DataContext = renamePackViewModel };
             var result = dialog.ShowDialog();
             var selectedIndex = SelectedIndex;
             if (result.HasValue && result.Value)

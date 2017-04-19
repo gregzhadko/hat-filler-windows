@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using GalaSoft.MvvmLight;
+﻿using GalaSoft.MvvmLight;
+using System.Linq;
 
 namespace HatDesktop.Model
 {
@@ -21,7 +21,7 @@ namespace HatDesktop.Model
             set { Set(ref _reviewState, value); }
         }
 
-        public static readonly string[] DefaultReviewers = {"fomin", "tatarintsev", "sivykh", "zhadko"};
+        public static readonly string[] DefaultReviewers = { "fomin", "tatarintsev", "sivykh", "zhadko" };
         private State _reviewState;
 
         public static Reviewer[] NewReviewers() => DefaultReviewers.Select(r => new Reviewer(r)).ToArray();

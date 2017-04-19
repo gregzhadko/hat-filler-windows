@@ -1,9 +1,9 @@
-﻿using System;
+﻿using GalaSoft.MvvmLight;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
-using GalaSoft.MvvmLight;
 
 namespace HatDesktop.Model
 {
@@ -27,7 +27,7 @@ namespace HatDesktop.Model
                     var reviewer = ReviewerObjects.FirstOrDefault(r => r.Author == authorState.Key);
                     if (reviewer != null)
                     {
-                        reviewer.ReviewState = (State) authorState.Value;
+                        reviewer.ReviewState = (State)authorState.Value;
                     }
                 }
             }

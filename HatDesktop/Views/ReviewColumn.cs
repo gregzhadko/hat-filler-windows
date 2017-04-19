@@ -1,7 +1,7 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using HatDesktop.Model;
+﻿using HatDesktop.Model;
 using HatDesktop.ViewModels;
+using System.Windows;
+using System.Windows.Controls;
 using Telerik.Windows.Controls;
 using Telerik.Windows.Controls.GridView;
 
@@ -13,14 +13,14 @@ namespace HatDesktop.Views
         {
             var viewModel = (MainViewModel)cell.ParentOfType<RadGridView>().DataContext;
             var author = viewModel.SelectedAuthor;
-            var phrase = (PhraseItem) dataItem;
-            var stackPanel = new StackPanel {Orientation = Orientation.Horizontal};
+            var phrase = (PhraseItem)dataItem;
+            var stackPanel = new StackPanel { Orientation = Orientation.Horizontal };
             stackPanel.Children.Add(CreateDeleteButton(phrase, author));
             stackPanel.Children.Add(CreateEditButton(phrase, author));
             stackPanel.Children.Add(CreateReviewButton(phrase, author));
 
             phrase.RaiseUpdateAuthor += Refresh;
-            
+
             return stackPanel;
         }
 
@@ -65,10 +65,10 @@ namespace HatDesktop.Views
 
         private static void Button_Click(object sender, State state)
         {
-            var btn = (Button) sender;
+            var btn = (Button)sender;
             var grid = btn.ParentOfType<RadGridView>();
-            var phrase = (PhraseItem) btn.DataContext;
-            var viewModel = (MainViewModel) grid.DataContext;
+            var phrase = (PhraseItem)btn.DataContext;
+            var viewModel = (MainViewModel)grid.DataContext;
             if (!viewModel.ReviewPhrase(phrase, state))
             {
                 MessageBox.Show("Error on the phrase reviewing");

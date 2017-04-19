@@ -34,16 +34,15 @@
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
             <Button Margin="5"
-                   
+
                     Content="Ok"
-                    Padding="20, 2" 
-                    Click="OKButton_Click"/>
+                    Padding="20, 2"
+                    Click="OKButton_Click" />
             <Button Margin="5"
-                    
+
                     Content="Cancel"
                     Click="CancelButton_Click"
                     Padding="10, 2" />
         </StackPanel>
-
     </Grid>
 </Window>

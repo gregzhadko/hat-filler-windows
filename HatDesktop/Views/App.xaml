@@ -14,7 +14,6 @@
         <viewModels:ViewModelLocator x:Key="Locator"
                              d:IsDataSource="True" />
 
-
         <Style x:Key="RadGridViewBlueStyle" TargetType="telerik:RadGridView">
 
             <Setter Property="IsReadOnly" Value="False" />
@@ -40,5 +39,4 @@
         </Style>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </Application.Resources>
-
 </Application>
