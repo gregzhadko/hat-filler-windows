@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HatDesktop", "HatDesktop.csproj", "{D18E0CF8-D6C2-48A8-A873-C0E6BCF99E89}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HatDesktop", "HatDesktop\HatDesktop.csproj", "{D18E0CF8-D6C2-48A8-A873-C0E6BCF99E89}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HatDesktopTests", "..\HatDesktopTests\HatDesktopTests.csproj", "{65A3E362-23D5-452D-8818-56B959C845DF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HatDesktopTests", "HatDesktopTests\HatDesktopTests.csproj", "{65A3E362-23D5-452D-8818-56B959C845DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
