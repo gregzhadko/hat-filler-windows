@@ -119,8 +119,7 @@ namespace HatDesktop.ViewModels
         public RelayCommand AddCommand => _addCommand ?? (_addCommand = new RelayCommand(() =>
         {
             IsBusy = true;
-            string error;
-            var phrase = GetNewPhrase(out error);
+            var phrase = GetNewPhrase(out string error);
             if (phrase == null)
             {
                 MessageBox.Show(error);
@@ -207,8 +206,7 @@ namespace HatDesktop.ViewModels
 
                 IsBusy = true;
                 editedPhrase.UpdateAuthor(SelectedAuthor);
-                string error;
-                _packService.EditPhrase(SelectedPack.Id, _oldEditValue, editedPhrase, SelectedAuthor, out error);
+                _packService.EditPhrase(SelectedPack.Id, _oldEditValue, editedPhrase, SelectedAuthor, out string error);
                 if (!string.IsNullOrEmpty(error))
                 {
                     MessageBox.Show($"The new word wasn't edited in the pack:\n{error}", "Error", MessageBoxButton.OK,
@@ -232,8 +230,7 @@ namespace HatDesktop.ViewModels
             {
                 foreach (var item in args.Items.OfType<PhraseItem>())
                 {
-                    string error;
-                    _packService.DeletePhrase(SelectedPack.Id, item.Phrase, out error);
+                    _packService.DeletePhrase(SelectedPack.Id, item.Phrase, out string error);
                     if (!string.IsNullOrEmpty(error))
                         MessageBox.Show($"The word wasn't deleted:\n{error}", "Error", MessageBoxButton.OK,
                             MessageBoxImage.Error);
@@ -255,8 +252,7 @@ namespace HatDesktop.ViewModels
                 phraseItem.Description = newDescription;
 
                 phraseItem.UpdateAuthor(SelectedAuthor);
-                string error;
-                _packService.EditPhrase(SelectedPack.Id, oldPhrase, phraseItem, SelectedAuthor, out error);
+                _packService.EditPhrase(SelectedPack.Id, oldPhrase, phraseItem, SelectedAuthor, out string error);
                 if (!string.IsNullOrEmpty(error))
                     MessageBox.Show($"The word wasn't edited in the pack:\n{error}", "Error", MessageBoxButton.OK,
                         MessageBoxImage.Error);
@@ -277,9 +273,8 @@ namespace HatDesktop.ViewModels
             var selectedIndex = SelectedIndex;
             if (result.HasValue && result.Value)
             {
-                string error;
                 _packService.EditPack(SelectedPack.Id, renamePackViewModel.Name,
-                    renamePackViewModel.Description, out error);
+    renamePackViewModel.Description, out string error);
 
                 if (!string.IsNullOrWhiteSpace(error))
                 {
@@ -378,8 +373,7 @@ namespace HatDesktop.ViewModels
 
         private Pack LoadPackData(Pack pack, int port)
         {
-            string error;
-            pack = _packService.GetPackById(port, pack.Id, out error);
+            pack = _packService.GetPackById(port, pack.Id, out string error);
             if (!string.IsNullOrEmpty(error))
             {
                 MessageBox.Show("Error occurs on pack reloading:\n" + error);

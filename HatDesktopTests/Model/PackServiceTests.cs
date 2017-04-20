@@ -17,8 +17,7 @@ namespace HatDesktopTests.Model
         [Test]
         public void GetPackInfoTest()
         {
-            string error;
-            var pack = _packService.GetPackById(Port, Id, out error);
+            var pack = _packService.GetPackById(Port, Id, out string error);
             Assert.IsNotNull(pack);
             Assert.IsNotEmpty(pack.Name);
             Assert.IsNotEmpty(pack.Description);
@@ -28,8 +27,7 @@ namespace HatDesktopTests.Model
         [Test]
         public void EditPackTest()
         {
-            string error;
-            var pack = _packService.GetPackById(Port, Id, out error);
+            var pack = _packService.GetPackById(Port, Id, out string error);
             var newName = Name.First();
             var newDescription = Lorem.Paragraph(1);
             _packService.EditPack(Id, newName, newDescription, out error);
@@ -46,8 +44,7 @@ namespace HatDesktopTests.Model
         [Test]
         public void GetPacksIdsTest()
         {
-            string error;
-            IList<Pack> packs = _packService.GetAllPacksInfo(Port, out error).ToList();
+            IList<Pack> packs = _packService.GetAllPacksInfo(Port, out string error).ToList();
             Assert.That(error, Is.Null.Or.Empty);
             CollectionAssert.Contains(packs.Select(p => p.Id), 1);
             CollectionAssert.Contains(packs.Select(p => p.Id), 10);
@@ -57,9 +54,8 @@ namespace HatDesktopTests.Model
         [Test]
         public void AddSimplePhraseTest()
         {
-            string error;
             var phrase = GenerateNewPhrase();
-            _packService.AddPhrase(Id, phrase, out error);
+            _packService.AddPhrase(Id, phrase, out string error);
 
             var newPack = _packService.GetPackById(Port, Id, out error);
             Assert.That(newPack.Phrases.Any(p => p.Phrase == phrase.Phrase));
@@ -70,8 +66,7 @@ namespace HatDesktopTests.Model
         [Test]
         public void DeleteSimplePhraseTest()
         {
-            string error;
-            var pack = _packService.GetPackById(Port, Id, out error);
+            var pack = _packService.GetPackById(Port, Id, out string error);
             var phrase = GenerateNewPhrase();
             _packService.AddPhrase(Id, phrase, out error);
             _packService.DeletePhrase(Id, phrase.Phrase, out error);
@@ -82,9 +77,8 @@ namespace HatDesktopTests.Model
         [Test]
         public void AddPhraseTest()
         {
-            string error;
             var phrase = GenerateNewPhrase();
-            _packService.AddPhrase(Id, phrase, out error);
+            _packService.AddPhrase(Id, phrase, out string error);
 
             var newPack = _packService.GetPackById(Port, Id, out error);
             Assert.That(newPack.Phrases.Any(p => p.Phrase == phrase.Phrase && p.Description == phrase.Description));
@@ -95,8 +89,7 @@ namespace HatDesktopTests.Model
         [Test]
         public void DeletePhraseTest()
         {
-            string error;
-            var pack = _packService.GetPackById(Port, Id, out error);
+            var pack = _packService.GetPackById(Port, Id, out string error);
             var phrase = GenerateNewPhrase();
             _packService.AddPhrase(Id, phrase, out error);
             _packService.DeletePhrase(Id, phrase.Phrase, out error);
@@ -107,9 +100,8 @@ namespace HatDesktopTests.Model
         [Test]
         public void EditPhraseDescriptionTest()
         {
-            string error;
             var oldPhrase = GenerateNewPhrase();
-            _packService.AddPhrase(Id, oldPhrase, out error);
+            _packService.AddPhrase(Id, oldPhrase, out string error);
             var newPhrase = new PhraseItem
             {
                 Phrase = oldPhrase.Phrase,
@@ -129,9 +121,8 @@ namespace HatDesktopTests.Model
         [Test]
         public void EditPhraseTest()
         {
-            string error;
             var oldPhrase = GenerateNewPhrase();
-            _packService.AddPhrase(Id, oldPhrase, out error);
+            _packService.AddPhrase(Id, oldPhrase, out string error);
             var newPhrase = new PhraseItem
             {
                 Phrase = oldPhrase.Phrase + " " + Name.First(),
@@ -171,9 +162,8 @@ namespace HatDesktopTests.Model
         [Test]
         public void EditPhraseNameTest()
         {
-            string error;
             var originalPhrase = GenerateNewPhrase();
-            _packService.AddPhrase(Id, originalPhrase, out error);
+            _packService.AddPhrase(Id, originalPhrase, out string error);
             var newPhrase = new PhraseItem() { Phrase = Name.First(), Description = originalPhrase.Description, Complexity = originalPhrase.Complexity };
             newPhrase.UpdateAuthor(_testAuthor);
             _packService.EditPhrase(Id, originalPhrase, newPhrase, _testAuthor, out error);
@@ -241,9 +231,8 @@ namespace HatDesktopTests.Model
         [Test]
         public void PhraseCountTest()
         {
-            string error;
             //Get pack food
-            var pack = _packService.GetPackById(Port, 9, out error);
+            var pack = _packService.GetPackById(Port, 9, out string error);
             Assert.That(pack.Phrases.Count, Is.GreaterThan(50));
         }
     }
