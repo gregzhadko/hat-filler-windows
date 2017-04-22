@@ -248,3 +248,5 @@ HatDesktop/App.config
 HatDesktop/Properties/Settings.Designer.cs
 HatDesktop/Properties/Settings.settings
 Model/app.config
+Model/Properties/Settings.Designer.cs
+Model/Properties/Settings.settings
