@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace HatDesktop.Model
+namespace Model
 {
     public interface IPackService
     {

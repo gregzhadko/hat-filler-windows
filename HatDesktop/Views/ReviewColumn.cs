@@ -1,7 +1,7 @@
-﻿using HatDesktop.Model;
-using HatDesktop.ViewModels;
+﻿using HatDesktop.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
+using Model;
 using Telerik.Windows.Controls;
 using Telerik.Windows.Controls.GridView;
 

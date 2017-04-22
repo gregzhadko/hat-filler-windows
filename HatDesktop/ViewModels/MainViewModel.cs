@@ -1,5 +1,4 @@
 ﻿using GalaSoft.MvvmLight.Command;
-using HatDesktop.Model;
 using HatDesktop.Properties;
 using HatDesktop.Views;
 using NLog;
@@ -8,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using Model;
 using Telerik.Windows.Controls;
 using Telerik.Windows.Controls.GridView;
 using ViewModelBase = GalaSoft.MvvmLight.ViewModelBase;

@@ -1,7 +1,7 @@
-﻿using GalaSoft.MvvmLight;
-using System.Linq;
+﻿using System.Linq;
+using GalaSoft.MvvmLight;
 
-namespace HatDesktop.Model
+namespace Model
 {
     public class Reviewer : ObservableObject
     {

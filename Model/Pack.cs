@@ -1,7 +1,7 @@
-﻿using GalaSoft.MvvmLight;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using GalaSoft.MvvmLight;
 
-namespace HatDesktop.Model
+namespace Model
 {
     public class Pack : ObservableObject
     {

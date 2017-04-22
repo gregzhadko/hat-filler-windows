@@ -1,8 +1,8 @@
 ﻿using GalaSoft.MvvmLight.Ioc;
-using HatDesktop.Model;
 using HatDesktop.Views;
 using Microsoft.Practices.ServiceLocation;
 using System.Diagnostics.CodeAnalysis;
+using Model;
 
 namespace HatDesktop.ViewModels
 {

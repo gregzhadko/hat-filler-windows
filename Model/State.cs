@@ -1,4 +1,4 @@
-﻿namespace HatDesktop.Model
+﻿namespace Model
 {
     public enum State
     {

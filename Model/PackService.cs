@@ -1,13 +1,13 @@
-﻿using HatDesktop.Properties;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using Model.Properties;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
-namespace HatDesktop.Model
+namespace Model
 {
     public class PackService : IPackService
     {

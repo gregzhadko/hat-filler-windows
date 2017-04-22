@@ -1,5 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
-using HatDesktop.Model;
+using Model;
 
 namespace HatDesktop.ViewModels
 {
