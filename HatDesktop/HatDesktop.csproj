@@ -113,6 +113,7 @@
     </Compile>
     <Compile Include="StringUtils.cs" />
     <Compile Include="ViewModels\Constants.cs" />
+    <Compile Include="ViewModels\SpellCheckerViewModel.cs" />
     <Compile Include="Views\CustomKeyboardCommandProvider.cs" />
     <Compile Include="Views\ReviewColumn.cs" />
     <Compile Include="Views\RenamePackView.xaml.cs">
@@ -121,6 +122,9 @@
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\RenamePackViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
+    <Compile Include="Views\SpellCheckerView.xaml.cs">
+      <DependentUpon>SpellCheckerView.xaml</DependentUpon>
+    </Compile>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -135,6 +139,10 @@
     </Compile>
     <Page Include="Views\RenamePackView.xaml">
       <SubType>Form</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SpellCheckerView.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
