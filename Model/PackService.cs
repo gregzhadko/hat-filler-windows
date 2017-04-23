@@ -88,19 +88,21 @@ namespace Model
             new Tuple<int, string>(8081, "test")
         };
 
-        public Pack[] GetFullPacksDataAsync(int port, out string error)
+        public Task<Pack[]> GetFullPacksData(int port)
         {
-            var packIds = GetPacksInfo(port, out error).Select(p => Convert.ToInt32(p["id"])).ToList();
+            var packIds = GetPacksInfo(port, out string error).Select(p => Convert.ToInt32(p["id"])).ToList();
             var loadTasks = new List<Task<Pack>>();
             for (int i = 0; i < packIds.Count; i++)
             {
                 var id = i;
-                var task = new Task<Pack>(() => GetPackById(port, packIds[id], out string e));
+                var task = new Task<Pack>(() =>
+                {
+                    return GetPackById(port, packIds[id], out string e);
+                });
                 loadTasks.Add(task);
             }
 
-            var result = Task.WhenAll(loadTasks);
-            return result.Result;
+            return Task.WhenAll(loadTasks);
         }
 
         private static IEnumerable<JToken> GetPacksInfo(int port, out string error)
