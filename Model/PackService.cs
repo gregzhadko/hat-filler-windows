@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using Model.Properties;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -86,6 +87,21 @@ namespace Model
         {
             new Tuple<int, string>(8081, "test")
         };
+
+        public Pack[] GetFullPacksDataAsync(int port, out string error)
+        {
+            var packIds = GetPacksInfo(port, out error).Select(p => Convert.ToInt32(p["id"])).ToList();
+            var loadTasks = new List<Task<Pack>>();
+            for (int i = 0; i < packIds.Count; i++)
+            {
+                var id = i;
+                var task = new Task<Pack>(() => GetPackById(port, packIds[id], out string e));
+                loadTasks.Add(task);
+            }
+
+            var result = Task.WhenAll(loadTasks);
+            return result.Result;
+        }
 
         private static IEnumerable<JToken> GetPacksInfo(int port, out string error)
         {
