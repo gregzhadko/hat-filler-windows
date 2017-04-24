@@ -5,46 +5,48 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Model;
-using NHunspell;
+using Yandex.Speller.Api;
+using Yandex.Speller.Api.DataContract;
 
 namespace SpellChecker
 {
     public class Program
     {
+        private static PackService _service;
+        private static List<Pack> _packs = new List<Pack>();
+
         public static void Main(string[] args)
         {
-            Run();
-        }
 
-        private static async Task Run()
-        {
-            var service = new PackService();
+            _service = new PackService();
+            Console.OutputEncoding = Encoding.UTF8;
             Console.WriteLine("Data loading...");
-            var packs = await service.GetFullPacksData(8081);
+            LoadPacks();
             Console.WriteLine("Data loading is completed");
 
-            using (var hunspell = new Hunspell("ru_ru.aff", "ru_ru.dic"))
-            {
-                foreach (var pack in packs)
-                {
-                    foreach (var phrase in pack.Phrases)
-                    {
-                        foreach (var word in GetWords(phrase.Phrase))
-                        {
-                            if (!hunspell.Spell(word))
-                            {
-                                Console.WriteLine($"Ошибка в слове {word}");
-                                Console.ReadKey();
-                            }
-                        }
+            IYandexSpeller speller = new YandexSpeller();
 
-                        foreach (var word in GetWords(phrase.Description))
+            foreach (var pack in _packs)
+            {
+                foreach (var phrase in pack.Phrases)
+                {
+                    var words = GetWords(phrase.Phrase);
+                    var results = speller.CheckTexts(words, Lang.En | Lang.Ru, Options.Default, TextFormat.Plain);
+                    for (int i = 0; i < results.Length; i++)
+                    {
+                        if (results[i].Errors.Any() && results[i].Errors[0].Code == ErrorCode.ErrorUnknownWord)
                         {
-                            if (!hunspell.Spell(word))
-                            {
-                                Console.WriteLine($"Ошибка в слове {word}");
-                                Console.ReadKey();
-                            }
+                            Console.WriteLine($"{DateTime.Now.ToString("hh:mm:ss")}: Ошибка в слове {words[i]} из пака {pack.Name}. Полное слово: {phrase.Phrase}");
+                        }
+                    }
+
+                    words = GetWords(phrase.Description);
+                    results = speller.CheckTexts(words, Lang.En | Lang.Ru, Options.Default, TextFormat.Plain);
+                    for (int i = 0; i < results.Length; i++)
+                    {
+                        if (results[i].Errors.Any() && results[i].Errors[0].Code == ErrorCode.ErrorUnknownWord)
+                        {
+                            Console.WriteLine($"{DateTime.Now.ToString("hh:mm:ss")}: Ошибка в слове {words[i]} из пака {pack.Name}. В описании к слову: {phrase.Phrase}");
                         }
                     }
                 }
@@ -52,6 +54,16 @@ namespace SpellChecker
 
             Console.WriteLine("Spellcheck is finished");
             Console.ReadKey();
+        }
+
+        static void LoadPacks()
+        {
+            var packs = _service.GetAllPacksInfo(8081, out string error);
+            foreach(var pack in packs)
+            {
+                Console.WriteLine($"Loading of pack {pack.Name}");
+                _packs.Add(_service.GetPackById(8081, pack.Id, out error));
+            }
         }
 
         static string[] GetWords(string input)

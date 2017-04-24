@@ -88,22 +88,26 @@ namespace Model
             new Tuple<int, string>(8081, "test")
         };
 
-        public Task<Pack[]> GetFullPacksData(int port)
-        {
-            var packIds = GetPacksInfo(port, out string error).Select(p => Convert.ToInt32(p["id"])).ToList();
-            var loadTasks = new List<Task<Pack>>();
-            for (int i = 0; i < packIds.Count; i++)
-            {
-                var id = i;
-                var task = new Task<Pack>(() =>
-                {
-                    return GetPackById(port, packIds[id], out string e);
-                });
-                loadTasks.Add(task);
-            }
+        //public Pack[] GetFullPacksData(int port)
+        //{
+        //    var packIds = GetPacksInfo(port, out string error).Select(p => Convert.ToInt32(p["id"])).ToList();
+        //    var loadTasks = new List<Task<Pack>>();
+        //    //for (int i = 0; i < packIds.Count; i++)
+        //    //{
+        //    //    var id = i;
+        //    //    var task = new Task<Pack>(() =>
+        //    //    {
+        //    //        return GetPackById(port, packIds[id], out string e);
+        //    //    });
+        //    //    loadTasks.Add(task);
+        //    //}
 
-            return Task.WhenAll(loadTasks);
-        }
+        //    //var result = Task.WhenAll(loadTasks).ConfigureAwait(false);
+
+            
+            
+
+        //}
 
         private static IEnumerable<JToken> GetPacksInfo(int port, out string error)
         {
@@ -111,6 +115,11 @@ namespace Model
             var jObject = JObject.Parse(response)["packs"];
             var packs = jObject.Select(i => i["pack"]);
             return packs;
+        }
+
+        public int[] GetPackIds()
+        {
+            return GetPacksInfo(8081, out string error).Select(p => Convert.ToInt32(p["id"])).ToArray();
         }
 
         private static string GetResponceFromServer(string requestUriString, int port, out string errorResponse)
