@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Model;
+using NHunspell;
 using Yandex.Speller.Api;
 using Yandex.Speller.Api.DataContract;
 
@@ -26,32 +27,38 @@ namespace SpellChecker
 
             IYandexSpeller speller = new YandexSpeller();
 
-            foreach (var pack in _packs)
+            using (var hunspell = new Hunspell("ru_RU_ie.aff", "ru_RU_ie.dic"))
             {
-                foreach (var phrase in pack.Phrases)
+                foreach (var pack in _packs)
                 {
-                    var words = GetWords(phrase.Phrase);
-                    var results = speller.CheckTexts(words, Lang.En | Lang.Ru, Options.Default, TextFormat.Plain);
-                    for (int i = 0; i < results.Length; i++)
+                    foreach (var phrase in pack.Phrases)
                     {
-                        if (results[i].Errors.Any() && results[i].Errors[0].Code == ErrorCode.ErrorUnknownWord)
+                        var words = GetWords(phrase.Phrase);
+                        foreach (var word in words)
                         {
-                            Console.WriteLine($"{DateTime.Now.ToString("hh:mm:ss")}: Ошибка в слове {words[i]} из пака {pack.Name}. Полное слово: {phrase.Phrase}");
+                            if (!hunspell.Spell(word) && speller.CheckText(word, Lang.Ru | Lang.En, Options.IgnoreCapitalization, TextFormat.Plain).Errors.Any())
+                            {
+                                Console.WriteLine($"{DateTime.Now:hh:mm:ss}: Ошибка в слове {word} из пака {pack.Name}. Полное слово: {phrase.Phrase}");
+                                //Console.WriteLine($"Может добавим в словарь слово {word}? y/n");
+                                //var key = Console.ReadKey();
+                                //if (key.KeyChar == 'y' || key.KeyChar == 'Y')
+                                //{
+                                //    hunspell.Add(word);
+                                //}
+                            }
                         }
-                    }
 
-                    words = GetWords(phrase.Description);
-                    results = speller.CheckTexts(words, Lang.En | Lang.Ru, Options.Default, TextFormat.Plain);
-                    for (int i = 0; i < results.Length; i++)
-                    {
-                        if (results[i].Errors.Any() && results[i].Errors[0].Code == ErrorCode.ErrorUnknownWord)
+                        words = GetWords(phrase.Description);
+                        foreach (var word in words)
                         {
-                            Console.WriteLine($"{DateTime.Now.ToString("hh:mm:ss")}: Ошибка в слове {words[i]} из пака {pack.Name}. В описании к слову: {phrase.Phrase}");
+                            if (!hunspell.Spell(word) && speller.CheckText(word, Lang.Ru | Lang.En, Options.IgnoreCapitalization, TextFormat.Plain).Errors.Any())
+                            {
+                                Console.WriteLine($"{DateTime.Now:hh:mm:ss}: Ошибка в слове {word} из пака {pack.Name}. Из описания к слову: {phrase.Phrase}");
+                            }
                         }
                     }
                 }
             }
-
             Console.WriteLine("Spellcheck is finished");
             Console.ReadKey();
         }
