@@ -105,14 +105,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AttachedProperties.cs" />
     <Compile Include="IModalWindow.cs" />
+    <Compile Include="LocalUtils.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="StringUtils.cs" />
+    <Compile Include="TreeHelper.cs" />
     <Compile Include="ViewModels\Constants.cs" />
+    <Compile Include="ViewModels\GridBasedViewModel.cs" />
     <Compile Include="ViewModels\SpellCheckerViewModel.cs" />
     <Compile Include="Views\CustomKeyboardCommandProvider.cs" />
     <Compile Include="Views\ReviewColumn.cs" />
