@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Model;
 using NHunspell;
 using Yandex.Speller.Api;
 using Yandex.Speller.Api.DataContract;
+using System.IO;
 
 namespace SpellChecker
 {
@@ -25,42 +25,56 @@ namespace SpellChecker
             LoadPacks();
             Console.WriteLine("Data loading is completed");
 
-            IYandexSpeller speller = new YandexSpeller();
+            var yandexSpellCheck = new YandexSpeller();
 
-            using (var hunspell = new Hunspell("ru_RU_ie.aff", "ru_RU_ie.dic"))
+            using (var hunSpell = new Hunspell("ru_RU_ie.aff", "ru_RU_ie.dic"))
             {
+                InitCustomDictionary(hunSpell);
+
                 foreach (var pack in _packs)
                 {
                     foreach (var phrase in pack.Phrases)
                     {
-                        var words = GetWords(phrase.Phrase);
-                        foreach (var word in words)
-                        {
-                            if (!hunspell.Spell(word) && speller.CheckText(word, Lang.Ru | Lang.En, Options.IgnoreCapitalization, TextFormat.Plain).Errors.Any())
-                            {
-                                Console.WriteLine($"{DateTime.Now:hh:mm:ss}: Ошибка в слове {word} из пака {pack.Name}. Полное слово: {phrase.Phrase}");
-                                //Console.WriteLine($"Может добавим в словарь слово {word}? y/n");
-                                //var key = Console.ReadKey();
-                                //if (key.KeyChar == 'y' || key.KeyChar == 'Y')
-                                //{
-                                //    hunspell.Add(word);
-                                //}
-                            }
-                        }
-
-                        words = GetWords(phrase.Description);
-                        foreach (var word in words)
-                        {
-                            if (!hunspell.Spell(word) && speller.CheckText(word, Lang.Ru | Lang.En, Options.IgnoreCapitalization, TextFormat.Plain).Errors.Any())
-                            {
-                                Console.WriteLine($"{DateTime.Now:hh:mm:ss}: Ошибка в слове {word} из пака {pack.Name}. Из описания к слову: {phrase.Phrase}");
-                            }
-                        }
+                        SpellPhrase(pack, phrase.Phrase, hunSpell, yandexSpellCheck);
+                        SpellPhrase(pack, phrase.Description, hunSpell, yandexSpellCheck);
                     }
                 }
             }
-            Console.WriteLine("Spellcheck is finished");
+            Console.WriteLine("Spell check is finished");
             Console.ReadKey();
+        }
+
+        private static void InitCustomDictionary(Hunspell hunSpell)
+        {
+            string[] lines = File.ReadAllLines("CustomDictionary.txt");
+            foreach (var line in lines)
+            {
+                hunSpell.Add(line);
+            }
+        }
+
+        static void SpellPhrase(Pack pack, string phrase, Hunspell hunSpell, IYandexSpeller speller)
+        {
+            var words = GetWords(phrase);
+            foreach (var word in words)
+            {
+                if (!hunSpell.Spell(word) && speller.CheckText(word, Lang.Ru | Lang.En, Options.IgnoreCapitalization, TextFormat.Plain).Errors.Any())
+                {
+                    Console.WriteLine($"{DateTime.Now:hh:mm:ss}: Ошибка в слове {word} из пака {pack.Name}. Полная фраза: {phrase}");
+                    Console.WriteLine($"Может добавим в словарь слово {word}? y/n");
+                    var key = Console.ReadKey();
+                    if (key.KeyChar == 'y' || key.KeyChar == 'Y')
+                    {
+                        SaveNewCustomWord(hunSpell, word);
+                    }
+                }
+            }
+        }
+
+        private static void SaveNewCustomWord(Hunspell hunSpell, string word)
+        {
+            hunSpell.Add(word);
+            File.WriteAllLines(@"..\..\CustomDictionary.txt", new string[] { word });
         }
 
         static void LoadPacks()
