@@ -63,10 +63,12 @@ namespace SpellChecker
                     Console.WriteLine($"{DateTime.Now:hh:mm:ss}: Ошибка в слове {word} из пака {pack.Name}. Полная фраза: {phrase}");
                     Console.WriteLine($"Может добавим в словарь слово {word}? y/n");
                     var key = Console.ReadKey();
+                    Console.WriteLine();
                     if (key.KeyChar == 'y' || key.KeyChar == 'Y')
                     {
                         SaveNewCustomWord(hunSpell, word);
                     }
+                    Console.WriteLine("Работаем Дальше!");
                 }
             }
         }
@@ -74,7 +76,8 @@ namespace SpellChecker
         private static void SaveNewCustomWord(Hunspell hunSpell, string word)
         {
             hunSpell.Add(word);
-            File.WriteAllLines(@"..\..\CustomDictionary.txt", new string[] { word });
+            File.AppendAllLines(@"..\..\CustomDictionary.txt", new string[] { word });
+            Console.WriteLine($"Слово {word} было добавлено");
         }
 
         static void LoadPacks()
