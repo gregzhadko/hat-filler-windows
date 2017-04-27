@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.Serialization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -15,6 +16,26 @@ namespace HatDesktop
 {
     public static class LocalUtils
     {
+        public static T DeepCopy<T>(this T oSource)
+        {
+            T oClone;
+
+            var dcs = new DataContractSerializer(typeof(T));
+
+            using (var ms = new MemoryStream())
+            {
+                dcs.WriteObject(ms, oSource);
+                ms.Position = 0;
+                oClone = (T)dcs.ReadObject(ms);
+            }
+            return oClone;
+        }
+
+        public static bool IsNullOrEmpty<T>(this ICollection<T> col)
+        {
+            return col == null || col.Count == 0;
+        }
+
         public static int FindIndex<T>(this IList<T> source, Predicate<T> match, int startIndex = 0)
         {
             for (var i = startIndex; i < source.Count; i++)

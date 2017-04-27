@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -12,9 +13,91 @@ using System.Windows.Media;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using HatDesktop.Properties;
+using Model;
 
 namespace HatDesktop.ViewModels
 {
+    public abstract class GridBasedViewModel<T> : GridBasedViewModel
+        where T : PhraseItem, new()
+    {
+
+        protected virtual T GetNewItem() { return new T(); }
+
+        private ObservableCollection<T> _items;
+        public ObservableCollection<T> Items
+        {
+            get { return _items; }
+            set { Set(ref _items, value); }
+        }
+
+        private T BackupItem { get; set; }
+
+        private T _selectedItem;
+        public T SelectedItem
+        {
+            get { return _selectedItem; }
+            set
+            {
+                Set(ref _selectedItem, value);
+                SelectedItemChanged();
+            }
+        }
+
+
+        protected override bool HasSelectedItem
+        {
+            get { return SelectedItem != null; }
+            set { if (!value) SelectedItem = null; }
+        }
+
+        protected override void InsertNewItem()
+        {
+            PreEditing();
+            var newItem = GetNewItem();
+            Items.Insert(0, newItem);
+            //DataGrid.Items.Add(newItem);
+            DataGrid.ScrollIntoView(newItem);
+            DataGrid.UpdateLayout();
+            DataGrid.FocusRow(0);
+            StartEditingMode();
+        }
+
+        protected override void RollbackNewItem()
+        {
+            Items.Remove(SelectedItem);
+        }
+        protected override void CreateBackupItem()
+        {
+            Debug.Assert(!IsCurrentItemNew);
+            Debug.Assert(SelectedItem != null);
+            BackupItem = SelectedItem.DeepCopy();
+        }
+        protected override void ClearBackupItem()
+        {
+            Debug.Assert(!IsCurrentItemNew);
+            Debug.Assert(BackupItem != null);
+            BackupItem = null;
+        }
+        protected override void RestoreBackedUpItem()
+        {
+            Debug.Assert(!IsCurrentItemNew);
+            Debug.Assert(BackupItem != null);
+            var selIndex = SelectedIndex;
+            Items.RemoveAt(selIndex);
+            Items.Insert(selIndex, BackupItem);
+            ClearBackupItem();
+            DataGrid.FocusRow(selIndex);
+        }
+
+        protected override bool IsCurrentItemNew => SelectedItem != null && SelectedItem.IsNew;
+
+        protected override bool IsSelectedItemValid => SelectedItem != null && SelectedItem.IsValid;
+
+        protected override string SelectedItemValidationErrors => SelectedItem == null ? string.Empty : SelectedItem.Error;
+        protected override void SelectedItemChanged() { }
+        protected override int ItemCount => Items.IsNullOrEmpty() ? 0 : Items.Count;
+    }
+
     public abstract class GridBasedViewModel : ViewModelBase //: BaseViewModel
     {
         protected bool ReloadOnlyEditedItems = false;

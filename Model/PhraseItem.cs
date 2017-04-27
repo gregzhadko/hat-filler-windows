@@ -57,6 +57,9 @@ namespace Model
 
         public string Error => this[null];
 
+        public bool IsNew => string.IsNullOrWhiteSpace(Phrase);
+        public bool IsValid => string.IsNullOrEmpty(Error);
+
         public string this[string columnName]
         {
             get
