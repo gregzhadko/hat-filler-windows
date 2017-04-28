@@ -33,6 +33,7 @@ namespace SpellChecker
 
                 foreach (var pack in _packs)
                 {
+                    Console.WriteLine($"Смотрю пак {pack.Name}");
                     foreach (var phrase in pack.Phrases)
                     {
                         SpellPhrase(pack, phrase.Phrase, hunSpell, yandexSpellCheck);
