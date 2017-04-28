@@ -18,7 +18,7 @@ namespace SpellChecker
 
         public static void Main(string[] args)
         {
-
+            Console.ForegroundColor = ConsoleColor.Green;
             _service = new PackService();
             Console.OutputEncoding = Encoding.UTF8;
             Console.WriteLine("Data loading...");
@@ -56,14 +56,29 @@ namespace SpellChecker
         static void SpellPhrase(Pack pack, string phrase, Hunspell hunSpell, IYandexSpeller speller)
         {
             var words = GetWords(phrase);
-            foreach (var word in words)
+            foreach (var word in words.Select(w => w.ToLowerInvariant()))
             {
                 if (!hunSpell.Spell(word) && speller.CheckText(word, Lang.Ru | Lang.En, Options.IgnoreCapitalization, TextFormat.Plain).Errors.Any())
                 {
-                    Console.WriteLine($"{DateTime.Now:hh:mm:ss}: Ошибка в слове {word} из пака {pack.Name}. Полная фраза: {phrase}");
-                    Console.WriteLine($"Может добавим в словарь слово {word}? y/n");
+                    var color = Console.ForegroundColor;
+                    Console.Write($"{DateTime.Now:hh:mm:ss}: Ошибка в слове ");
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write(word);
+                    Console.ForegroundColor = color;
+                    Console.Write(" из пака ");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write(pack.Name);
+                    Console.ForegroundColor = color;
+                    Console.Write(" Полная фраза: ");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write(phrase);
+                    Console.ForegroundColor = color;
+                    Console.WriteLine($" Может добавим в словарь слово");
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write(word);
+                    Console.ForegroundColor = color;
+                    Console.Write("? y/n\n");
                     var key = Console.ReadKey();
-                    Console.WriteLine();
                     if (key.KeyChar == 'y' || key.KeyChar == 'Y')
                     {
                         SaveNewCustomWord(hunSpell, word);
@@ -77,7 +92,8 @@ namespace SpellChecker
         {
             hunSpell.Add(word);
             File.AppendAllLines(@"..\..\CustomDictionary.txt", new string[] { word });
-            Console.WriteLine($"Слово {word} было добавлено");
+            File.AppendAllLines(@"CustomDictionary.txt", new string[] { word });
+            Console.WriteLine($"\nСлово {word} было добавлено");
         }
 
         static void LoadPacks()
