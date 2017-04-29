@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.9
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HatDesktop", "HatDesktop\HatDesktop.csproj", "{D18E0CF8-D6C2-48A8-A873-C0E6BCF99E89}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -16,6 +16,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "Model\Model.csproj", "{9724B901-D240-4705-A0C4-35AAAB0CE0E8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpellChecker", "SpellChecker\SpellChecker.csproj", "{A2EECB4D-EFEB-4437-A9E4-AA0BC1F6F469}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HatNewUI", "HatNewUI\HatNewUI.csproj", "{47135B03-31EA-4618-9467-E7A8882AE14C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{A2EECB4D-EFEB-4437-A9E4-AA0BC1F6F469}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2EECB4D-EFEB-4437-A9E4-AA0BC1F6F469}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2EECB4D-EFEB-4437-A9E4-AA0BC1F6F469}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47135B03-31EA-4618-9467-E7A8882AE14C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47135B03-31EA-4618-9467-E7A8882AE14C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47135B03-31EA-4618-9467-E7A8882AE14C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47135B03-31EA-4618-9467-E7A8882AE14C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
