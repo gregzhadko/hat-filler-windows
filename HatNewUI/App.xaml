@@ -5,7 +5,8 @@
              StartupUri="MainWindow.xaml" 
              xmlns:metro="clr-namespace:MahApps;assembly=MahApps.Metro"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             d1p1:Ignorable="d" xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006">
+             d1p1:Ignorable="d" xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModel="clr-namespace:HatNewUI.ViewModel">
   <Application.Resources>
     <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -17,6 +18,7 @@
                 <ResourceDictionary Source="/Views/Style.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
+            <viewModel:ViewModelLocator x:Key="Locator" d:IsDataSource="True" />
 
         </ResourceDictionary>
   </Application.Resources>

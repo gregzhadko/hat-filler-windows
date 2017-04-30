@@ -1,4 +1,4 @@
-﻿using MVVMBase;
+﻿using HatNewUI.ViewModel;
 
 namespace HatNewUI.UtilsObject
 {

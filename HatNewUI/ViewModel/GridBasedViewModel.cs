@@ -12,7 +12,6 @@ using HatNewUI.Handlers;
 using HatNewUI.Helpers;
 using MahApps.Metro.Controls;
 using Model;
-using MVVMBase;
 using Action = System.Action;
 
 namespace HatNewUI.ViewModel
@@ -92,21 +91,13 @@ namespace HatNewUI.ViewModel
             DataGrid.FocusRow(selIndex);
         }
 
-        protected override bool IsCurrentItemNew { get { return SelectedItem != null && SelectedItem.IsNew; } }
+        protected override bool IsCurrentItemNew => SelectedItem != null && SelectedItem.IsNew;
 
-        protected override bool IsSelectedItemValid
-        {
-            get { return SelectedItem != null && SelectedItem.IsValid; }
-        }
-        protected override string SelectedItemValidationErrors
-        {
-            get
-            {
-                return SelectedItem == null ? string.Empty : SelectedItem.Error;
-            }
-        }
+        protected override bool IsSelectedItemValid => SelectedItem != null && SelectedItem.IsValid;
+
+        protected override string SelectedItemValidationErrors => SelectedItem == null ? string.Empty : SelectedItem.Error;
         protected override void SelectedItemChanged() { }
-        protected override int ItemCount { get { return Items.IsNullOrEmpty() ? 0 : Items.Count; } }
+        protected override int ItemCount => Items.IsNullOrEmpty() ? 0 : Items.Count;
     }
 
 

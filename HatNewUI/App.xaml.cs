@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows;
 using GalaSoft.MvvmLight.Messaging;
 using HatNewUI.Helpers;
 using HatNewUI.IoC;
 using HatNewUI.UtilsObject;
-using MVVMBase;
+using HatNewUI.ViewModel;
 
 namespace HatNewUI
 {
@@ -38,7 +35,7 @@ namespace HatNewUI
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            LoadMainWindow();
+            //LoadMainWindow();
         }
 
         internal static void LoadMainWindow()
@@ -81,7 +78,7 @@ namespace HatNewUI
                     InnerDisplayDialog(_dialogDisplayMessageQueue.Dequeue());
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 _dialogDisplayMessageQueue.Clear();
                 throw;
@@ -96,22 +93,13 @@ namespace HatNewUI
             }
         }
 
-        public MainWindow RealMainWindow
-        {
-            get
-            {
-                //return _mainWindow ?? (
-                //    _mainWindow = UIIoCContainer.GetInstance<MainWindow>(GetWindowToken(ViewsEnum.MainWindow.ToString())));
-                return Windows.OfType<MainWindow>().Single();
-            }
-        }
+        public MainWindow RealMainWindow => Windows.OfType<MainWindow>().Single();
 
         readonly Stack<IDataContextHolder> _contents = new Stack<IDataContextHolder>();
 
         void InnerDisplayDialog(NotificationMessage<DialogLoadData<ViewsEnum>> loadData)
         {
-            if (loadData == null || loadData.Content == null ||
-               loadData.Notification != MessengerHelper.DisplayDialogToken)
+            if (loadData?.Content == null || loadData.Notification != MessengerHelper.DisplayDialogToken)
                 return;
 
             var dialogToken = GetDialogToken(loadData.Content.View.ToString());
@@ -140,8 +128,7 @@ namespace HatNewUI
 
         public void DisplayView(NotificationMessage<ViewLoadData<ViewsEnum>> loadData)
         {
-            if (loadData == null || loadData.Content == null ||
-                loadData.Notification != MessengerHelper.DisplayViewToken)
+            if (loadData?.Content == null || loadData.Notification != MessengerHelper.DisplayViewToken)
                 return;
 
             //Remove all dialogs or previous views from memory

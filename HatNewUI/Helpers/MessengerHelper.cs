@@ -1,7 +1,7 @@
 ﻿using System;
 using GalaSoft.MvvmLight.Messaging;
 using HatNewUI.UtilsObject;
-using MVVMBase;
+using HatNewUI.ViewModel;
 
 namespace HatNewUI
 {

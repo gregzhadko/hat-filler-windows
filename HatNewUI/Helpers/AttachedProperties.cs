@@ -2,10 +2,8 @@
 using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Interactivity;
 using System.Windows.Media;
 using HatNewUI.ViewModel;
-using MVVMBase;
 
 namespace HatNewUI.Helpers
 {
@@ -149,8 +147,9 @@ namespace HatNewUI.Helpers
          * Tag property to add any string value necessary. Utility Property
          */
         #region Tag
-        public static string WingGridTag { get { return "WingGrid"; } }
-        public static string ChecklistItemGridTag { get { return "ChecklistItemGrid"; } }
+        public static string WingGridTag => "WingGrid";
+        public static string ChecklistItemGridTag => "ChecklistItemGrid";
+
         public static string GetTag(DependencyObject obj)
         {
             return (string)obj.GetValue(TagProperty);

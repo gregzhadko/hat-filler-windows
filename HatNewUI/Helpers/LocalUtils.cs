@@ -9,8 +9,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
+using HatNewUI.ViewModel;
 using MahApps.Metro.Controls.Dialogs;
-using MVVMBase;
 
 //using System.Windows.Media;
 

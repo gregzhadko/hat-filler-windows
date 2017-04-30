@@ -1,19 +1,11 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Input;
-using System.Windows.Threading;
 using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
-using HatNewUI;
 using HatNewUI.Helpers;
 using HatNewUI.UtilsObject;
 
-
-namespace MVVMBase
+namespace HatNewUI.ViewModel
 {
     public abstract class BaseViewModel : ViewModelBase
     {

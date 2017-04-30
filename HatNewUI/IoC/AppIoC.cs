@@ -1,4 +1,6 @@
 ﻿using System;
+using HatNewUI.IoC;
+using HatNewUI.ViewModel;
 
 namespace HatNewUI
 {
@@ -11,16 +13,16 @@ namespace HatNewUI
 
         static public void RegisterServicesOnIoC()
         {
-            //VIEWMODELS
-            //UIIoCContainer.RegisterReal<LoginViewModel>();
-            
+            //WINDOWS
+            UIIoCContainer.Register<MainViewModel>();
+
 
         }
 
         void RegisterViewsOnIoC()
         {
             //WINDOWS
-            //UIIoCContainer.Register(CreateView<MainWindow>);
+            UIIoCContainer.Register(CreateView<MainWindow>);
 
 
             //VIEWS

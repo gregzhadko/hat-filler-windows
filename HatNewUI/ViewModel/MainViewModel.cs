@@ -1,6 +1,5 @@
 using System.Windows;
 using GalaSoft.MvvmLight.Command;
-using MVVMBase;
 using HatNewUI.Helpers;
 
 namespace HatNewUI.ViewModel
@@ -15,24 +14,6 @@ namespace HatNewUI.ViewModel
         {
             base.Init(parameters);
         }
-
-
-
-        public string DebugNotification
-        {
-            get
-            {
-                return
-#if DEBUG
- "[DEBUG]"
-#else
-  string.Empty
-#endif
-;
-            }
-        }
-
-
 
         private object _overheadContent;
         public object OverheadContent
