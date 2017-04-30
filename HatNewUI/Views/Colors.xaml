@@ -15,4 +15,7 @@
     <Color x:Key="DataGridRowBorderColor">#E5E5E5</Color>
     <SolidColorBrush x:Key="DataGridRowBorderColorBrush" Color="{StaticResource DataGridRowBorderColor}" />
 
+    <Color x:Key="DataGridColumnHeaderColor">#D7D7D7</Color>
+    <SolidColorBrush x:Key="DataGridColumnHeaderColorBrush" Color="{StaticResource DataGridColumnHeaderColor}" />
+
 </ResourceDictionary>

@@ -8,7 +8,11 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using GalaSoft.MvvmLight.Command;
+using HatNewUI.Handlers;
+using HatNewUI.Helpers;
+using MahApps.Metro.Controls;
 using Model;
+using MVVMBase;
 using Action = System.Action;
 
 namespace HatNewUI.ViewModel
@@ -38,7 +42,7 @@ namespace HatNewUI.ViewModel
             {
                 _selectedItem = value;
                 SelectedItemChanged();
-                OnPropertyChanged();
+                Set(ref _selectedItem, value);
             }
         }
 
@@ -249,8 +253,8 @@ namespace HatNewUI.ViewModel
             if (IsSelectedItemValid) return true;
 
             NotificationHandler.Show(
-                $"The item does not meet the required validations. Please fix the following errors: \n\n{SelectedItemValidationErrors}",
-                Resources.WarningTitle, MessageBoxButton.OK, MessageBoxImage.Warning);
+                $"The item does not meet the required validations. Please fix the following errors: \n\n{SelectedItemValidationErrors}", "Warning", MessageBoxButton.OK,
+                MessageBoxImage.Warning);
 
             return false;
         }
@@ -274,27 +278,21 @@ namespace HatNewUI.ViewModel
         }
 
         private int _selectedIndex;
+
         public int SelectedIndex
         {
             get { return _selectedIndex; }
-            set
-            {
-                _selectedIndex = value;
-                OnPropertyChanged();
-            }
+            set { Set(ref _selectedIndex, value); }
         }
 
 
 
         private bool _isEditable = true;
+
         public bool IsEditable
         {
             get { return _isEditable; }
-            set
-            {
-                _isEditable = value;
-                OnPropertyChanged();
-            }
+            set { Set(ref _isEditable); }
         }
 
         private bool _canBeAdded = true;
@@ -302,11 +300,7 @@ namespace HatNewUI.ViewModel
         public virtual bool CanBeAdded
         {
             get { return _canBeAdded; }
-            set
-            {
-                _canBeAdded = value;
-                OnPropertyChanged();
-            }
+            set { Set(ref _canBeAdded, value); }
         }
 
         private bool _canBeDeleted = true;
@@ -314,22 +308,14 @@ namespace HatNewUI.ViewModel
         public bool CanBeDeleted
         {
             get { return _canBeDeleted; }
-            set
-            {
-                _canBeDeleted = value;
-                OnPropertyChanged();
-            }
+            set { Set(ref _canBeDeleted, value); }
         }
 
         private string _addButtonText = "Add";
         public string AddButtonText
         {
             get { return _addButtonText; }
-            set
-            {
-                _addButtonText = value;
-                OnPropertyChanged();
-            }
+            set { Set(ref _addButtonText, value); }
         }
 
 
@@ -339,9 +325,8 @@ namespace HatNewUI.ViewModel
             get { return _isEditing; }
             set
             {
-                _isEditing = value;
-                AddButtonText = _isEditing ? "Save" : "Add";
-                OnPropertyChanged();
+                AddButtonText = value ? "Save" : "Add";
+                Set(ref _isEditing, value);
             }
         }
 
@@ -353,11 +338,7 @@ namespace HatNewUI.ViewModel
         public bool IsEnterKeyDisabled
         {
             get { return _isEnterKeyDisabled; }
-            set
-            {
-                _isEnterKeyDisabled = value;
-                OnPropertyChanged();
-            }
+            set { Set(ref _isEnterKeyDisabled, value); }
         }
 
         private RelayCommand<RoutedEventArgs> _creatingDataGrid;

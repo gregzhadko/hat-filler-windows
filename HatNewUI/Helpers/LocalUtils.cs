@@ -21,7 +21,7 @@ namespace HatNewUI.Helpers
         public static async void ShowProgressing(this BaseViewModel vm,
             Action<ProgressDialogController> act, string title = "Loading", string message = "Please wait...")
         {
-            await ((Application.Current as App).RealMainWindow)
+            await ((App) Application.Current).RealMainWindow
                 .ShowProgressAsync(title, message)
                 .ContinueWith(x =>
                 {
@@ -36,7 +36,7 @@ namespace HatNewUI.Helpers
             string title = "Clinical Champion", MessageDialogStyle style = MessageDialogStyle.Affirmative,
             MetroDialogSettings extraSettings = null)
         {
-            await ((Application.Current as App).RealMainWindow)
+            await ((App) Application.Current).RealMainWindow
                 .ShowMessageAsync(title, message, style, extraSettings)
                 .ContinueWith(x => afterMessage?.Invoke(x.Result));
         }

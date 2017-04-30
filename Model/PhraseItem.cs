@@ -53,6 +53,13 @@ namespace Model
             set { Set(nameof(Phrase), ref _phrase, value); }
         }
 
+        public bool IsNew { get; set; }
+
+        public bool IsValid
+        {
+            get { return string.IsNullOrEmpty(Error); }
+        }
+
         public string ReviewedBy => ReviewerObjects.FirstOrDefault(r => r.ReviewState == State.Accept)?.Author;
 
         public string Error => this[null];

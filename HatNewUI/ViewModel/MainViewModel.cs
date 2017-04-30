@@ -1,7 +1,7 @@
 using System.Windows;
 using GalaSoft.MvvmLight.Command;
 using MVVMBase;
-using HatNewUI.Helpers
+using HatNewUI.Helpers;
 
 namespace HatNewUI.ViewModel
 {

@@ -106,6 +106,8 @@ namespace HatNewUI
             }
         }
 
+        readonly Stack<IDataContextHolder> _contents = new Stack<IDataContextHolder>();
+
         void InnerDisplayDialog(NotificationMessage<DialogLoadData<ViewsEnum>> loadData)
         {
             if (loadData == null || loadData.Content == null ||
