@@ -9,6 +9,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using HatNewUI;
+using HatNewUI.Helpers;
 using HatNewUI.UtilsObject;
 
 
@@ -16,10 +17,6 @@ namespace MVVMBase
 {
     public abstract class BaseViewModel : ViewModelBase
     {
-
-
-
-
         private bool? _shownAsDialog;
 
         public bool? ShownAsDialog

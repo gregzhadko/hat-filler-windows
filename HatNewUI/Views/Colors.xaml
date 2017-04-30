@@ -1,0 +1,18 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:HatNewUI.Views">
+    <Color x:Key="Accent3">#4E82C3</Color>
+    <SolidColorBrush x:Key="AccentBrush3" Color="{StaticResource Accent3}" />
+    <Color x:Key="DataGridRowMouseOverColor">#B8CDE7</Color>
+    <SolidColorBrush x:Key="DataGridRowMouseOverColorBrush" Color="{StaticResource DataGridRowMouseOverColor}" />
+
+    <Color x:Key="DataGridSelectedRowColor">#80A6D4</Color>
+    <SolidColorBrush x:Key="DataGridSelectedRowColorBrush" Color="{StaticResource DataGridSelectedRowColor}" />
+
+    <Color x:Key="DataGridRowColor">#F4F4F4</Color>
+    <SolidColorBrush x:Key="DataGridRowColorBrush" Color="{StaticResource DataGridRowColor}" />
+
+    <Color x:Key="DataGridRowBorderColor">#E5E5E5</Color>
+    <SolidColorBrush x:Key="DataGridRowBorderColorBrush" Color="{StaticResource DataGridRowBorderColor}" />
+
+</ResourceDictionary>

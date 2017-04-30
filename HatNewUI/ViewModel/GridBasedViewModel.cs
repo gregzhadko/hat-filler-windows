@@ -321,7 +321,7 @@ namespace HatNewUI.ViewModel
             }
         }
 
-        private string _addButtonText = Resources.Add;
+        private string _addButtonText = "Add";
         public string AddButtonText
         {
             get { return _addButtonText; }
@@ -340,7 +340,7 @@ namespace HatNewUI.ViewModel
             set
             {
                 _isEditing = value;
-                AddButtonText = _isEditing ? Resources.Save : Resources.Add;
+                AddButtonText = _isEditing ? "Save" : "Add";
                 OnPropertyChanged();
             }
         }
