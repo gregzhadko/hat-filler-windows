@@ -5,20 +5,20 @@ namespace Model
 {
     public interface IPackService
     {
-        Pack GetPackById(int port, int id, out string error);
+        Pack GetPackById(int port, int id);
 
-        void EditPack(int id, string name, string description, out string error);
+        void EditPack(int id, string name, string description);
 
-        IEnumerable<Pack> GetAllPacksInfo(int port, out string error);
+        IEnumerable<Pack> GetAllPacksInfo(int port);
 
-        void AddPhrase(int packId, PhraseItem phrase, out string error);
+        void AddPhrase(int packId, PhraseItem phrase);
 
-        void DeletePhrase(int packId, string phrase, out string error);
+        void DeletePhrase(int packId, string phrase);
 
         List<Tuple<int, string>> GetPorts();
 
-        void EditPhrase(int packId, PhraseItem oldPhrase, PhraseItem newPhrase, string selectedAuthor, out string error);
+        void EditPhrase(int packId, PhraseItem oldPhrase, PhraseItem newPhrase, string selectedAuthor);
 
-        void ReviewPhrase(int packId, PhraseItem phrase, string reviewerName, State state, out string error);
+        void ReviewPhrase(int packId, PhraseItem phrase, string reviewerName, State state);
     }
 }

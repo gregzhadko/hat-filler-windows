@@ -111,7 +111,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="StringUtils.cs" />
     <Compile Include="ViewModels\Constants.cs" />
     <Compile Include="ViewModels\SpellCheckerViewModel.cs" />
     <Compile Include="Views\CustomKeyboardCommandProvider.cs" />

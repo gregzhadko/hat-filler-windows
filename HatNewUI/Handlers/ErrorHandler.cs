@@ -87,7 +87,7 @@ namespace HatNewUI.Handlers
             {
                 NotificationHandler.Show(message + "\n\n" + stackTrace, caption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
-            catch (Exception ex)
+            catch
             {
                 //Log to
             }

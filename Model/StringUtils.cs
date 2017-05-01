@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace HatDesktop
+namespace Model
 {
     public static class StringUtils
     {

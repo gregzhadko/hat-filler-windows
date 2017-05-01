@@ -1,4 +1,4 @@
-﻿using HatDesktop;
+﻿using Model;
 using NUnit.Framework;
 
 namespace HatDesktopTests

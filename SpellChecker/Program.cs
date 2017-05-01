@@ -82,11 +82,11 @@ namespace SpellChecker
 
         static void LoadPacks()
         {
-            var packs = _service.GetAllPacksInfo(8081, out string error);
+            var packs = _service.GetAllPacksInfo(8081);
             foreach(var pack in packs)
             {
                 Console.WriteLine($"Loading of pack {pack.Name}");
-                _packs.Add(_service.GetPackById(8081, pack.Id, out error));
+                _packs.Add(_service.GetPackById(8081, pack.Id));
             }
         }
 
