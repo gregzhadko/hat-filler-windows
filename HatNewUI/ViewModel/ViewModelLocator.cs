@@ -15,6 +15,7 @@ namespace HatNewUI.ViewModel
         }
 
         public MainViewModel Main => UIIoCContainer.GetInstance<MainViewModel>();
+        public FillerViewModel FillerViewModel => UIIoCContainer.GetInstance<FillerViewModel>();
         
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
+using HatNewUI.Helpers;
 using HatNewUI.IoC;
 using HatNewUI.ViewModel;
+using HatNewUI.Views;
 
 namespace HatNewUI
 {
@@ -11,10 +13,11 @@ namespace HatNewUI
             return new T();
         }
 
-        static public void RegisterServicesOnIoC()
+        public static void RegisterServicesOnIoC()
         {
-            //WINDOWS
-            UIIoCContainer.Register<MainViewModel>();
+            //VIEWMODELS
+            UIIoCContainer.RegisterReal<MainViewModel>();
+            UIIoCContainer.RegisterReal<FillerViewModel>();
 
 
         }
@@ -26,7 +29,7 @@ namespace HatNewUI
 
 
             //VIEWS
-            //UIIoCContainer.Register<IDataContextHolder>(CreateView<AdminSettings>, ViewsEnum.AdminSettings.ToString());
+            UIIoCContainer.Register<IDataContextHolder>(CreateView<FillerView>, ViewsEnum.Filler.ToString());
             
         }
 

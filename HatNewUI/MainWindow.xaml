@@ -1,28 +1,62 @@
-﻿<controls:MetroWindow x:Class="HatNewUI.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:HatNewUI"
-        xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-        xmlns:helpers="clr-namespace:HatNewUI.Helpers"
-        mc:Ignorable="d"
-        Title="CHAMPION"
-                      Height="250"
-                      MinWidth="1300"
-                      MinHeight="600"
-                      DataContext="{Binding Main,
-                                            Source={StaticResource Locator}}"
-                      ResizeMode="CanResizeWithGrip"
-                      TitleForeground="Transparent"
-                      WindowState="Maximized"
-                      helpers:AttachedProperties.CurrentMainWindowSection="{Binding CurrentSection,
-                                                                                  Mode=OneWayToSource}">
-
-
+﻿<controls:MetroWindow
+    x:Class="HatNewUI.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="clr-namespace:HatNewUI.Helpers"
+    xmlns:local="clr-namespace:HatNewUI"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="НАПОЛНИТЕЛЬ"
+    Height="250"
+    MinWidth="1300"
+    MinHeight="600"
+    helpers:AttachedProperties.CurrentMainWindowSection="{Binding CurrentSection, Mode=OneWayToSource}"
+    DataContext="{Binding Main, Source={StaticResource Locator}}"
+    ResizeMode="CanResizeWithGrip"
+    TitleForeground="Transparent"
+    WindowState="Maximized"
+    mc:Ignorable="d">
 
     <Grid>
-        <ContentPresenter x:Name="OverheadContent" Content="{Binding OverheadContent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        <!--  MAIN CONTENT  -->
+        <Grid>
+            <Grid.Style>
+                <Style>
+                    <Style.Setters>
+                        <Setter Property="FrameworkElement.Visibility" Value="Collapsed" />
+                    </Style.Setters>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding OverheadContent}" Value="{x:Null}">
+                            <DataTrigger.Setters>
+                                <Setter Property="FrameworkElement.Visibility" Value="Visible" />
+                            </DataTrigger.Setters>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <ContentControl Content="{Binding PrincipalContainer}" />
+        </Grid>
+
+        <!--  OVERHEAD CONTENT  -->
+        <Grid>
+            <Grid.Style>
+                <Style>
+                    <Style.Setters>
+                        <Setter Property="FrameworkElement.Visibility" Value="Visible" />
+                    </Style.Setters>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding OverheadContent}" Value="{x:Null}">
+                            <DataTrigger.Setters>
+                                <Setter Property="FrameworkElement.Visibility" Value="Collapsed" />
+                            </DataTrigger.Setters>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <!--  AUXILIARY CONTENT  -->
+            <ContentPresenter x:Name="OverheadContent" Content="{Binding OverheadContent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        </Grid>
     </Grid>
 </controls:MetroWindow>
 

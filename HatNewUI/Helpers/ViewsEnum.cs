@@ -3,6 +3,7 @@
     public enum ViewsEnum
     {
         MainWindow = 1,
-        RenameWindow
+        Filler = 2,
+        RenameWindow = 3
     }
 }

@@ -35,12 +35,13 @@ namespace HatNewUI
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            //LoadMainWindow();
+            LoadMainWindow();
         }
 
         internal static void LoadMainWindow()
         {
             MessengerHelper.SendDisplayViewMessage(null, ViewsEnum.MainWindow);
+            MessengerHelper.SendDisplayViewMessage(Current, ViewsEnum.Filler);
         }
 
         #region View Control Helper Methods

@@ -385,7 +385,7 @@ namespace HatNewUI.ViewModel
             }
         }
 
-        private readonly static Func<KeyEventArgs, bool> _shouldTunnelDownEvent = p =>
+        private static readonly Func<KeyEventArgs, bool> _shouldTunnelDownEvent = p =>
         {
             /*
              * Don't take into consideration calls originated from:
