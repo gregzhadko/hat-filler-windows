@@ -78,6 +78,7 @@ namespace SpellChecker
                     Console.WriteLine($" Добавим слово в словарь или пропустим в конкретном случае? (d - dictionary, s - skip)");
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.Write(word);
+                    Console.WriteLine();
                     Console.ForegroundColor = color;
                     var key = Console.ReadKey();
                     if (key.KeyChar == 'y' || key.KeyChar == 'Y' || key.KeyChar == 'd' || key.KeyChar == 'D')
