@@ -1,9 +1,13 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Interactivity;
 using System.Windows.Media;
 using HatNewUI.ViewModel;
+using TriggerBase = System.Windows. Interactivity.TriggerBase;
 
 namespace HatNewUI.Helpers
 {
@@ -261,31 +265,31 @@ namespace HatNewUI.Helpers
 
         #endregion
 
-        //#region Binding interaction triggers
-        //public static StyleTriggerCollection GetTriggers(DependencyObject obj)
-        //{
-        //    return (StyleTriggerCollection)obj.GetValue(TriggersProperty);
-        //}
+        #region Binding interaction triggers
+        public static StyleTriggerCollection GetTriggers(DependencyObject obj)
+        {
+            return (StyleTriggerCollection)obj.GetValue(TriggersProperty);
+        }
 
-        //public static void SetTriggers(DependencyObject obj, StyleTriggerCollection value)
-        //{
-        //    obj.SetValue(TriggersProperty, value);
-        //}
+        public static void SetTriggers(DependencyObject obj, StyleTriggerCollection value)
+        {
+            obj.SetValue(TriggersProperty, value);
+        }
 
-        //public static readonly DependencyProperty TriggersProperty =
-        //    DependencyProperty.RegisterAttached("Triggers", typeof(StyleTriggerCollection), typeof(AttachedProperties), new UIPropertyMetadata(null, OnTriggersChanged));
+        public static readonly DependencyProperty TriggersProperty =
+            DependencyProperty.RegisterAttached("Triggers", typeof(StyleTriggerCollection), typeof(AttachedProperties), new UIPropertyMetadata(null, OnTriggersChanged));
 
-        //static void OnTriggersChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        //{
-        //    var triggers = (StyleTriggerCollection)e.NewValue;
-        //    if (triggers == null) return;
-        //    triggers.SelectMany(x => x.Actions).OfType<EventBinding>().ToList().ForEach(x => { x.TriggerVisual = d; });
-        //    var existingTriggers = Interaction.GetTriggers(d);
+        static void OnTriggersChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var triggers = (StyleTriggerCollection)e.NewValue;
+            if (triggers == null) return;
+            triggers.SelectMany(x => x.Actions).OfType<EventBinding>().ToList().ForEach(x => { x.TriggerVisual = d; });
+            var existingTriggers = Interaction.GetTriggers(d);
 
-        //    foreach (var trigger in triggers)
-        //        existingTriggers.Add(trigger);
-        //}
-        //#endregion
+            foreach (var trigger in triggers)
+                existingTriggers.Add(trigger);
+        }
+        #endregion
 
         #region TabItemViewModel
 
@@ -307,5 +311,9 @@ namespace HatNewUI.Helpers
 
         #endregion
 
+    }
+
+    public class StyleTriggerCollection : List<TriggerBase>
+    {
     }
 }

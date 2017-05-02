@@ -2,7 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:converters="http://metro.mahapps.com/winfx/xaml/shared"
                     xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
-                    >
+                    xmlns:helpers="clr-namespace:HatNewUI.Helpers"
+                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity">
 
     <converters:ToUpperConverter x:Key="ToUpperConverter" />
 
@@ -161,6 +162,138 @@
                 </Style>
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <Style x:Key="InputDataGrid" x:Shared="False" TargetType="{x:Type DataGrid}" BasedOn="{StaticResource {x:Type DataGrid}}">
+        <Style.Setters>
+            <Setter Property="ItemsSource" Value="{Binding (helpers:AttachedProperties.InputDrivenGridDataContext).Items,RelativeSource={RelativeSource Self}}"/>
+            <Setter Property="SelectedItem" Value="{Binding (helpers:AttachedProperties.InputDrivenGridDataContext).SelectedItem,Mode=TwoWay,RelativeSource={RelativeSource Self}}"/>
+            <Setter Property="SelectedIndex" Value="{Binding (helpers:AttachedProperties.InputDrivenGridDataContext).SelectedIndex,Mode=TwoWay,RelativeSource={RelativeSource Self}}"/>
+            <Setter Property="CanUserReorderColumns" Value="False"/>
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="CanUserDeleteRows" Value="False"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="SelectionMode" Value="Single"/>
+            <Setter Property="RowStyle" Value="{StaticResource InputDataGridRow}"/>
+
+            <Setter Property="helpers:AttachedProperties.Triggers">
+                <Setter.Value>
+                    <helpers:StyleTriggerCollection >
+                        <i:EventTrigger EventName="Loaded" >
+                            <helpers:EventBinding 
+                                    Command="{Binding Path=TriggerVisual.(helpers:AttachedProperties.InputDrivenGridDataContext).CreatingDataGrid,                                     
+                                    RelativeSource={RelativeSource Self}}" PassEventArgsToCommand="True"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="BeginningEdit">
+                            <helpers:EventBinding 
+                                    Command="{Binding Path=TriggerVisual.(helpers:AttachedProperties.InputDrivenGridDataContext).BeginningEdit,                                     
+                                    RelativeSource={RelativeSource Self}}" PassEventArgsToCommand="True"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="CellEditEnding">
+                            <helpers:EventBinding 
+                                    Command="{Binding Path=TriggerVisual.(helpers:AttachedProperties.InputDrivenGridDataContext).EndingEdit,                                     
+                                    RelativeSource={RelativeSource Self}}" PassEventArgsToCommand="True"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="RowEditEnding">
+                            <helpers:EventBinding 
+                                    Command="{Binding Path=TriggerVisual.(helpers:AttachedProperties.InputDrivenGridDataContext).RowEditEnding,                                     
+                                    RelativeSource={RelativeSource Self}}" PassEventArgsToCommand="True"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="PreviewKeyDown">
+                            <helpers:EventBinding 
+                                    Command="{Binding Path=TriggerVisual.(helpers:AttachedProperties.InputDrivenGridDataContext).KeyDown,                                     
+                                    RelativeSource={RelativeSource Self}}" PassEventArgsToCommand="True"/>
+                        </i:EventTrigger>
+                    </helpers:StyleTriggerCollection>
+                </Setter.Value>
+            </Setter>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DataGrid}">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="{TemplateBinding Background}"
+                            Padding="{TemplateBinding Padding}"
+                            SnapsToDevicePixels="True">
+
+                            <ScrollViewer x:Name="DG_ScrollViewer"
+                                      Focusable="false">
+                                <ScrollViewer.Template>
+                                    <ControlTemplate TargetType="{x:Type ScrollViewer}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="*" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <Grid Grid.Column="1" Grid.Row="0">
+                                                <DataGridColumnHeadersPresenter x:Name="PART_ColumnHeadersPresenter"
+                                                                            Visibility="{Binding HeadersVisibility, 
+                                                                                        ConverterParameter={x:Static DataGridHeadersVisibility.Column}, 
+                                                                                        Converter={x:Static DataGrid.HeadersVisibilityConverter}, 
+                                                                                        RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
+
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
+                                                    <!--<TextBlock Text="MANAGE" FontWeight="DemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5, 5, 5, 8"/>-->
+                                                    <Button Content="REFRESH" Padding="10, 2" Margin="5, 5, 5, 8"
+                                                                    Command="{Binding DataContext.CurrentViewModel.Refresh,
+                                                                                        RelativeSource={RelativeSource FindAncestor,AncestorType={x:Type DataGrid}}}"/>
+                                                </StackPanel>
+                                            </Grid>
+
+                                            <Grid Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="*"/>
+                                                </Grid.RowDefinitions>
+
+                                                <!--ADD NEW ITEM BUTTON-->
+                                                <Button Content="New Item" HorizontalAlignment="Left" VerticalAlignment="Top"
+                                                        IsEnabled="{Binding DataContext.CurrentViewModel.IsEditing, Converter={StaticResource InvertBooleanConverter},RelativeSource={RelativeSource FindAncestor,AncestorType={x:Type local:AdminSettings}}}"
+                                                        Command="{Binding DataContext.CurrentViewModel.Add, RelativeSource={RelativeSource FindAncestor,AncestorType={x:Type local:AdminSettings}}}" Padding="10,2"
+                                                        CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType={x:Type DataGrid}}}"/>
+
+                                                <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" Grid.Row="1"
+                                                                        CanContentScroll="{TemplateBinding CanContentScroll}"/>
+                                            </Grid>
+
+                                            <ScrollBar x:Name="PART_VerticalScrollBar" Grid.Column="2" Maximum="{TemplateBinding ScrollableHeight}" Orientation="Vertical"
+                                                       Grid.Row="1" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
+                                                       Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                                       ViewportSize="{TemplateBinding ViewportHeight}" />
+
+
+                                            <Grid Grid.Column="1" Grid.Row="2">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="{Binding NonFrozenColumnsViewportHorizontalOffset, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <ScrollBar x:Name="PART_HorizontalScrollBar" Grid.Column="1" Maximum="{TemplateBinding ScrollableWidth}"
+                                                           Orientation="Horizontal" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"
+                                                           Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                                           ViewportSize="{TemplateBinding ViewportWidth}" />
+                                            </Grid>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </ScrollViewer.Template>
+
+                                <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                            </ScrollViewer>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
     </Style>
 
 </ResourceDictionary>

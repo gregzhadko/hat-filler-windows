@@ -5,15 +5,87 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HatNewUI.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:helpers="clr-namespace:HatNewUI.Helpers"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     d:DesignHeight="300"
     d:DesignWidth="300"
     Background="White"
     DataContext="{Binding FillerViewModel, Source={StaticResource Locator}}"
     mc:Ignorable="d">
-    <Grid>
-        <Button
-            Width="100"
-            Height="40"
-            Content="Test" />
-    </Grid>
+    <DataGrid
+                    Name="UsersDataGrid"
+                    Margin="5"
+                    helpers:AttachedProperties.InputDrivenGridDataContext="{Binding Users}"
+                    Style="{StaticResource InputDataGrid}">
+
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="PreviewMouseDoubleClick">
+                <utils:EventBinding Command="{Binding DataContext.Users.MouseDoubleClicked, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:AdminSettings}}}" PassEventArgsToCommand="True" />
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
+
+        <DataGrid.Columns>
+            <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding UserName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                            EditingElementStyle="{StaticResource ValidatedTextBoxStyle}"
+                            Header="USERNAME" />
+            <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding RawPassword, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource, Converter={StaticResource PasswordConverter}}"
+                            EditingElementStyle="{StaticResource ValidatedTextBoxStyle}"
+                            Header="PASSWORD" />
+            <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding FirstName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                            EditingElementStyle="{StaticResource ValidatedTextBoxStyle}"
+                            Header="FIRST NAME" />
+            <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding LastName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                            EditingElementStyle="{StaticResource ValidatedTextBoxStyle}"
+                            Header="LAST NAME" />
+
+            <DataGridTemplateColumn>
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+
+                            <Button
+                                            Margin="2"
+                                            Padding="10,2"
+                                            Command="{Binding DataContext.CurrentViewModel.Edit, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:AdminSettings}}}"
+                                            Content="Edit" />
+
+                            <Button
+                                            Margin="2"
+                                            Padding="10,2"
+                                            Command="{Binding DataContext.CurrentViewModel.Delete, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:AdminSettings}}}"
+                                            Content="Archive" />
+                        </StackPanel>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+                <DataGridTemplateColumn.CellEditingTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+
+                            <Button
+                                            Margin="2"
+                                            Padding="10,2"
+                                            Command="{Binding DataContext.CurrentViewModel.Add, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:AdminSettings}}}"
+                                            Content="Save" />
+
+                            <Button
+                                            Margin="2"
+                                            Padding="10,2"
+                                            Command="{Binding DataContext.CurrentViewModel.Cancel, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:AdminSettings}}}"
+                                            Content="Cancel" />
+                        </StackPanel>
+                    </DataTemplate>
+
+                </DataGridTemplateColumn.CellEditingTemplate>
+
+            </DataGridTemplateColumn>
+        </DataGrid.Columns>
+    </DataGrid>
 </UserControl>

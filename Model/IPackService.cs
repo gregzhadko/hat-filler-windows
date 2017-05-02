@@ -5,7 +5,7 @@ namespace Model
 {
     public interface IPackService
     {
-        Pack GetPackById(int port, int id);
+        Pack GetPackById(int id);
 
         void EditPack(int id, string name, string description);
 

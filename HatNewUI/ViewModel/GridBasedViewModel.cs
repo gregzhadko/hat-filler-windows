@@ -31,7 +31,7 @@ namespace HatNewUI.ViewModel
 
 
 
-        private T BackupItem { get; set; }
+        protected T BackupItem { get; set; }
 
         private T _selectedItem;
         public T SelectedItem
@@ -130,7 +130,7 @@ namespace HatNewUI.ViewModel
         protected virtual bool CanStartEdit() { return true; }
         protected virtual void UpdateChangedItem() { }
 
-        void AcceptChanges()
+        private void AcceptChanges()
         {
             if (!CheckItemValid()) return;
             StopEditingMode();
@@ -142,8 +142,8 @@ namespace HatNewUI.ViewModel
             }
             else
             {
-                ClearBackupItem();
                 UpdateItem();
+                ClearBackupItem();
                 if (ReloadOnlyEditedItems) UpdateChangedItem();
                 else RefreshAction();
             }
@@ -207,7 +207,7 @@ namespace HatNewUI.ViewModel
         }
 
 
-        void StopEditingMode()
+        private void StopEditingMode()
         {
 
             var selectedRow = (DataGridRow)DataGrid.ItemContainerGenerator.ContainerFromIndex(SelectedIndex);
@@ -224,7 +224,7 @@ namespace HatNewUI.ViewModel
         }
 
 
-        void MoveNextCell()
+        private void MoveNextCell()
         {
             if (DataGrid.CurrentCell == default(DataGridCellInfo) || !IsEditing) return;
 

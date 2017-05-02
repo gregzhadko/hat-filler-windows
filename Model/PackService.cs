@@ -46,6 +46,8 @@ namespace Model
             }
         }
 
+        public void UpdatePhrase(PhraseItem phrase)
+
         public void ReviewPhrase(int packId, PhraseItem phrase, string reviewerName, State state)
         {
             GetResponceFromServer($"reviewPackWord?id={packId}&word={phrase.Phrase}&author={reviewerName}&state={(int)state}", 8091);
@@ -57,14 +59,14 @@ namespace Model
             return packsInfo.Select(p => new Pack { Id = Convert.ToInt32(p["id"]), Name = p["name"].ToString() });
         }
 
-        public Pack GetPackById(int port, int id)
+        public Pack GetPackById(int id)
         {
             if (id == 0)
             {
                 return null;
             }
 
-            var response = GetResponceFromServer($"getPack?id={id}", port);
+            var response = GetResponceFromServer($"getPack?id={id}", 8081);
 
             var pack = JsonConvert.DeserializeObject<Pack>(response);
             if (pack.Phrases == null)
