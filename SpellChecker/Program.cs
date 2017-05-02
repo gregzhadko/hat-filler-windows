@@ -15,15 +15,16 @@ namespace SpellChecker
     {
         private static PackService _service;
         private static List<Pack> _packs = new List<Pack>();
+        private static List<string> _skippedPhrases = File.ReadAllLines("SkipDictionary.txt").ToList();
 
         public static void Main(string[] args)
         {
             Console.ForegroundColor = ConsoleColor.Green;
             _service = new PackService();
             Console.OutputEncoding = Encoding.UTF8;
-            Console.WriteLine("Data loading...");
+            Console.WriteLine("Загружаю паки...");
             LoadPacks();
-            Console.WriteLine("Data loading is completed");
+            Console.WriteLine("Загрузка паков завершена");
 
             var yandexSpellCheck = new YandexSpeller();
 
@@ -47,8 +48,8 @@ namespace SpellChecker
 
         private static void InitCustomDictionary(Hunspell hunSpell)
         {
-            string[] lines = File.ReadAllLines("CustomDictionary.txt");
-            foreach (var line in lines)
+            var customWords = File.ReadAllLines("CustomDictionary.txt");
+            foreach (var line in customWords)
             {
                 hunSpell.Add(line);
             }
@@ -59,7 +60,7 @@ namespace SpellChecker
             var words = GetWords(phrase);
             foreach (var word in words.Select(w => w.ToLowerInvariant()))
             {
-                if (!hunSpell.Spell(word) && speller.CheckText(word, Lang.Ru | Lang.En, Options.IgnoreCapitalization, TextFormat.Plain).Errors.Any())
+                if (!hunSpell.Spell(word) && !ExistsInSkipped(word, phrase, pack.Id) && speller.CheckText(word, Lang.Ru | Lang.En, Options.IgnoreCapitalization, TextFormat.Plain).Errors.Any())
                 {
                     var color = Console.ForegroundColor;
                     Console.Write($"{DateTime.Now:hh:mm:ss}: Ошибка в слове ");
@@ -74,19 +75,35 @@ namespace SpellChecker
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.Write(phrase);
                     Console.ForegroundColor = color;
-                    Console.WriteLine($" Может добавим в словарь слово");
+                    Console.WriteLine($" Добавим слово в словарь или пропустим в конкретном случае? (d - dictionary, s - skip)");
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.Write(word);
                     Console.ForegroundColor = color;
-                    Console.Write("? y/n\n");
                     var key = Console.ReadKey();
-                    if (key.KeyChar == 'y' || key.KeyChar == 'Y')
+                    if (key.KeyChar == 'y' || key.KeyChar == 'Y' || key.KeyChar == 'd' || key.KeyChar == 'D')
                     {
                         SaveNewCustomWord(hunSpell, word);
+                    }
+                    else if (key.KeyChar == 's' || key.KeyChar == 'S')
+                    {
+                        SaveNewSkipWord(word, phrase, pack.Id);
                     }
                     Console.WriteLine("Работаем Дальше!");
                 }
             }
+        }
+
+        private static bool ExistsInSkipped(string word, string wholeWord, int id)
+        {
+            foreach(var line in _skippedPhrases.Select(s => s.Split(new[] { '|' })).ToArray())
+            {
+                if(String.Compare(line[0], word, true) == 0 && String.Compare(line[1], id.ToString(), true) == 0 && String.Compare(line[2], wholeWord, true) == 0)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private static void SaveNewCustomWord(Hunspell hunSpell, string word)
@@ -94,7 +111,15 @@ namespace SpellChecker
             hunSpell.Add(word);
             File.AppendAllLines(@"..\..\CustomDictionary.txt", new string[] { word });
             File.AppendAllLines(@"CustomDictionary.txt", new string[] { word });
-            Console.WriteLine($"\nСлово {word} было добавлено");
+            Console.WriteLine($"\nСлово {word} было добавлено в персональный словарь");
+        }
+
+        private static void SaveNewSkipWord(string word, string wholeWord, int packId)
+        {
+            var stringToSave = $"{word}|{packId}|{wholeWord}";
+            File.AppendAllLines(@"..\..\SkipDictionary.txt", new string[] { stringToSave });
+            File.AppendAllLines(@"SkipDictionary.txt", new string[] { stringToSave });
+            Console.WriteLine($"\nСлово {word} было добавлено в словарь пропущенных слов");
         }
 
         static void LoadPacks()
@@ -102,7 +127,7 @@ namespace SpellChecker
             var packs = _service.GetAllPacksInfo(8081, out string error);
             foreach(var pack in packs)
             {
-                Console.WriteLine($"Loading of pack {pack.Name}");
+                Console.WriteLine($"Загрузка пака {pack.Name}");
                 _packs.Add(_service.GetPackById(8081, pack.Id, out error));
             }
         }
