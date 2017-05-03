@@ -20,7 +20,7 @@
 
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="PreviewMouseDoubleClick">
-                <utils:EventBinding Command="{Binding DataContext.Users.MouseDoubleClicked, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:AdminSettings}}}" PassEventArgsToCommand="True" />
+                <helpers:EventBinding Command="{Binding DataContext.Users.MouseDoubleClicked, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:AdminSettings}}}" PassEventArgsToCommand="True" />
             </i:EventTrigger>
         </i:Interaction.Triggers>
 

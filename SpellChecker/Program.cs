@@ -129,7 +129,7 @@ namespace SpellChecker
             foreach(var pack in packs)
             {
                 Console.WriteLine($"Загрузка пака {pack.Name}");
-                _packs.Add(_service.GetPackById(8081, pack.Id));
+                _packs.Add(_service.GetPackById(pack.Id));
             }
         }
 

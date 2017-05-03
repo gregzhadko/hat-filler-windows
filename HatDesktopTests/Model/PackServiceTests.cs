@@ -18,7 +18,7 @@ namespace HatDesktopTests.Model
         [Test]
         public void GetPackInfoTest()
         {
-            var pack = _packService.GetPackById(Port, Id);
+            var pack = _packService.GetPackById(Id);
             Assert.IsNotNull(pack);
             Assert.IsNotEmpty(pack.Name);
             Assert.IsNotEmpty(pack.Description);
@@ -28,12 +28,12 @@ namespace HatDesktopTests.Model
         [Test]
         public void EditPackTest()
         {
-            var pack = _packService.GetPackById(Port, Id);
+            var pack = _packService.GetPackById(Id);
             var newName = Name.First();
             var newDescription = Lorem.Paragraph(1);
             _packService.EditPack(Id, newName, newDescription);
 
-            var newPack = _packService.GetPackById(Port, Id);
+            var newPack = _packService.GetPackById(Id);
 
             Assert.That(newPack.Name, Is.EqualTo(newName));
             Assert.That(newPack.Description, Is.EqualTo(newDescription));
@@ -57,7 +57,7 @@ namespace HatDesktopTests.Model
             var phrase = GenerateNewPhrase();
             _packService.AddPhrase(Id, phrase);
 
-            var newPack = _packService.GetPackById(Port, Id);
+            var newPack = _packService.GetPackById(Id);
             Assert.That(newPack.Phrases.Any(p => p.Phrase == phrase.Phrase));
 
             _packService.DeletePhrase(Id, phrase.Phrase);
@@ -66,11 +66,11 @@ namespace HatDesktopTests.Model
         [Test]
         public void DeleteSimplePhraseTest()
         {
-            var pack = _packService.GetPackById(Port, Id);
+            var pack = _packService.GetPackById(Id);
             var phrase = GenerateNewPhrase();
             _packService.AddPhrase(Id, phrase);
             _packService.DeletePhrase(Id, phrase.Phrase);
-            var newPack = _packService.GetPackById(Port, Id);
+            var newPack = _packService.GetPackById(Id);
             Assert.That(pack.Phrases.Count, Is.EqualTo(newPack.Phrases.Count));
         }
 
@@ -80,7 +80,7 @@ namespace HatDesktopTests.Model
             var phrase = GenerateNewPhrase();
             _packService.AddPhrase(Id, phrase);
 
-            var newPack = _packService.GetPackById(Port, Id);
+            var newPack = _packService.GetPackById(Id);
             Assert.That(newPack.Phrases.Any(p => p.Phrase == phrase.Phrase && p.Description == phrase.Description));
 
             _packService.DeletePhrase(Id, phrase.Phrase);
@@ -89,11 +89,11 @@ namespace HatDesktopTests.Model
         [Test]
         public void DeletePhraseTest()
         {
-            var pack = _packService.GetPackById(Port, Id);
+            var pack = _packService.GetPackById(Id);
             var phrase = GenerateNewPhrase();
             _packService.AddPhrase(Id, phrase);
             _packService.DeletePhrase(Id, phrase.Phrase);
-            var newPack = _packService.GetPackById(Port, Id);
+            var newPack = _packService.GetPackById(Id);
             Assert.That(pack.Phrases.Count, Is.EqualTo(newPack.Phrases.Count));
         }
 
@@ -111,7 +111,7 @@ namespace HatDesktopTests.Model
             newPhrase.UpdateAuthor(_testAuthor);
             _packService.EditPhrase(Id, oldPhrase, newPhrase, _testAuthor);
 
-            var pack = _packService.GetPackById(Port, Id);
+            var pack = _packService.GetPackById(Id);
             Assert.That(pack.Phrases.Any(p => p.Phrase == newPhrase.Phrase && p.Description == newPhrase.Description));
             Assert.That(pack.Phrases.Select(p => p.Description), Is.Not.Contains(oldPhrase.Description));
 
@@ -132,7 +132,7 @@ namespace HatDesktopTests.Model
             newPhrase.UpdateAuthor(_testAuthor);
             _packService.EditPhrase(Id, oldPhrase, newPhrase, _testAuthor);
 
-            var pack = _packService.GetPackById(Port, Id);
+            var pack = _packService.GetPackById(Id);
             Assert.That(pack.Phrases.Any(p => p.Phrase == newPhrase.Phrase && p.Description == newPhrase.Description));
             Assert.That(pack.Phrases.Select(p => p.Phrase), Is.Not.Contains(oldPhrase.Phrase));
             Assert.That(pack.Phrases.Select(p => p.Description), Is.Not.Contains(oldPhrase.Description));
@@ -163,7 +163,7 @@ namespace HatDesktopTests.Model
         public void PhraseCountTest()
         {
             //Get pack food
-            var pack = _packService.GetPackById(Port, 9);
+            var pack = _packService.GetPackById(9);
             Assert.That(pack.Phrases.Count, Is.GreaterThan(50));
         }
     }

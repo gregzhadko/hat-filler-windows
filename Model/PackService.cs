@@ -46,8 +46,6 @@ namespace Model
             }
         }
 
-        public void UpdatePhrase(PhraseItem phrase)
-
         public void ReviewPhrase(int packId, PhraseItem phrase, string reviewerName, State state)
         {
             GetResponceFromServer($"reviewPackWord?id={packId}&word={phrase.Phrase}&author={reviewerName}&state={(int)state}", 8091);
