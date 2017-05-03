@@ -128,8 +128,13 @@ namespace SpellChecker
             var packs = _service.GetAllPacksInfo(8081);
             foreach(var pack in packs)
             {
-                Console.WriteLine($"Загрузка пака {pack.Name}");
+<<<<<<< HEAD
+                Console.WriteLine($"Loading of pack {pack.Name}");
                 _packs.Add(_service.GetPackById(8081, pack.Id));
+=======
+                Console.WriteLine($"Загрузка пака {pack.Name}");
+                _packs.Add(_service.GetPackById(8081, pack.Id, out error));
+>>>>>>> origin/master
             }
         }
 
