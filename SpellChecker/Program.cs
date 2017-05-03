@@ -60,38 +60,55 @@ namespace SpellChecker
             var words = GetWords(phrase);
             foreach (var word in words.Select(w => w.ToLowerInvariant()))
             {
-                if (!hunSpell.Spell(word) && !ExistsInSkipped(word, phrase, pack.Id) && speller.CheckText(word, Lang.Ru | Lang.En, Options.IgnoreCapitalization, TextFormat.Plain).Errors.Any())
+                if (!hunSpell.Spell(word) && !ExistsInSkipped(word, phrase, pack.Id))
                 {
-                    var color = Console.ForegroundColor;
-                    Console.Write($"{DateTime.Now:hh:mm:ss}: Ошибка в слове ");
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write(word);
-                    Console.ForegroundColor = color;
-                    Console.Write(" из пака ");
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Console.Write(pack.Name);
-                    Console.ForegroundColor = color;
-                    Console.Write(" Полная фраза: ");
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Console.Write(phrase);
-                    Console.ForegroundColor = color;
-                    Console.WriteLine($" Добавим слово в словарь или пропустим в конкретном случае? (d - dictionary, s - skip)");
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write(word);
-                    Console.WriteLine();
-                    Console.ForegroundColor = color;
-                    var key = Console.ReadKey();
-                    if (key.KeyChar == 'y' || key.KeyChar == 'Y' || key.KeyChar == 'd' || key.KeyChar == 'D')
+                    if (YandexSpellCheck(speller, word))
+                    {
+                        ShowSpellErrorMessages(pack, phrase, word);
+                        var key = Console.ReadKey();
+                        if (key.KeyChar == 'y' || key.KeyChar == 'Y' || key.KeyChar == 'd' || key.KeyChar == 'D')
+                        {
+                            SaveNewCustomWord(hunSpell, word);
+                        }
+                        else if (key.KeyChar == 's' || key.KeyChar == 'S')
+                        {
+                            SaveNewSkipWord(word, phrase, pack.Id);
+                        }
+                        Console.WriteLine("Работаем Дальше!");
+                    }
+                    else
                     {
                         SaveNewCustomWord(hunSpell, word);
                     }
-                    else if (key.KeyChar == 's' || key.KeyChar == 'S')
-                    {
-                        SaveNewSkipWord(word, phrase, pack.Id);
-                    }
-                    Console.WriteLine("Работаем Дальше!");
                 }
             }
+        }
+
+        private static bool YandexSpellCheck(IYandexSpeller speller, string word)
+        {
+            return speller.CheckText(word, Lang.Ru | Lang.En, Options.IgnoreCapitalization, TextFormat.Plain).Errors.Any();
+        }
+
+        private static void ShowSpellErrorMessages(Pack pack, string phrase, string word)
+        {
+            var color = Console.ForegroundColor;
+            Console.Write($"{DateTime.Now:hh:mm:ss}: Ошибка в слове ");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write(word);
+            Console.ForegroundColor = color;
+            Console.Write(" из пака ");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write(pack.Name);
+            Console.ForegroundColor = color;
+            Console.Write(" Полная фраза: ");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write(phrase);
+            Console.ForegroundColor = color;
+            Console.WriteLine($" Добавим слово в словарь или пропустим в конкретном случае? (d - dictionary, s - skip)");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write(word);
+            Console.WriteLine();
+            Console.ForegroundColor = color;
         }
 
         private static bool ExistsInSkipped(string word, string wholeWord, int id)
