@@ -91,6 +91,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\BasicConverters.cs" />
     <Compile Include="Helpers\EventBinding.cs" />
     <Compile Include="ViewModel\FillerViewModel.cs" />
     <Compile Include="Views\FillerView.xaml.cs">
