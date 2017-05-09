@@ -15,36 +15,31 @@
     <DataGrid
         Name="UsersDataGrid"
         Margin="5"
-        helpers:AttachedProperties.InputDrivenGridDataContext="{Binding Users}"
+        helpers:AttachedProperties.InputDrivenGridDataContext="{Binding FillerViewModel, Source={StaticResource Locator}}"
         Style="{StaticResource InputDataGrid}">
 
-        <i:Interaction.Triggers>
+        <!--<i:Interaction.Triggers>
             <i:EventTrigger EventName="PreviewMouseDoubleClick">
                 <helpers:EventBinding Command="{Binding DataContext.Users.MouseDoubleClicked, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" PassEventArgsToCommand="True" />
             </i:EventTrigger>
-        </i:Interaction.Triggers>
+        </i:Interaction.Triggers>-->
 
         <DataGrid.Columns>
             <DataGridTextColumn
                 Width="*"
-                Binding="{Binding UserName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                Binding="{Binding Phrase, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                 EditingElementStyle="{StaticResource ValidatedTextBoxStyle}"
-                Header="USERNAME" />
+                Header="PHRASE" />
             <DataGridTextColumn
                 Width="*"
-                Binding="{Binding RawPassword, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource, Converter={StaticResource PasswordConverter}}"
+                Binding="{Binding Description, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                 EditingElementStyle="{StaticResource ValidatedTextBoxStyle}"
-                Header="PASSWORD" />
+                Header="COMPLEXITY" />
             <DataGridTextColumn
                 Width="*"
-                Binding="{Binding FirstName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                Binding="{Binding Description, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                 EditingElementStyle="{StaticResource ValidatedTextBoxStyle}"
-                Header="FIRST NAME" />
-            <DataGridTextColumn
-                Width="*"
-                Binding="{Binding LastName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
-                EditingElementStyle="{StaticResource ValidatedTextBoxStyle}"
-                Header="LAST NAME" />
+                Header="DESCRIPTION" />
 
             <DataGridTemplateColumn>
                 <DataGridTemplateColumn.CellTemplate>
