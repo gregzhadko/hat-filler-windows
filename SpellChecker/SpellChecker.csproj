@@ -48,19 +48,13 @@
       <HintPath>..\packages\NHunspell.1.2.5554.16953\lib\net\NHunspell.dll</HintPath>
     </Reference>
     <Reference Include="RestSharp, Version=100.0.0.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
-      <HintPath>..\packages\RestSharpSigned.105.0.1\lib\net4\RestSharp.dll</HintPath>
+      <HintPath>..\packages\RestSharpSigned.105.2.3\lib\net452\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmLightLibs.5.3.0.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
     <Reference Include="Yandex.Speller.Api, Version=1.0.5650.35359, Culture=neutral, PublicKeyToken=13753ec45a8638dd, processorArchitecture=MSIL">
       <HintPath>..\packages\Yandex.Speller.Api.1.0.5650.35359\lib\net40-Client\Yandex.Speller.Api.dll</HintPath>
     </Reference>

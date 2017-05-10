@@ -37,20 +37,20 @@ namespace Model
 
         public double Complexity
         {
-            get { return _complexity; }
-            set { Set(nameof(Complexity), ref _complexity, value); }
+            get => _complexity;
+            set => Set(nameof(Complexity), ref _complexity, value);
         }
 
         public string Description
         {
-            get { return _description; }
-            set { Set(nameof(Description), ref _description, value); }
+            get => _description;
+            set => Set(nameof(Description), ref _description, value);
         }
 
         public string Phrase
         {
-            get { return _phrase; }
-            set { Set(nameof(Phrase), ref _phrase, value); }
+            get => _phrase;
+            set => Set(nameof(Phrase), ref _phrase, value);
         }
 
         public string ReviewedBy => ReviewerObjects.FirstOrDefault(r => r.ReviewState == State.Accept)?.Author;
@@ -108,19 +108,10 @@ namespace Model
             return phrase;
         }
 
-        public bool IsReviewedBy(string author)
-        {
-            return ReviewerObjects.First(r => r.Author == author).ReviewState == State.Accept;
-        }
+        public bool IsReviewedBy(string author) => ReviewerObjects.First(r => r.Author == author).ReviewState == State.Accept;
 
-        public bool IsWantToEditBy(string author)
-        {
-            return ReviewerObjects.First(r => r.Author == author).ReviewState == State.Edit;
-        }
+        public bool IsWantToEditBy(string author) => ReviewerObjects.First(r => r.Author == author).ReviewState == State.Edit;
 
-        public bool IsWantToDeleteBy(string author)
-        {
-            return ReviewerObjects.First(r => r.Author == author).ReviewState == State.Delete;
-        }
+        public bool IsWantToDeleteBy(string author) => ReviewerObjects.First(r => r.Author == author).ReviewState == State.Delete;
     }
 }

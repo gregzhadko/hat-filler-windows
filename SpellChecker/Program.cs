@@ -14,8 +14,8 @@ namespace SpellChecker
     public class Program
     {
         private static PackService _service;
-        private static List<Pack> _packs = new List<Pack>();
-        private static List<string> _skippedPhrases = File.ReadAllLines("SkipDictionary.txt").ToList();
+        private static readonly List<Pack> Packs = new List<Pack>();
+        private static readonly List<string> SkippedPhrases = File.ReadAllLines("SkipDictionary.txt").ToList();
 
         public static void Main(string[] args)
         {
@@ -32,7 +32,7 @@ namespace SpellChecker
             {
                 InitCustomDictionary(hunSpell);
 
-                foreach (var pack in _packs)
+                foreach (var pack in Packs)
                 {
                     Console.WriteLine($"Смотрю пак {pack.Name}");
                     foreach (var phrase in pack.Phrases)
@@ -60,26 +60,32 @@ namespace SpellChecker
             var words = GetWords(phrase);
             foreach (var word in words.Select(w => w.ToLowerInvariant()))
             {
-                if (!hunSpell.Spell(word) && !ExistsInSkipped(word, phrase, pack.Id))
+                if (hunSpell.Spell(word) || ExistsInSkipped(word, phrase, pack.Id))
                 {
-                    if (YandexSpellCheck(speller, word))
+                    continue;
+                }
+                if (YandexSpellCheck(speller, word))
+                {
+                    ShowSpellErrorMessages(pack, phrase, word);
+                    var key = Console.ReadKey();
+                    switch (key.KeyChar)
                     {
-                        ShowSpellErrorMessages(pack, phrase, word);
-                        var key = Console.ReadKey();
-                        if (key.KeyChar == 'y' || key.KeyChar == 'Y' || key.KeyChar == 'd' || key.KeyChar == 'D')
-                        {
+                        case 'y':
+                        case 'Y':
+                        case 'd':
+                        case 'D':
                             SaveNewCustomWord(hunSpell, word);
-                        }
-                        else if (key.KeyChar == 's' || key.KeyChar == 'S')
-                        {
+                            break;
+                        case 's':
+                        case 'S':
                             SaveNewSkipWord(word, phrase, pack.Id);
-                        }
-                        Console.WriteLine("Работаем Дальше!");
+                            break;
                     }
-                    else
-                    {
-                        SaveNewCustomWord(hunSpell, word);
-                    }
+                    Console.WriteLine("Работаем Дальше!");
+                }
+                else
+                {
+                    SaveNewCustomWord(hunSpell, word);
                 }
             }
         }
@@ -104,7 +110,7 @@ namespace SpellChecker
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write(phrase);
             Console.ForegroundColor = color;
-            Console.WriteLine($" Добавим слово в словарь или пропустим в конкретном случае? (d - dictionary, s - skip)");
+            Console.WriteLine(" Добавим слово в словарь или пропустим в конкретном случае? (d - dictionary, s - skip)");
             Console.ForegroundColor = ConsoleColor.Red;
             Console.Write(word);
             Console.WriteLine();
@@ -113,30 +119,24 @@ namespace SpellChecker
 
         private static bool ExistsInSkipped(string word, string wholeWord, int id)
         {
-            foreach (var line in _skippedPhrases.Select(s => s.Split(new[] { '|' })).ToArray())
-            {
-                if (String.Compare(line[0], word, true) == 0 && String.Compare(line[1], id.ToString(), true) == 0 && String.Compare(line[2], wholeWord, true) == 0)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return SkippedPhrases.Select(s => s.Split('|')).Any(line => string.Compare(line[0], word, StringComparison.OrdinalIgnoreCase) == 0 &&
+                                                                         string.Compare(line[1], id.ToString(), StringComparison.OrdinalIgnoreCase) == 0 &&
+                                                                         string.Compare(line[2], wholeWord, StringComparison.OrdinalIgnoreCase) == 0);
         }
 
         private static void SaveNewCustomWord(Hunspell hunSpell, string word)
         {
             hunSpell.Add(word);
-            File.AppendAllLines(@"..\..\CustomDictionary.txt", new string[] { word });
-            File.AppendAllLines(@"CustomDictionary.txt", new string[] { word });
+            File.AppendAllLines(@"..\..\CustomDictionary.txt", new[] {word});
+            File.AppendAllLines(@"CustomDictionary.txt", new[] {word});
             Console.WriteLine($"\nСлово {word} было добавлено в персональный словарь");
         }
 
         private static void SaveNewSkipWord(string word, string wholeWord, int packId)
         {
             var stringToSave = $"{word}|{packId}|{wholeWord}";
-            File.AppendAllLines(@"..\..\SkipDictionary.txt", new string[] { stringToSave });
-            File.AppendAllLines(@"SkipDictionary.txt", new string[] { stringToSave });
+            File.AppendAllLines(@"..\..\SkipDictionary.txt", new[] {stringToSave});
+            File.AppendAllLines(@"SkipDictionary.txt", new[] {stringToSave});
             Console.WriteLine($"\nСлово {word} было добавлено в словарь пропущенных слов");
         }
 
@@ -146,7 +146,7 @@ namespace SpellChecker
             foreach (var pack in packs)
             {
                 Console.WriteLine($"Загрузка пака {pack.Name}");
-                _packs.Add(_service.GetPackById(8081, pack.Id, out error));
+                Packs.Add(_service.GetPackById(8081, pack.Id, out error));
             }
         }
 
@@ -155,8 +155,8 @@ namespace SpellChecker
             var matches = Regex.Matches(input, @"\b[\w']*\b");
 
             var words = from m in matches.Cast<Match>()
-                        where !string.IsNullOrEmpty(m.Value)
-                        select TrimSuffix(m.Value);
+                where !string.IsNullOrEmpty(m.Value)
+                select TrimSuffix(m.Value);
 
             return words.ToArray();
         }
