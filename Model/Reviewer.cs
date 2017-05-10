@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using GalaSoft.MvvmLight;
+﻿using GalaSoft.MvvmLight;
+using System.Linq;
 
 namespace Model
 {

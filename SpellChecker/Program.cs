@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Model;
+using NHunspell;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Model;
-using NHunspell;
 using Yandex.Speller.Api;
 using Yandex.Speller.Api.DataContract;
-using System.IO;
 
 namespace SpellChecker
 {
@@ -55,7 +55,7 @@ namespace SpellChecker
             }
         }
 
-        static void SpellPhrase(Pack pack, string phrase, Hunspell hunSpell, IYandexSpeller speller)
+        private static void SpellPhrase(Pack pack, string phrase, Hunspell hunSpell, IYandexSpeller speller)
         {
             var words = GetWords(phrase);
             foreach (var word in words.Select(w => w.ToLowerInvariant()))
@@ -113,9 +113,9 @@ namespace SpellChecker
 
         private static bool ExistsInSkipped(string word, string wholeWord, int id)
         {
-            foreach(var line in _skippedPhrases.Select(s => s.Split(new[] { '|' })).ToArray())
+            foreach (var line in _skippedPhrases.Select(s => s.Split(new[] { '|' })).ToArray())
             {
-                if(String.Compare(line[0], word, true) == 0 && String.Compare(line[1], id.ToString(), true) == 0 && String.Compare(line[2], wholeWord, true) == 0)
+                if (String.Compare(line[0], word, true) == 0 && String.Compare(line[1], id.ToString(), true) == 0 && String.Compare(line[2], wholeWord, true) == 0)
                 {
                     return true;
                 }
@@ -140,17 +140,17 @@ namespace SpellChecker
             Console.WriteLine($"\nСлово {word} было добавлено в словарь пропущенных слов");
         }
 
-        static void LoadPacks()
+        private static void LoadPacks()
         {
             var packs = _service.GetAllPacksInfo(8081, out string error);
-            foreach(var pack in packs)
+            foreach (var pack in packs)
             {
                 Console.WriteLine($"Загрузка пака {pack.Name}");
                 _packs.Add(_service.GetPackById(8081, pack.Id, out error));
             }
         }
 
-        static string[] GetWords(string input)
+        private static string[] GetWords(string input)
         {
             var matches = Regex.Matches(input, @"\b[\w']*\b");
 
@@ -161,7 +161,7 @@ namespace SpellChecker
             return words.ToArray();
         }
 
-        static string TrimSuffix(string word)
+        private static string TrimSuffix(string word)
         {
             int apostropheLocation = word.IndexOf('\'');
             if (apostropheLocation != -1)
