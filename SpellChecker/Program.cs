@@ -143,10 +143,10 @@ namespace SpellChecker
         private static void LoadPacks()
         {
             var packs = _service.GetAllPacksInfo(8081);
-            foreach(var pack in packs)
+            foreach (var pack in packs)
             {
                 Console.WriteLine($"Загрузка пака {pack.Name}");
-                _packs.Add(_service.GetPackById(pack.Id));
+                Packs.Add(_service.GetPackById(pack.Id));
             }
         }
 
@@ -163,7 +163,7 @@ namespace SpellChecker
 
         private static string TrimSuffix(string word)
         {
-            int apostropheLocation = word.IndexOf('\'');
+            var apostropheLocation = word.IndexOf('\'');
             if (apostropheLocation != -1)
             {
                 word = word.Substring(0, apostropheLocation);
