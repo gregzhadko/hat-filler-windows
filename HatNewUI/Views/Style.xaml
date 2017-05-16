@@ -8,6 +8,7 @@
     xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls">
 
     <converters:ToUpperConverter x:Key="ToUpperConverter" />
+    <converters1:MultiBindingEqualityComparer x:Key="MultiEqualityComparer" />
     <converters1:BooleanImplementConverter
         x:Key="InvertBooleanConverter"
         False="True"
@@ -536,6 +537,36 @@
     </Style>
 
     <Style
+        x:Key="InputDataGridRow"
+        BasedOn="{StaticResource {x:Type DataGridRow}}"
+        TargetType="{x:Type DataGridRow}">
+        <Setter Property="IsEnabled" Value="False" />
+        <Style.Triggers>
+
+            <DataTrigger Binding="{Binding Path=(helpers:AttachedProperties.InputDrivenGridDataContext).IsEditing, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" Value="False">
+                <Setter Property="IsEnabled" Value="True" />
+            </DataTrigger>
+
+
+            <DataTrigger Binding="{Binding Path=(helpers:AttachedProperties.InputDrivenGridDataContext).IsEditable, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" Value="False">
+                <Setter Property="IsEnabled" Value="False" />
+            </DataTrigger>
+
+
+            <DataTrigger Value="True">
+                <DataTrigger.Binding>
+                    <MultiBinding Converter="{StaticResource MultiEqualityComparer}">
+                        <Binding />
+                        <Binding Path="(helpers:AttachedProperties.InputDrivenGridDataContext).SelectedItem" RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}" />
+                    </MultiBinding>
+                </DataTrigger.Binding>
+                <Setter Property="IsEnabled" Value="True" />
+            </DataTrigger>
+
+        </Style.Triggers>
+    </Style>
+
+    <Style
         x:Key="InputDataGrid"
         x:Shared="False"
         BasedOn="{StaticResource {x:Type DataGrid}}"
@@ -679,6 +710,8 @@
             </Setter>
         </Style.Setters>
     </Style>
+
+
 
     <Style
         x:Key="ValidatedTextBoxStyle"
