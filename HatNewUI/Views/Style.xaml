@@ -718,6 +718,8 @@
         BasedOn="{StaticResource {x:Type TextBox}}"
         TargetType="{x:Type TextBox}">
         <!--<Setter Property="Validation.ErrorTemplate" Value="{StaticResource ValidationErrorTemplate}"/>-->
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="AcceptsReturn" Value="True" />
         <Setter Property="Validation.ErrorTemplate">
             <Setter.Value>
                 <ControlTemplate>

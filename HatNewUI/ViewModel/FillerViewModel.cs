@@ -17,6 +17,7 @@ namespace HatNewUI.ViewModel
         protected override void Init(params object[] parameters)
         {
             _service = new PackService();
+            LoadItems();
         }
 
         protected override void CommitNewItem()
@@ -62,7 +63,7 @@ namespace HatNewUI.ViewModel
         protected override void LoadItems()
         {
             //TODO: fix pack id
-            SelectedPack = _service.GetPackById(1);
+            SelectedPack = _service.GetPackById(10);
             Items = new ObservableCollection<PhraseItem>(SelectedPack.Phrases);
         }
 

@@ -72,6 +72,5 @@ namespace HatNewUI.ViewModel
             }
         }
 
-
     }
 }

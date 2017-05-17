@@ -26,20 +26,32 @@
 
         <DataGrid.Columns>
             <DataGridTextColumn
-                Width="*"
+                Width="Auto"
                 Binding="{Binding Phrase, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                 EditingElementStyle="{StaticResource ValidatedTextBoxStyle}"
                 Header="PHRASE" />
             <DataGridTextColumn
-                Width="*"
-                Binding="{Binding Description, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                Width="Auto"
+                Binding="{Binding Complexity, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                 EditingElementStyle="{StaticResource ValidatedTextBoxStyle}"
-                Header="COMPLEXITY" />
+                Header="COMPLEXITY">
+                <DataGridTextColumn.ElementStyle>
+                    <Style>
+                        <Setter Property="TextBlock.HorizontalAlignment" Value="Center" />
+                    </Style>
+                </DataGridTextColumn.ElementStyle>
+            </DataGridTextColumn>
             <DataGridTextColumn
                 Width="*"
                 Binding="{Binding Description, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                 EditingElementStyle="{StaticResource ValidatedTextBoxStyle}"
-                Header="DESCRIPTION" />
+                Header="DESCRIPTION">
+                <DataGridTextColumn.ElementStyle>
+                    <Style>
+                        <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                    </Style>
+                </DataGridTextColumn.ElementStyle>
+            </DataGridTextColumn>
 
             <DataGridTemplateColumn>
                 <DataGridTemplateColumn.CellTemplate>
@@ -56,7 +68,7 @@
                                 Margin="2"
                                 Padding="10,2"
                                 Command="{Binding DataContext.CurrentViewModel.Delete, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
-                                Content="Archive" />
+                                Content="Delete" />
                         </StackPanel>
                     </DataTemplate>
                 </DataGridTemplateColumn.CellTemplate>

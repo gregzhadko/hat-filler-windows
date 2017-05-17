@@ -193,7 +193,7 @@ namespace HatNewUI
 
             closeData.Content.ViewModel.CallBack?.Invoke(closeData.Content.Result);
 
-            ((Window)closeData.Content.ViewModel.VisualTree).Close();
+            //((Window)closeData.Content.ViewModel.VisualTree).Close();
         }
 
 
