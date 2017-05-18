@@ -61,8 +61,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LocalizationChecker.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SpellChecker.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="SkipDictionary.txt">
