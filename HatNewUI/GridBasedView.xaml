@@ -1,50 +1,87 @@
-﻿<UserControl x:Class="HatNewUI.GridBasedView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             xmlns:command="http://www.galasoft.ch/mvvmlight"
-             mc:Ignorable="d" x:Name="MyView"
-             d:DesignHeight="300" d:DesignWidth="1250">
+﻿<UserControl
+    x:Class="HatNewUI.GridBasedView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:command="http://www.galasoft.ch/mvvmlight"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="MyView"
+    d:DesignHeight="300"
+    d:DesignWidth="1250"
+    mc:Ignorable="d">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="MouseDoubleClick">
-            <command:EventToCommand Command="{Binding GridBasedDataContext.MouseDoubleClicked,ElementName=MyView}" 
-                                    PassEventArgsToCommand="True"/>
+            <command:EventToCommand Command="{Binding GridBasedDataContext.MouseDoubleClicked, ElementName=MyView}" PassEventArgsToCommand="True" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0,20" Height="40">
+        <Grid
+            Height="40"
+            Margin="0,20"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Top">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <Button Content="{Binding GridBasedDataContext.AddButtonText,ElementName=MyView}"
-                    Command="{Binding GridBasedDataContext.Add,ElementName=MyView}"
-                    VerticalAlignment="Stretch" Focusable="False" Margin="10,0" Grid.Column="0"/>
-            <Button Content="EDIT" Command="{Binding GridBasedDataContext.Edit,ElementName=MyView}"
-                    VerticalAlignment="Stretch" Focusable="False" Margin="10,0" Grid.Column="1"/>
-            <Button Content="ARCHIVE" Command="{Binding GridBasedDataContext.Delete,ElementName=MyView}"
-                    ToolTip="Archiving an entity removes it from lists and prohibits it from being used (deletion)"
-                    VerticalAlignment="Stretch" Focusable="False" Margin="10,0" Grid.Column="2"/>
-            <Button Content="CANCEL" Command="{Binding GridBasedDataContext.Cancel,ElementName=MyView}"
-                    VerticalAlignment="Stretch" Focusable="False" Margin="10,0" Grid.Column="3"/>
-            <Button Content="REFRESH" Command="{Binding GridBasedDataContext.Refresh,ElementName=MyView}"
-                    VerticalAlignment="Stretch" Focusable="False" Margin="10,0" Grid.Column="4"/>
-            <Button Content="?" Command="{Binding GridBasedDataContext.Help,ElementName=MyView}"
-                    VerticalAlignment="Stretch" Focusable="False" Margin="10,0" Grid.Column="5"/>
+            <Button
+                Grid.Column="0"
+                Margin="10,0"
+                VerticalAlignment="Stretch"
+                Command="{Binding GridBasedDataContext.Add, ElementName=MyView}"
+                Content="{Binding GridBasedDataContext.AddButtonText, ElementName=MyView}"
+                Focusable="False" />
+            <Button
+                Grid.Column="1"
+                Margin="10,0"
+                VerticalAlignment="Stretch"
+                Command="{Binding GridBasedDataContext.Edit, ElementName=MyView}"
+                Content="EDIT"
+                Focusable="False" />
+            <Button
+                Grid.Column="2"
+                Margin="10,0"
+                VerticalAlignment="Stretch"
+                Command="{Binding GridBasedDataContext.Delete, ElementName=MyView}"
+                Content="ARCHIVE"
+                Focusable="False"
+                ToolTip="Archiving an entity removes it from lists and prohibits it from being used (deletion)" />
+            <Button
+                Grid.Column="3"
+                Margin="10,0"
+                VerticalAlignment="Stretch"
+                Command="{Binding GridBasedDataContext.Cancel, ElementName=MyView}"
+                Content="CANCEL"
+                Focusable="False" />
+            <Button
+                Grid.Column="4"
+                Margin="10,0"
+                VerticalAlignment="Stretch"
+                Command="{Binding GridBasedDataContext.Refresh, ElementName=MyView}"
+                Content="REFRESH"
+                Focusable="False" />
+            <Button
+                Grid.Column="5"
+                Margin="10,0"
+                VerticalAlignment="Stretch"
+                Command="{Binding GridBasedDataContext.Help, ElementName=MyView}"
+                Content="?"
+                Focusable="False" />
         </Grid>
 
-        <ContentControl Content="{Binding GridContent, ElementName=MyView}"
-            Grid.Row="1" VerticalAlignment="Stretch"/>
+        <ContentControl
+            Grid.Row="1"
+            VerticalAlignment="Stretch"
+            Content="{Binding GridContent, ElementName=MyView}" />
 
     </Grid>
 </UserControl>

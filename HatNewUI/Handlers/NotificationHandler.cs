@@ -43,12 +43,12 @@ namespace HatNewUI.Handlers
             MessageBoxResult defaultResult = MessageBoxResult.None,
             Action<MessageBoxResult> callback = null)
         {
-            Application.Current.Dispatcher.Invoke((Action)(() =>
+            Application.Current.Dispatcher.Invoke((Action) (() =>
             {
-                var ownerWindow = new Window { WindowStartupLocation = WindowStartupLocation.CenterScreen, Topmost = true };
+                var ownerWindow = new Window {WindowStartupLocation = WindowStartupLocation.CenterScreen, Topmost = true};
                 //callback
                 var res = MessageBox.Show(ownerWindow, messageText, caption, button, icon, defaultResult);
-                if (callback != null) callback(res);
+                callback?.Invoke(res);
             }), null);
         }
 

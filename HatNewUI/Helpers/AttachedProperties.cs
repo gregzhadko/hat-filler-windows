@@ -226,7 +226,7 @@ namespace HatNewUI.Helpers
         #region InputDrivenGridDataContext
         public static object GetInputDrivenGridDataContext(DependencyObject obj)
         {
-            return (object)obj.GetValue(InputDrivenGridDataContextProperty);
+            return obj.GetValue(InputDrivenGridDataContextProperty);
         }
 
         public static void SetInputDrivenGridDataContext(DependencyObject obj, object value)

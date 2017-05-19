@@ -65,8 +65,7 @@ namespace HatNewUI.Handlers
         }
 
 
-        public static void PrepareExceptionInfo(Exception ex, StringBuilder sb,
-            StringBuilder traceSb, bool addStackTrace)
+        public static void PrepareExceptionInfo(Exception ex, StringBuilder sb, StringBuilder traceSb, bool addStackTrace)
         {
             if (ex == null) return;
             if (addStackTrace)
@@ -78,7 +77,9 @@ namespace HatNewUI.Handlers
             sb.AppendFormat(": {0}", ex.Message);
 
             if (ex.InnerException != null)
+            {
                 PrepareExceptionInfo(ex.InnerException, sb, traceSb, addStackTrace);
+            }
         }
 
         private static void ShowErrorUI(string message, string caption, string stackTrace)
