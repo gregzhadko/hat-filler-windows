@@ -20,8 +20,28 @@
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <Label Content="Selected Pack:" Style="{StaticResource MetroLabel}" />
+        <StackPanel
+            Grid.Row="0"
+            Margin="5"
+            Orientation="Horizontal">
+            <Label
+                Margin="5"
+                Content="SELECTED PACK:"
+                Style="{StaticResource MetroLabel}" />
+            <ComboBox
+                MinWidth="200"
+                Margin="5"
+                ItemsSource="{Binding Packs}"
+                SelectedValue="{Binding SelectedPack}"
+                Style="{DynamicResource MetroComboBox}" />
+            <Label
+                Margin="5"
+                Content="DESCRIPTION:"
+                Style="{StaticResource MetroLabel}" />
+            <Label
+                Margin="5"
+                Content="{Binding SelectedPack.Description}"
+                Style="{StaticResource MetroLabel}" />
         </StackPanel>
         <StackPanel Grid.Row="1" Orientation="Horizontal" />
 

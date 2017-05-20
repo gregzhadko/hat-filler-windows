@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace Model
 {
@@ -51,10 +52,17 @@ namespace Model
             GetResponceFromServer($"reviewPackWord?id={packId}&word={phrase.Phrase}&author={reviewerName}&state={(int)state}", 8091);
         }
 
-        public IEnumerable<Pack> GetAllPacksInfo(int port)
+        public IEnumerable<Pack> GetAllPacksInfo(int port = 8081)
         {
             var packsInfo = GetPacksInfo(port);
             return packsInfo.Select(p => new Pack { Id = Convert.ToInt32(p["id"]), Name = p["name"].ToString() });
+        }
+
+        public async Task<IEnumerable<Pack>> GetAllPackInfoAsync(int port = 8081)
+        {
+            var task = new Task<IEnumerable<Pack>>(() => GetAllPacksInfo(port));
+            task.Start();
+            return await task;
         }
 
         public Pack GetPackById(int id)
@@ -73,6 +81,13 @@ namespace Model
             }
             pack.Phrases = pack.Phrases.OrderBy(p => p.Phrase).ToList();
             return pack;
+        }
+
+        public async Task<Pack> GetPackByIdAsync(int id)
+        {
+            var task = new Task<Pack>(() => GetPackById(id));
+            task.Start();
+            return await task;
         }
 
         public List<Tuple<int, string>> GetPorts() => new List<Tuple<int, string>>

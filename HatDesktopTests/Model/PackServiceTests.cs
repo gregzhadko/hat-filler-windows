@@ -11,7 +11,7 @@ namespace HatDesktopTests.Model
     public class PackServiceTests
     {
         private readonly IPackService _packService = new PackService();
-        private static string _testAuthor = "zhadko";
+        private const string TestAuthor = "zhadko";
         private const int Port = 8081;
         private const int Id = 15;
 
@@ -108,8 +108,8 @@ namespace HatDesktopTests.Model
                 Description = $"{oldPhrase.Description} {Lorem.Sentence()}",
                 Complexity = oldPhrase.Complexity % 5,
             };
-            newPhrase.UpdateAuthor(_testAuthor);
-            _packService.EditPhrase(Id, oldPhrase, newPhrase, _testAuthor);
+            newPhrase.UpdateAuthor(TestAuthor);
+            _packService.EditPhrase(Id, oldPhrase, newPhrase, TestAuthor);
 
             var pack = _packService.GetPackById(Id);
             Assert.That(pack.Phrases.Any(p => p.Phrase == newPhrase.Phrase && p.Description == newPhrase.Description));
@@ -129,8 +129,8 @@ namespace HatDesktopTests.Model
                 Description = oldPhrase.Description + " " + Lorem.Sentence(),
                 Complexity = oldPhrase.Complexity % 5,
             };
-            newPhrase.UpdateAuthor(_testAuthor);
-            _packService.EditPhrase(Id, oldPhrase, newPhrase, _testAuthor);
+            newPhrase.UpdateAuthor(TestAuthor);
+            _packService.EditPhrase(Id, oldPhrase, newPhrase, TestAuthor);
 
             var pack = _packService.GetPackById(Id);
             Assert.That(pack.Phrases.Any(p => p.Phrase == newPhrase.Phrase && p.Description == newPhrase.Description));
@@ -148,7 +148,7 @@ namespace HatDesktopTests.Model
                 Description = Lorem.Sentence(),
                 Phrase = Name.First(),
             };
-            phrase.UpdateAuthor(_testAuthor);
+            phrase.UpdateAuthor(TestAuthor);
             return phrase;
         }
 
