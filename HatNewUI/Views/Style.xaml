@@ -643,7 +643,7 @@
                                                     <Button
                                                         Margin="5,5,5,8"
                                                         Padding="10,2"
-                                                        Command="{Binding DataContext.CurrentViewModel.Refresh, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
+                                                        Command="{Binding DataContext.Refresh, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
                                                         Content="REFRESH" />
                                                 </StackPanel>
                                             </Grid>
@@ -662,10 +662,10 @@
                                                     Padding="10,2"
                                                     HorizontalAlignment="Left"
                                                     VerticalAlignment="Top"
-                                                    Command="{Binding DataContext.CurrentViewModel.Add, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                    Command="{Binding DataContext.Add, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
                                                     CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
                                                     Content="New Item"
-                                                    IsEnabled="{Binding DataContext.CurrentViewModel.IsEditing, Converter={StaticResource InvertBooleanConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" />
+                                                    IsEnabled="{Binding DataContext.IsEditing, Converter={StaticResource InvertBooleanConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" />
 
                                                 <ScrollContentPresenter
                                                     x:Name="PART_ScrollContentPresenter"

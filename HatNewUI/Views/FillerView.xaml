@@ -95,13 +95,13 @@
                                 <Button
                                     Margin="2"
                                     Padding="10,2"
-                                    Command="{Binding DataContext.CurrentViewModel.Edit, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+                                    Command="{Binding DataContext.Edit, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
                                     Content="Edit" />
 
                                 <Button
                                     Margin="2"
                                     Padding="10,2"
-                                    Command="{Binding DataContext.CurrentViewModel.Delete, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+                                    Command="{Binding DataContext.Delete, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
                                     Content="Delete" />
                             </StackPanel>
                         </DataTemplate>
@@ -113,13 +113,13 @@
                                 <Button
                                     Margin="2"
                                     Padding="10,2"
-                                    Command="{Binding DataContext.CurrentViewModel.Add, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+                                    Command="{Binding DataContext.Add, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
                                     Content="Save" />
 
                                 <Button
                                     Margin="2"
                                     Padding="10,2"
-                                    Command="{Binding DataContext.CurrentViewModel.Cancel, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+                                    Command="{Binding DataContext.Cancel, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
                                     Content="Cancel" />
                             </StackPanel>
                         </DataTemplate>
