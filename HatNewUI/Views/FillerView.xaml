@@ -30,12 +30,14 @@
                 Style="{StaticResource MetroLabel}" />
             <ComboBox
                 MinWidth="200"
-                Margin="5"
+                Margin="5,6,5,4"
+                DisplayMemberPath="WholeName"
+                IsSynchronizedWithCurrentItem="True"
                 ItemsSource="{Binding Packs}"
-                SelectedValue="{Binding SelectedPack}"
-                Style="{DynamicResource MetroComboBox}" />
+                SelectedItem="{Binding SelectedPack, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                Style="{DynamicResource VirtualisedMetroComboBox}" />
             <Label
-                Margin="5"
+                Margin="0,5,0,5"
                 Content="DESCRIPTION:"
                 Style="{StaticResource MetroLabel}" />
             <Label

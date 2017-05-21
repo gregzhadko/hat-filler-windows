@@ -55,10 +55,7 @@ namespace Model
 
         public bool IsNew { get; set; }
 
-        public bool IsValid
-        {
-            get { return string.IsNullOrEmpty(Error); }
-        }
+        public bool IsValid => string.IsNullOrEmpty(Error);
 
         public string ReviewedBy => ReviewerObjects.FirstOrDefault(r => r.ReviewState == State.Accept)?.Author;
 

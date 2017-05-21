@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using HatNewUI.Handlers;
 using Model;
@@ -16,21 +17,19 @@ namespace HatNewUI.ViewModel
 
         protected override void Init(params object[] parameters)
         {
-            _isInitializing = true;
             _service = new PackService();
             InitialLoad();
-            LoadItems();
-            _isInitializing = false;
         }
 
         private async void InitialLoad()
         {
+            _isInitializing = true;
             var packs = _service.GetAllPackInfoAsync();
             var selectedPack = _service.GetPackByIdAsync(_defaultPackId);
             await Task.WhenAll(packs, selectedPack);
-            Packs = new ObservableCollection<Pack>(packs.Result);
+            Packs = new ObservableCollection<Pack>(packs.Result.OrderBy(p => p.Id));
             SelectedPack = selectedPack.Result;
-            Items = new ObservableCollection<PhraseItem>(SelectedPack.Phrases);
+            _isInitializing = false;
         }
 
         protected override void CommitNewItem()
@@ -75,15 +74,21 @@ namespace HatNewUI.ViewModel
 
         protected override void LoadItems()
         {
-            //TODO: fix pack id
-            SelectedPack = _service.GetPackById(10);
             Items = new ObservableCollection<PhraseItem>(SelectedPack.Phrases);
         }
 
         public Pack SelectedPack
         {
             get => _selectedPack;
-            set => Set(ref _selectedPack, value);
+            set
+            {
+                Set(ref _selectedPack, value);
+                if (!_isInitializing)
+                {
+                    _selectedPack = _service.GetPackById(_selectedPack.Id);
+                }
+                LoadItems();
+            }
         }
 
         public ObservableCollection<Pack> Packs
@@ -91,5 +96,6 @@ namespace HatNewUI.ViewModel
             get => _packs;
             set => Set(ref _packs, value);
         }
+
     }
 }

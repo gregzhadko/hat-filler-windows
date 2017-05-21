@@ -15,5 +15,8 @@ namespace Model
         public IList<PhraseItem> Phrases { get; set; } = new List<PhraseItem>();
 
         public override string ToString() => Name;
+
+        public string WholeName => $"{Id}. {Name}";
+
     }
 }
