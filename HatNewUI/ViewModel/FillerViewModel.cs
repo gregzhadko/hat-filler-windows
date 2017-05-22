@@ -12,8 +12,12 @@ namespace HatNewUI.ViewModel
         private PackService _service;
         private Pack _selectedPack;
         private ObservableCollection<Pack> _packs;
-        private int _defaultPackId = 1;
+
         private bool _isInitializing;
+
+        //TODO: Load author and default pack id from settings 
+        private int _defaultPackId = Properties.Settings.Default.SelectedPackId;
+        private string _selectedAuthor = Properties.Settings.Default.SelectedAuthor;
 
         protected override void Init(params object[] parameters)
         {
@@ -49,8 +53,7 @@ namespace HatNewUI.ViewModel
         {
             try
             {
-                //TODO: fix author
-                _service.EditPhrase(SelectedPack.Id, BackupItem, SelectedItem, "zhadko");
+                _service.EditPhrase(SelectedPack.Id, BackupItem, SelectedItem, _selectedAuthor);
             }
             catch (Exception ex)
             {
@@ -88,6 +91,7 @@ namespace HatNewUI.ViewModel
                     _selectedPack = _service.GetPackById(_selectedPack.Id);
                 }
                 LoadItems();
+                Properties.Settings.Default.SelectedPackId = _selectedPack.Id;
             }
         }
 

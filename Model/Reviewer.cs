@@ -1,8 +1,10 @@
 ﻿using GalaSoft.MvvmLight;
 using System.Linq;
+using System.Runtime.Serialization;
 
 namespace Model
 {
+    [DataContract]
     public class Reviewer : ObservableObject
     {
         public Reviewer(string author, State reviewState = State.Unknown)
@@ -11,14 +13,13 @@ namespace Model
             ReviewState = reviewState;
         }
 
-        // ReSharper disable once MemberCanBePrivate.Global
-        // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
+        [DataMember]
         public string Author { get; set; }
 
         public State ReviewState
         {
-            get { return _reviewState; }
-            set { Set(ref _reviewState, value); }
+            get => _reviewState;
+            set => Set(ref _reviewState, value);
         }
 
         public static readonly string[] DefaultReviewers = { "fomin", "tatarintsev", "sivykh", "zhadko" };

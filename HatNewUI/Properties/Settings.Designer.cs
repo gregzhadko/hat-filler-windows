@@ -22,5 +22,29 @@ namespace HatNewUI.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int SelectedPackId {
+            get {
+                return ((int)(this["SelectedPackId"]));
+            }
+            set {
+                this["SelectedPackId"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("zhadko")]
+        public string SelectedAuthor {
+            get {
+                return ((string)(this["SelectedAuthor"]));
+            }
+            set {
+                this["SelectedAuthor"] = value;
+            }
+        }
     }
 }

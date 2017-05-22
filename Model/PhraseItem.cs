@@ -1,9 +1,9 @@
-﻿using GalaSoft.MvvmLight;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using GalaSoft.MvvmLight;
 
 namespace Model
 {
@@ -11,24 +11,20 @@ namespace Model
     {
         private double _complexity;
         private string _description;
-
         private string _phrase;
 
-        // ReSharper disable once UnusedMember.Global
         public Dictionary<string, int> Reviews
         {
-            //get { return ReviewerObjects.Select(r => r.Author).ToArray(); }
             set
             {
                 if (value == null)
                     return;
+
                 foreach (var authorState in value)
                 {
                     var reviewer = ReviewerObjects.FirstOrDefault(r => r.Author == authorState.Key);
                     if (reviewer != null)
-                    {
-                        reviewer.ReviewState = (State)authorState.Value;
-                    }
+                        reviewer.ReviewState = (State) authorState.Value;
                 }
             }
         }
@@ -73,7 +69,7 @@ namespace Model
 
                 if (columnName == null || columnName == nameof(Complexity))
                     if (Complexity > 5 || Complexity < 1)
-                        result.AppendLine("Complexity should be in [1, 5]");
+                        result.AppendLine("Complexity should be in range [1, 5]");
 
                 if (columnName == null || columnName == nameof(Description))
                     if (string.IsNullOrEmpty(Description))
@@ -86,9 +82,7 @@ namespace Model
         public void UpdateAuthor(string author)
         {
             foreach (var reviewer in ReviewerObjects)
-            {
                 reviewer.ReviewState = author == reviewer.Author ? State.Accept : State.Unknown;
-            }
 
             RaiseUpdateAuthor?.Invoke();
         }
@@ -105,17 +99,24 @@ namespace Model
                 ReviewerObjects = new Reviewer[ReviewerObjects.Length]
             };
             for (var i = 0; i < ReviewerObjects.Length; i++)
-            {
                 phrase.ReviewerObjects[i] = new Reviewer(ReviewerObjects[i].Author, ReviewerObjects[i].ReviewState);
-            }
 
             return phrase;
         }
 
-        public bool IsReviewedBy(string author) => ReviewerObjects.First(r => r.Author == author).ReviewState == State.Accept;
+        public bool IsReviewedBy(string author)
+        {
+            return ReviewerObjects.First(r => r.Author == author).ReviewState == State.Accept;
+        }
 
-        public bool IsWantToEditBy(string author) => ReviewerObjects.First(r => r.Author == author).ReviewState == State.Edit;
+        public bool IsWantToEditBy(string author)
+        {
+            return ReviewerObjects.First(r => r.Author == author).ReviewState == State.Edit;
+        }
 
-        public bool IsWantToDeleteBy(string author) => ReviewerObjects.First(r => r.Author == author).ReviewState == State.Delete;
+        public bool IsWantToDeleteBy(string author)
+        {
+            return ReviewerObjects.First(r => r.Author == author).ReviewState == State.Delete;
+        }
     }
 }

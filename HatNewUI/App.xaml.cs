@@ -7,6 +7,7 @@ using System.Windows;
 using GalaSoft.MvvmLight.Messaging;
 using HatNewUI.Helpers;
 using HatNewUI.IoC;
+using HatNewUI.Properties;
 using HatNewUI.UtilsObject;
 using HatNewUI.ViewModel;
 
@@ -192,6 +193,7 @@ namespace HatNewUI
             }
 
             closeData.Content.ViewModel.CallBack?.Invoke(closeData.Content.Result);
+            Settings.Default.Save();
 
             //((Window)closeData.Content.ViewModel.VisualTree).Close();
         }
