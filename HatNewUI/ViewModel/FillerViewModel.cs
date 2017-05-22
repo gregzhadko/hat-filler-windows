@@ -16,8 +16,8 @@ namespace HatNewUI.ViewModel
         private bool _isInitializing;
 
         //TODO: Load author and default pack id from settings 
-        private int _defaultPackId = Properties.Settings.Default.SelectedPackId;
-        private string _selectedAuthor = Properties.Settings.Default.SelectedAuthor;
+        private readonly int _defaultPackId = Properties.Settings.Default.SelectedPackId;
+        private readonly string _selectedAuthor = Properties.Settings.Default.SelectedAuthor;
 
         protected override void Init(params object[] parameters)
         {
@@ -28,11 +28,14 @@ namespace HatNewUI.ViewModel
         private async void InitialLoad()
         {
             _isInitializing = true;
-            var packs = _service.GetAllPackInfoAsync();
-            var selectedPack = _service.GetPackByIdAsync(_defaultPackId);
-            await Task.WhenAll(packs, selectedPack);
-            Packs = new ObservableCollection<Pack>(packs.Result.OrderBy(p => p.Id));
-            SelectedPack = selectedPack.Result;
+            var packsTask = _service.GetAllPackInfoAsync();
+            var packTask = _service.GetPackByIdAsync(_defaultPackId);
+            await Task.WhenAll(packsTask, packTask);
+            Packs = new ObservableCollection<Pack>(packsTask.Result.OrderBy(p => p.Id));
+            var selectedPack = Packs.First(p => p.Id == packTask.Result.Id);
+            selectedPack.Phrases = packTask.Result.Phrases;
+            SelectedPack = selectedPack;
+
             _isInitializing = false;
         }
 
