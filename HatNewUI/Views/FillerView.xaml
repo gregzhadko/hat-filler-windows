@@ -62,6 +62,7 @@
 
             <DataGrid.Columns>
                 <DataGridTextColumn
+                    MinWidth="300"
                     Width="Auto"
                     Binding="{Binding Phrase, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                     EditingElementStyle="{StaticResource ValidatedTextBoxStyle}"
@@ -88,8 +89,7 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-
-                <DataGridTemplateColumn>
+                <DataGridTemplateColumn MinWidth="130">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">

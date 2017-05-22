@@ -17,10 +17,10 @@ using Action = System.Action;
 namespace HatNewUI.ViewModel
 {
     public abstract class GridBasedViewModel<T> : GridBasedViewModel
-        where T : PhraseItem, new()
+        where T : PhraseItem, ICloneable, new()
     {
 
-        protected virtual T GetNewItem() { return new T(); }
+        protected virtual T GetNewItem() { return new T() {IsNew = true}; }
 
         private ObservableCollection<T> _items;
         public ObservableCollection<T> Items
@@ -70,20 +70,14 @@ namespace HatNewUI.ViewModel
         }
         protected override void CreateBackupItem()
         {
-            Debug.Assert(!IsCurrentItemNew);
-            Debug.Assert(SelectedItem != null);
-            BackupItem = SelectedItem.DeepCopy();
+            BackupItem = (T)SelectedItem.Clone(); //DeepCopy();
         }
         protected override void ClearBackupItem()
         {
-            Debug.Assert(!IsCurrentItemNew);
-            Debug.Assert(BackupItem != null);
             BackupItem = null;
         }
         protected override void RestoreBackedUpItem()
         {
-            Debug.Assert(!IsCurrentItemNew);
-            Debug.Assert(BackupItem != null);
             var selIndex = SelectedIndex;
             Items.RemoveAt(selIndex);
             Items.Insert(selIndex, BackupItem);

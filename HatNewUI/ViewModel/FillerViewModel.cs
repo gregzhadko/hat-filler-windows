@@ -45,6 +45,7 @@ namespace HatNewUI.ViewModel
             try
             {
                 _service.AddPhrase(SelectedPack.Id, SelectedItem);
+                SelectedItem.IsNew = false;
             }
             catch (Exception ex)
             {

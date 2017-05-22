@@ -7,7 +7,7 @@ using GalaSoft.MvvmLight;
 
 namespace Model
 {
-    public class PhraseItem : ObservableObject, IDataErrorInfo
+    public class PhraseItem : ObservableObject, IDataErrorInfo, ICloneable
     {
         private double _complexity;
         private string _description;
@@ -18,13 +18,17 @@ namespace Model
             set
             {
                 if (value == null)
+                {
                     return;
+                }
 
                 foreach (var authorState in value)
                 {
                     var reviewer = ReviewerObjects.FirstOrDefault(r => r.Author == authorState.Key);
                     if (reviewer != null)
+                    {
                         reviewer.ReviewState = (State) authorState.Value;
+                    }
                 }
             }
         }
@@ -49,7 +53,7 @@ namespace Model
             set => Set(nameof(Phrase), ref _phrase, value);
         }
 
-        public bool IsNew { get; set; }
+        public bool IsNew { get; set; } = false;
 
         public bool IsValid => string.IsNullOrEmpty(Error);
 
@@ -64,16 +68,28 @@ namespace Model
                 var result = new StringBuilder();
 
                 if (columnName == null || columnName == nameof(Phrase))
+                {
                     if (string.IsNullOrEmpty(Phrase))
+                    {
                         result.AppendLine("Please enter a phrase");
+                    }
+                }
 
                 if (columnName == null || columnName == nameof(Complexity))
+                {
                     if (Complexity > 5 || Complexity < 1)
+                    {
                         result.AppendLine("Complexity should be in range [1, 5]");
+                    }
+                }
 
                 if (columnName == null || columnName == nameof(Description))
+                {
                     if (string.IsNullOrEmpty(Description))
+                    {
                         result.AppendLine("Please enter a Description");
+                    }
+                }
 
                 return result.ToString();
             }
@@ -82,14 +98,16 @@ namespace Model
         public void UpdateAuthor(string author)
         {
             foreach (var reviewer in ReviewerObjects)
+            {
                 reviewer.ReviewState = author == reviewer.Author ? State.Accept : State.Unknown;
+            }
 
             RaiseUpdateAuthor?.Invoke();
         }
 
         public event Action RaiseUpdateAuthor;
 
-        public PhraseItem Clone()
+        public object Clone()
         {
             var phrase = new PhraseItem
             {
@@ -99,7 +117,9 @@ namespace Model
                 ReviewerObjects = new Reviewer[ReviewerObjects.Length]
             };
             for (var i = 0; i < ReviewerObjects.Length; i++)
+            {
                 phrase.ReviewerObjects[i] = new Reviewer(ReviewerObjects[i].Author, ReviewerObjects[i].ReviewState);
+            }
 
             return phrase;
         }
@@ -118,5 +138,6 @@ namespace Model
         {
             return ReviewerObjects.First(r => r.Author == author).ReviewState == State.Delete;
         }
+
     }
 }
