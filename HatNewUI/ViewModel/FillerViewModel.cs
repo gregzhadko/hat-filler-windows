@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using GalaSoft.MvvmLight.Command;
 using HatNewUI.Handlers;
 using Model;
 
@@ -15,7 +17,6 @@ namespace HatNewUI.ViewModel
 
         private bool _isInitializing;
 
-        //TODO: Load author and default pack id from settings 
         private readonly int _defaultPackId = Properties.Settings.Default.SelectedPackId;
         private readonly string _selectedAuthor = Properties.Settings.Default.SelectedAuthor;
 
@@ -41,11 +42,12 @@ namespace HatNewUI.ViewModel
 
         protected override void CommitNewItem()
         {
-            SelectedPack.Phrases.Add(SelectedItem);
             try
             {
+                StringUtils.FormatPhrase(SelectedItem);
                 _service.AddPhrase(SelectedPack.Id, SelectedItem);
                 SelectedItem.IsNew = false;
+                SelectedPack.Phrases.Add(SelectedItem);
             }
             catch (Exception ex)
             {
@@ -57,6 +59,7 @@ namespace HatNewUI.ViewModel
         {
             try
             {
+                StringUtils.FormatPhrase(SelectedItem);
                 _service.EditPhrase(SelectedPack.Id, BackupItem, SelectedItem, _selectedAuthor);
             }
             catch (Exception ex)
@@ -104,6 +107,27 @@ namespace HatNewUI.ViewModel
         {
             get => _packs;
             set => Set(ref _packs, value);
+        }
+
+        public RelayCommand FormatAllCommand
+        {
+            get
+            {
+                return new RelayCommand(() =>
+                {
+                    foreach (var phraseItem in Items)
+                    {
+                        var newPhrase = StringUtils.FormatPhrase(phraseItem);
+                        _service.EditPhrase(SelectedPack.Id, phraseItem, newPhrase, _selectedAuthor);
+                    }
+                    UpdateSelectedPack();
+                });
+            }
+        }
+
+        private void UpdateSelectedPack()
+        {
+            SelectedPack = SelectedPack;
         }
 
         protected override PhraseItem GetNewItem()

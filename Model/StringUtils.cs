@@ -99,5 +99,20 @@ namespace Model
                     .AddDot();
 
         public static string FormatPhrase(string newPhrase) => newPhrase.Trim().ToLowerInvariant();
+
+        public static PhraseItem FormatPhrase(PhraseItem originalPhrase)
+        {
+            var newPhrase = FormatPhrase(originalPhrase.Phrase);
+            var newDescription = FormatDescription(originalPhrase.Description);
+            if (!string.Equals(originalPhrase.Phrase, newPhrase, StringComparison.Ordinal) ||
+                !string.Equals(originalPhrase.Description, newDescription, StringComparison.Ordinal))
+            {
+                var phrase = (PhraseItem) originalPhrase.Clone();
+                phrase.Phrase = newPhrase;
+                phrase.Description = newDescription;
+                return phrase;
+            }
+            return originalPhrase;
+        }
     }
 }

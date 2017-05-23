@@ -18,6 +18,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition />
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <StackPanel
@@ -131,5 +132,7 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
+
+        <Button Grid.Row="3" Content="Format All" Margin="5" HorizontalAlignment="Right" Command="{Binding FormatAllCommand}"></Button>
     </Grid>
 </UserControl>

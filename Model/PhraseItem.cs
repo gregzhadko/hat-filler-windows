@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using GalaSoft.MvvmLight;
 
 namespace Model
@@ -72,6 +73,10 @@ namespace Model
                     if (string.IsNullOrEmpty(Phrase))
                     {
                         result.AppendLine("Please enter a phrase");
+                    }
+                    else if (!Regex.IsMatch(Phrase, @"^[a-zA-Z]+$"))
+                    {
+                        result.AppendLine("Phrase should contain only letters");
                     }
                 }
 
