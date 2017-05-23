@@ -105,5 +105,9 @@ namespace HatNewUI.ViewModel
             set => Set(ref _packs, value);
         }
 
+        protected override PhraseItem GetNewItem()
+        {
+            return new PhraseItem() {IsNew = true, Complexity = 1};
+        }
     }
 }

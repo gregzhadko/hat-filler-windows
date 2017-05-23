@@ -20,7 +20,7 @@ namespace HatNewUI.ViewModel
         where T : PhraseItem, ICloneable, new()
     {
 
-        protected virtual T GetNewItem() { return new T() {IsNew = true}; }
+        protected virtual T GetNewItem() { return new T(); }
 
         private ObservableCollection<T> _items;
         public ObservableCollection<T> Items
