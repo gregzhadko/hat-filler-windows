@@ -12,31 +12,28 @@ using HatNewUI.Handlers;
 using HatNewUI.Helpers;
 using MahApps.Metro.Controls;
 using Model;
-using Action = System.Action;
 
 namespace HatNewUI.ViewModel
 {
     public abstract class GridBasedViewModel<T> : GridBasedViewModel
         where T : PhraseItem, ICloneable, new()
     {
-
-        protected virtual T GetNewItem() { return new T(); }
-
         private ObservableCollection<T> _items;
+
+        private T _selectedItem;
+
         public ObservableCollection<T> Items
         {
-            get { return _items; }
-            set { Set(ref _items, value); }
+            get => _items;
+            set => Set(ref _items, value);
         }
-
 
 
         protected T BackupItem { get; set; }
 
-        private T _selectedItem;
         public T SelectedItem
         {
-            get { return _selectedItem; }
+            get => _selectedItem;
             set
             {
                 _selectedItem = value;
@@ -48,8 +45,26 @@ namespace HatNewUI.ViewModel
 
         protected override bool HasSelectedItem
         {
-            get { return SelectedItem != null; }
-            set { if (!value) SelectedItem = null; }
+            get => SelectedItem != null;
+            set
+            {
+                if (!value)
+                {
+                    SelectedItem = null;
+                }
+            }
+        }
+
+        protected override bool IsCurrentItemNew => SelectedItem != null && SelectedItem.IsNew;
+
+        protected override bool IsSelectedItemValid => SelectedItem != null && SelectedItem.IsValid;
+
+        protected override string SelectedItemValidationErrors => SelectedItem == null ? string.Empty : SelectedItem.Error;
+        protected override int ItemCount => Items.IsNullOrEmpty() ? 0 : Items.Count;
+
+        protected virtual T GetNewItem()
+        {
+            return new T();
         }
 
         protected override void InsertNewItem()
@@ -68,14 +83,17 @@ namespace HatNewUI.ViewModel
         {
             Items.Remove(SelectedItem);
         }
+
         protected override void CreateBackupItem()
         {
-            BackupItem = (T)SelectedItem.Clone(); //DeepCopy();
+            BackupItem = (T) SelectedItem.Clone(); //DeepCopy();
         }
+
         protected override void ClearBackupItem()
         {
             BackupItem = null;
         }
+
         protected override void RestoreBackedUpItem()
         {
             var selIndex = SelectedIndex;
@@ -85,20 +103,262 @@ namespace HatNewUI.ViewModel
             DataGrid.FocusRow(selIndex);
         }
 
-        protected override bool IsCurrentItemNew => SelectedItem != null && SelectedItem.IsNew;
-
-        protected override bool IsSelectedItemValid => SelectedItem != null && SelectedItem.IsValid;
-
-        protected override string SelectedItemValidationErrors => SelectedItem == null ? string.Empty : SelectedItem.Error;
-        protected override void SelectedItemChanged() { }
-        protected override int ItemCount => Items.IsNullOrEmpty() ? 0 : Items.Count;
+        protected override void SelectedItemChanged()
+        {
+        }
     }
 
 
     public abstract class GridBasedViewModel : BaseViewModel
     {
-        protected bool ReloadOnlyEditedItems = false;
+        private static readonly Func<KeyEventArgs, bool> ShouldTunnelDownEvent = p =>
+        {
+            /*
+             * Don't take into consideration calls originated from:
+             *  - The Wing Grid on the Facilities GridBasedView.
+             *  - The ChecklistItem Grid on the Pathways GridBasedView.
+             */
+            var source = p.OriginalSource as DependencyObject;
+
+            if (source == null)
+            {
+                return false;
+            }
+            var dg = source.FindParentPanel<DataGrid>();
+            return dg != null && !string.IsNullOrWhiteSpace(AttachedProperties.GetTag(dg));
+        };
+
+
+        private RelayCommand<DataGrid> _add;
+
+        private string _addButtonText = "Add";
+
+
+        private RelayCommand<DataGridBeginningEditEventArgs> _beginningEdit;
+
+        private bool _canBeAdded = true;
+
+        private bool _canBeDeleted = true;
+
+
+        private RelayCommand _cancel;
+
+        private RelayCommand<RoutedEventArgs> _creatingDataGrid;
+
+        private RelayCommand _delete;
+
+
+        private RelayCommand _edit;
+
+        private RelayCommand<DataGridCellEditEndingEventArgs> _endingEdit;
+
+
+        private RelayCommand _help;
+
+
+        private bool _isEditable = true;
+
+
+        private bool _isEditing;
+
+        private bool _isEnterKeyDisabled;
+
+        private RelayCommand<KeyEventArgs> _keyDown;
+
+
+        private RelayCommand<MouseButtonEventArgs> _mouseDoubleClicked;
+
+
+        private RelayCommand _refresh;
+
+        private RelayCommand<DataGridRowEditEndingEventArgs> _rowEditEnding;
+
+        private int _selectedIndex;
+
+
+        private Action _showHelp;
         protected DataGrid DataGrid;
+        protected bool ReloadOnlyEditedItems = false;
+        protected abstract bool HasSelectedItem { get; set; }
+        protected abstract int ItemCount { get; }
+        protected abstract bool IsSelectedItemValid { get; }
+        protected abstract string SelectedItemValidationErrors { get; }
+        protected abstract bool IsCurrentItemNew { get; }
+
+        public int SelectedIndex
+        {
+            get => _selectedIndex;
+            set => Set(ref _selectedIndex, value);
+        }
+
+        public bool IsEditable
+        {
+            get => _isEditable;
+            set => Set(ref _isEditable);
+        }
+
+        public virtual bool CanBeAdded
+        {
+            get => _canBeAdded;
+            set => Set(ref _canBeAdded, value);
+        }
+
+        public bool CanBeDeleted
+        {
+            get => _canBeDeleted;
+            set => Set(ref _canBeDeleted, value);
+        }
+
+        public string AddButtonText
+        {
+            get => _addButtonText;
+            set => Set(ref _addButtonText, value);
+        }
+
+        public bool IsEditing
+        {
+            get => _isEditing;
+            set
+            {
+                AddButtonText = value ? "Save" : "Add";
+                Set(ref _isEditing, value);
+            }
+        }
+
+        public bool IsEnterKeyDisabled
+        {
+            get => _isEnterKeyDisabled;
+            set => Set(ref _isEnterKeyDisabled, value);
+        }
+
+        public RelayCommand<RoutedEventArgs> CreatingDataGrid
+        {
+            get
+            {
+                return _creatingDataGrid ?? (_creatingDataGrid = new RelayCommand<RoutedEventArgs>(
+                           p =>
+                           {
+                               DataGrid = p.Source as DataGrid;
+                               FocusFirstCell();
+                           }));
+            }
+        }
+
+        public RelayCommand<DataGridBeginningEditEventArgs> BeginningEdit
+        {
+            get { return _beginningEdit ?? (_beginningEdit = new RelayCommand<DataGridBeginningEditEventArgs>(p => { })); }
+        }
+
+        public RelayCommand<DataGridRowEditEndingEventArgs> RowEditEnding
+        {
+            get
+            {
+                return _rowEditEnding ?? (_rowEditEnding = new RelayCommand<DataGridRowEditEndingEventArgs>(
+                           p => { }));
+            }
+        }
+
+        public RelayCommand<DataGridCellEditEndingEventArgs> EndingEdit
+        {
+            get
+            {
+                return _endingEdit ?? (_endingEdit = new RelayCommand<DataGridCellEditEndingEventArgs>(
+                           p =>
+                           {
+                               if (p.EditAction != DataGridEditAction.Commit)
+                               {
+                                   return;
+                               }
+                               if (IsEditing)
+                               {
+                                   p.Cancel = true;
+                               }
+                           }));
+            }
+        }
+
+        public RelayCommand<KeyEventArgs> KeyDown => _keyDown ?? (_keyDown = new RelayCommand<KeyEventArgs>(KeyDownAction));
+
+        public virtual RelayCommand<DataGrid> Add
+        {
+            get
+            {
+                return _add ?? (_add = new RelayCommand<DataGrid>(
+                           AddAction,
+                           dataGrid => IsEditing || IsEditable && CanBeAdded));
+            }
+        }
+
+        public virtual RelayCommand<MouseButtonEventArgs> MouseDoubleClicked
+        {
+            get
+            {
+                return _mouseDoubleClicked ?? (_mouseDoubleClicked = new RelayCommand<MouseButtonEventArgs>(
+                           MouseDoubleClickAction,
+                           p => CanStartEdit()));
+            }
+        }
+
+        public RelayCommand Help
+        {
+            get
+            {
+                return _help ?? (_help = new RelayCommand(
+                           () => ShowHelp(),
+                           () => ShowHelp != null));
+            }
+        }
+
+        /// <summary>
+        ///     This is the property that describes what should be done when the ?(HELP) button is clicked.
+        ///     Implementing classes must set a value to this Action for the button to become available.
+        /// </summary>
+        protected Action ShowHelp
+        {
+            get => _showHelp;
+            set
+            {
+                _showHelp = value;
+                Help.RaiseCanExecuteChanged();
+            }
+        }
+
+        public RelayCommand Refresh
+        {
+            get { return _refresh ?? (_refresh = new RelayCommand(RefreshAction, () => !IsEditing && IsEditable)); }
+        }
+
+        public RelayCommand Cancel
+        {
+            get { return _cancel ?? (_cancel = new RelayCommand(CancelEdit, () => IsEditing)); }
+        }
+
+        public RelayCommand Delete
+        {
+            get
+            {
+                return _delete ?? (_delete = new RelayCommand(
+                           () =>
+                           {
+                               if (DeleteItem())
+                               {
+                                   LoadItems();
+                               }
+                           },
+                           () => !IsEditing && IsEditable && CanBeDeleted));
+            }
+        }
+
+        public RelayCommand Edit
+        {
+            get
+            {
+                return _edit ?? (_edit = new RelayCommand(
+                           () => StartEditingMode(),
+                           () => !IsEditing && IsEditable));
+            }
+        }
+
         protected override void Init(params object[] parameters)
         {
             base.Init(parameters);
@@ -115,18 +375,23 @@ namespace HatNewUI.ViewModel
         protected abstract void CreateBackupItem();
         protected abstract void ClearBackupItem();
         protected abstract void RestoreBackedUpItem();
-        protected abstract bool HasSelectedItem { get; set; }
-        protected abstract int ItemCount { get; }
-        protected abstract bool IsSelectedItemValid { get; }
-        protected abstract string SelectedItemValidationErrors { get; }
-        protected abstract bool IsCurrentItemNew { get; }
         protected abstract void SelectedItemChanged();
-        protected virtual bool CanStartEdit() { return true; }
-        protected virtual void UpdateChangedItem() { }
+
+        protected virtual bool CanStartEdit()
+        {
+            return true;
+        }
+
+        protected virtual void UpdateChangedItem()
+        {
+        }
 
         private void AcceptChanges()
         {
-            if (!CheckItemValid()) return;
+            if (!CheckItemValid())
+            {
+                return;
+            }
             StopEditingMode();
             DataGrid.CommitEdit(DataGridEditingUnit.Row, false);
             if (IsCurrentItemNew)
@@ -138,11 +403,15 @@ namespace HatNewUI.ViewModel
             {
                 UpdateItem();
                 ClearBackupItem();
-                if (ReloadOnlyEditedItems) UpdateChangedItem();
-                else RefreshAction();
+                if (ReloadOnlyEditedItems)
+                {
+                    UpdateChangedItem();
+                }
+                else
+                {
+                    RefreshAction();
+                }
             }
-
-
         }
 
         public void CancelEdit()
@@ -162,19 +431,28 @@ namespace HatNewUI.ViewModel
 
         protected void StartEditingMode(int? columnIndex = null)
         {
-            if (!HasSelectedItem) return;
+            if (!HasSelectedItem)
+            {
+                return;
+            }
 
             columnIndex = columnIndex ?? DataGrid.GetCurrentColumnIndex();
             Debug.Assert(!IsEditing);
             IsEditing = true;
 
-            if (!IsCurrentItemNew) CreateBackupItem();
+            if (!IsCurrentItemNew)
+            {
+                CreateBackupItem();
+            }
 
-            var selectedRow = (DataGridRow)DataGrid.ItemContainerGenerator.ContainerFromIndex(SelectedIndex);
+            var selectedRow = (DataGridRow) DataGrid.ItemContainerGenerator.ContainerFromIndex(SelectedIndex);
 
             var presenter = LocalUtils.FindVisualChild<DataGridCellsPresenter>(selectedRow);
 
-            if (presenter == null) return;
+            if (presenter == null)
+            {
+                return;
+            }
 
             selectedRow.IsEnabled = true;
             StartEditingColumns(columnIndex, presenter);
@@ -184,7 +462,7 @@ namespace HatNewUI.ViewModel
         {
             for (var i = 0; i < DataGrid.Columns.Count; i++)
             {
-                var cell = (DataGridCell)presenter.ItemContainerGenerator.ContainerFromIndex(i);
+                var cell = (DataGridCell) presenter.ItemContainerGenerator.ContainerFromIndex(i);
 
                 cell.IsEditing = true;
 
@@ -195,7 +473,7 @@ namespace HatNewUI.ViewModel
                 DataGrid.UpdateLayout();
 
                 var contentPresenter = LocalUtils.FindVisualChild<ContentPresenter>(cell);
-                var frameworkElement = (FrameworkElement)VisualTreeHelper.GetChild(contentPresenter, 0);
+                var frameworkElement = (FrameworkElement) VisualTreeHelper.GetChild(contentPresenter, 0);
 
                 frameworkElement?.Focus();
             }
@@ -204,15 +482,17 @@ namespace HatNewUI.ViewModel
 
         private void StopEditingMode()
         {
-
-            var selectedRow = (DataGridRow)DataGrid.ItemContainerGenerator.ContainerFromIndex(SelectedIndex);
+            var selectedRow = (DataGridRow) DataGrid.ItemContainerGenerator.ContainerFromIndex(SelectedIndex);
 
             var presenter = LocalUtils.FindVisualChild<DataGridCellsPresenter>(selectedRow);
 
-            if (presenter == null) return;
+            if (presenter == null)
+            {
+                return;
+            }
             for (var i = 0; i < DataGrid.Columns.Count; i++)
             {
-                var cell = (DataGridCell)presenter.ItemContainerGenerator.ContainerFromIndex(i);
+                var cell = (DataGridCell) presenter.ItemContainerGenerator.ContainerFromIndex(i);
                 cell.IsEditing = false;
             }
             IsEditing = false;
@@ -221,7 +501,10 @@ namespace HatNewUI.ViewModel
 
         private void MoveNextCell()
         {
-            if (DataGrid.CurrentCell == default(DataGridCellInfo) || !IsEditing) return;
+            if (DataGrid.CurrentCell == default(DataGridCellInfo) || !IsEditing)
+            {
+                return;
+            }
 
             var newCell = Keyboard.Modifiers.HasFlag(ModifierKeys.Shift)
                 ? DataGrid.SelectedCells.OrderByDescending(c => c.Column.DisplayIndex)
@@ -229,14 +512,20 @@ namespace HatNewUI.ViewModel
                 : DataGrid.SelectedCells.OrderBy(c => c.Column.DisplayIndex)
                     .FirstOrDefault(c => c.Column.DisplayIndex > DataGrid.CurrentCell.Column.DisplayIndex);
 
-            if (newCell == default(DataGridCellInfo)) return;
+            if (newCell == default(DataGridCellInfo))
+            {
+                return;
+            }
             DataGrid.CurrentCell = newCell;
             DataGrid.SelectCellByIndex(SelectedIndex, DataGrid.CurrentCell.Column.DisplayIndex);
         }
 
         protected virtual bool CheckItemValid()
         {
-            if (IsSelectedItemValid) return true;
+            if (IsSelectedItemValid)
+            {
+                return true;
+            }
 
             NotificationHandler.Show(
                 $"The item does not meet the required validations. Please fix the following errors: \n\n{SelectedItemValidationErrors}", "Warning", MessageBoxButton.OK,
@@ -250,11 +539,20 @@ namespace HatNewUI.ViewModel
         {
             try
             {
-                if (ItemCount == 0) return;
-                if (DataGrid == null) return;
+                if (ItemCount == 0)
+                {
+                    return;
+                }
+                if (DataGrid == null)
+                {
+                    return;
+                }
                 DataGrid.UpdateLayout();
                 var cell = DataGrid.GetCell(0, 0);
-                if (cell == null) return;
+                if (cell == null)
+                {
+                    return;
+                }
                 cell.Focus();
             }
             catch
@@ -263,139 +561,9 @@ namespace HatNewUI.ViewModel
             }
         }
 
-        private int _selectedIndex;
-
-        public int SelectedIndex
-        {
-            get { return _selectedIndex; }
-            set { Set(ref _selectedIndex, value); }
-        }
-
-
-
-        private bool _isEditable = true;
-
-        public bool IsEditable
-        {
-            get { return _isEditable; }
-            set { Set(ref _isEditable); }
-        }
-
-        private bool _canBeAdded = true;
-
-        public virtual bool CanBeAdded
-        {
-            get { return _canBeAdded; }
-            set { Set(ref _canBeAdded, value); }
-        }
-
-        private bool _canBeDeleted = true;
-
-        public bool CanBeDeleted
-        {
-            get { return _canBeDeleted; }
-            set { Set(ref _canBeDeleted, value); }
-        }
-
-        private string _addButtonText = "Add";
-        public string AddButtonText
-        {
-            get { return _addButtonText; }
-            set { Set(ref _addButtonText, value); }
-        }
-
-
-        private bool _isEditing;
-        public bool IsEditing
-        {
-            get { return _isEditing; }
-            set
-            {
-                AddButtonText = value ? "Save" : "Add";
-                Set(ref _isEditing, value);
-            }
-        }
-
         protected virtual void PreEditing()
         {
         }
-
-        private bool _isEnterKeyDisabled;
-        public bool IsEnterKeyDisabled
-        {
-            get { return _isEnterKeyDisabled; }
-            set { Set(ref _isEnterKeyDisabled, value); }
-        }
-
-        private RelayCommand<RoutedEventArgs> _creatingDataGrid;
-        public RelayCommand<RoutedEventArgs> CreatingDataGrid
-        {
-            get
-            {
-                return _creatingDataGrid ?? (_creatingDataGrid = new RelayCommand<RoutedEventArgs>(
-                    p =>
-                    {
-                        DataGrid = (p.Source as DataGrid);
-                        FocusFirstCell();
-                    }));
-            }
-        }
-
-
-        private RelayCommand<DataGridBeginningEditEventArgs> _beginningEdit;
-        public RelayCommand<DataGridBeginningEditEventArgs> BeginningEdit
-        {
-            get
-            {
-                return _beginningEdit ?? (_beginningEdit = new RelayCommand<DataGridBeginningEditEventArgs>(p =>
-                {
-                }));
-            }
-        }
-
-        private RelayCommand<DataGridRowEditEndingEventArgs> _rowEditEnding;
-        public RelayCommand<DataGridRowEditEndingEventArgs> RowEditEnding
-        {
-            get
-            {
-                return _rowEditEnding ?? (_rowEditEnding = new RelayCommand<DataGridRowEditEndingEventArgs>(
-                    p =>
-                    {
-
-                    }));
-            }
-        }
-
-        private RelayCommand<DataGridCellEditEndingEventArgs> _endingEdit;
-        public RelayCommand<DataGridCellEditEndingEventArgs> EndingEdit
-        {
-            get
-            {
-                return _endingEdit ?? (_endingEdit = new RelayCommand<DataGridCellEditEndingEventArgs>(
-                    p =>
-                    {
-                        if (p.EditAction != DataGridEditAction.Commit) return;
-                        if (IsEditing) p.Cancel = true;
-                    }));
-            }
-        }
-
-        private static readonly Func<KeyEventArgs, bool> _shouldTunnelDownEvent = p =>
-        {
-            /*
-             * Don't take into consideration calls originated from:
-             *  - The Wing Grid on the Facilities GridBasedView.
-             *  - The ChecklistItem Grid on the Pathways GridBasedView.
-             */
-            var source = p.OriginalSource as DependencyObject;
-
-            if (source == null) return false;
-            var dg = source.FindParentPanel<DataGrid>();
-            return dg != null && !string.IsNullOrWhiteSpace(AttachedProperties.GetTag(dg));
-        };
-
-        private RelayCommand<KeyEventArgs> _keyDown;
-        public RelayCommand<KeyEventArgs> KeyDown => _keyDown ?? (_keyDown = new RelayCommand<KeyEventArgs>(KeyDownAction));
 
         private void KeyDownAction(KeyEventArgs eventArgs)
         {
@@ -409,7 +577,7 @@ namespace HatNewUI.ViewModel
                 case Key.Escape:
                     if (IsEditing)
                     {
-                        if (_shouldTunnelDownEvent(eventArgs))
+                        if (ShouldTunnelDownEvent(eventArgs))
                         {
                             return;
                         }
@@ -419,7 +587,7 @@ namespace HatNewUI.ViewModel
                     break;
 
                 case Key.Return:
-                    if (_shouldTunnelDownEvent(eventArgs))
+                    if (ShouldTunnelDownEvent(eventArgs))
                     {
                         return;
                     }
@@ -442,19 +610,6 @@ namespace HatNewUI.ViewModel
             }
         }
 
-
-        private RelayCommand<DataGrid> _add;
-
-        public virtual RelayCommand<DataGrid> Add
-        {
-            get
-            {
-                return _add ?? (_add = new RelayCommand<DataGrid>(
-                    AddAction,
-                    dataGrid => IsEditing || (IsEditable && CanBeAdded)));
-            }
-        }
-
         protected virtual void AddAction(DataGrid dataGrid)
         {
             if (IsEditing)
@@ -464,19 +619,6 @@ namespace HatNewUI.ViewModel
             else
             {
                 InsertNewItem();
-            }
-        }
-
-
-        private RelayCommand<MouseButtonEventArgs> _mouseDoubleClicked;
-
-        public virtual RelayCommand<MouseButtonEventArgs> MouseDoubleClicked
-        {
-            get
-            {
-                return _mouseDoubleClicked ?? (_mouseDoubleClicked = new RelayCommand<MouseButtonEventArgs>(
-                    MouseDoubleClickAction,
-                    p => CanStartEdit()));
             }
         }
 
@@ -493,87 +635,15 @@ namespace HatNewUI.ViewModel
             }
         }
 
-
-        private RelayCommand _help;
-        public RelayCommand Help
-        {
-            get
-            {
-                return _help ?? (_help = new RelayCommand(
-                    () => ShowHelp(),
-                    () => ShowHelp != null));
-            }
-        }
-
-
-        private Action _showHelp;
-        /// <summary>
-        /// This is the property that describes what should be done when the ?(HELP) button is clicked.
-        /// Implementing classes must set a value to this Action for the button to become available.
-        /// </summary>
-        protected Action ShowHelp
-        {
-            get { return _showHelp; }
-            set
-            {
-                _showHelp = value;
-                Help.RaiseCanExecuteChanged();
-            }
-        }
-
-
-        private RelayCommand _refresh;
-        public RelayCommand Refresh
-        {
-            get { return _refresh ?? (_refresh = new RelayCommand(RefreshAction, () => !IsEditing && IsEditable)); }
-        }
-
         private void RefreshAction()
         {
             HasSelectedItem = false;
             LoadItems();
         }
 
-
-        private RelayCommand _cancel;
-        public RelayCommand Cancel
-        {
-            get { return _cancel ?? (_cancel = new RelayCommand(CancelEdit, () => IsEditing)); }
-        }
-
-        private RelayCommand _delete;
-        public RelayCommand Delete
-        {
-            get
-            {
-                return _delete ?? (_delete = new RelayCommand(
-                    () =>
-                    {
-                        if (DeleteItem()) LoadItems();
-                    },
-                    () => !IsEditing && IsEditable && CanBeDeleted));
-            }
-        }
-
-
-
-        private RelayCommand _edit;
-        public RelayCommand Edit
-        {
-            get
-            {
-                return _edit ?? (_edit = new RelayCommand(
-                    () => StartEditingMode(),
-                    () => !IsEditing && IsEditable));
-            }
-        }
-
         protected static DataGrid GetParentDataGrid(RoutedEventArgs p)
         {
-            return ((DependencyObject)p.OriginalSource).TryFindParent<DataGrid>();
+            return ((DependencyObject) p.OriginalSource).TryFindParent<DataGrid>();
         }
     }
-
-
-
 }

@@ -19,8 +19,8 @@ namespace HatNewUI
         #region GridContent DP
         public object GridContent
         {
-            get { return (object)GetValue(GridContentProperty); }
-            set { SetValue(GridContentProperty, value); }
+            get => (object)GetValue(GridContentProperty);
+            set => SetValue(GridContentProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for GridContent.  This enables animation, styling, binding, etc...
@@ -38,8 +38,8 @@ namespace HatNewUI
         #region GridBasedDataContext DP
         public GridBasedViewModel GridBasedDataContext
         {
-            get { return (GridBasedViewModel)GetValue(GridBasedDataContextProperty); }
-            set { SetValue(GridBasedDataContextProperty, value); }
+            get => (GridBasedViewModel)GetValue(GridBasedDataContextProperty);
+            set => SetValue(GridBasedDataContextProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for GridBasedDataContext.  This enables animation, styling, binding, etc...

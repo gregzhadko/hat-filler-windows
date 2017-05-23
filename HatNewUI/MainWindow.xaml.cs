@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Windows;
-using HatNewUI.Handlers;
 using HatNewUI.Helpers;
 using HatNewUI.ViewModel;
 

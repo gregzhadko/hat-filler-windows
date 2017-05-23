@@ -13,16 +13,16 @@ namespace HatNewUI.ViewModel
 
         public bool? ShownAsDialog
         {
-            get { return _shownAsDialog; }
-            set { Set(ref _shownAsDialog, value); }
+            get => _shownAsDialog;
+            set => Set(ref _shownAsDialog, value);
         }
 
 
         private object _visualTree;
         public object VisualTree
         {
-            get { return _visualTree; }
-            set { Set(ref _visualTree, value); }
+            get => _visualTree;
+            set => Set(ref _visualTree, value);
         }
 
         public static void AsyncAction(Action action,

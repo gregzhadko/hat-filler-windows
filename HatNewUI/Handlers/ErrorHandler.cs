@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Text;
 using System.Windows;
 
@@ -17,20 +18,23 @@ namespace HatNewUI.Handlers
         }
 
         /// <summary>
-        /// Shows an error message
+        ///     Shows an error message
         /// </summary>
         /// <param name="message">The message to be displayed</param>
         /// <param name="caption">The dialog's caption</param>
         /// <param name="secondaryMessage">The secondary message to be displayed</param>
         public static void ShowError(string message, string caption = null, string secondaryMessage = null)
         {
-            if (caption == null) caption = DefaultCaption;
+            if (caption == null)
+            {
+                caption = DefaultCaption;
+            }
             ShowErrorUI(message, caption, secondaryMessage);
         }
 
         /// <summary>
-        /// Shows an error message taking the error info from the exception.
-        /// Alternatively, it allows the stacktrace to be shown.
+        ///     Shows an error message taking the error info from the exception.
+        ///     Alternatively, it allows the stacktrace to be shown.
         /// </summary>
         /// <param name="ex">The exception that was raised from the error</param>
         /// <param name="message">The message to be shown before the exception</param>
@@ -48,17 +52,22 @@ namespace HatNewUI.Handlers
 
         public static string GetStackTrace(Exception e)
         {
-            if (e == null) return null;
-            var strackTrace = new System.Diagnostics.StackTrace(e);
+            if (e == null)
+            {
+                return null;
+            }
+            var stackTrace = new StackTrace(e);
 
-            var frames = strackTrace.GetFrames();
+            var frames = stackTrace.GetFrames();
 
-            if (frames == null) return null;
+            if (frames == null)
+            {
+                return null;
+            }
             var sb = new StringBuilder();
             foreach (var frame in frames)
             {
-                sb.AppendFormat("{0}({1}): {2}()\n", frame.GetFileName(),
-                    frame.GetFileLineNumber(), frame.GetMethod().Name);
+                sb.AppendFormat("{0}({1}): {2}()\n", frame.GetFileName(), frame.GetFileLineNumber(), frame.GetMethod().Name);
             }
 
             return sb.ToString();
@@ -67,10 +76,16 @@ namespace HatNewUI.Handlers
 
         public static void PrepareExceptionInfo(Exception ex, StringBuilder sb, StringBuilder traceSb, bool addStackTrace)
         {
-            if (ex == null) return;
+            if (ex == null)
+            {
+                return;
+            }
             if (addStackTrace)
             {
-                if (traceSb.Length > 0) traceSb.AppendLine();
+                if (traceSb.Length > 0)
+                {
+                    traceSb.AppendLine();
+                }
                 traceSb.Append(GetStackTrace(ex) ?? string.Empty);
             }
 

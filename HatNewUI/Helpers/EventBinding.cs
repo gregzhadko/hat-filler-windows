@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using GalaSoft.MvvmLight.Command;
 
 namespace HatNewUI.Helpers
@@ -15,8 +10,8 @@ namespace HatNewUI.Helpers
 
         public DependencyObject TriggerVisual
         {
-            get { return (DependencyObject)GetValue(TriggerVisualProperty); }
-            set { SetValue(TriggerVisualProperty, value); }
+            get => (DependencyObject)GetValue(TriggerVisualProperty);
+            set => SetValue(TriggerVisualProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for TriggerVisual.  This enables animation, styling, binding, etc...
