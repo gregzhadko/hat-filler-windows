@@ -70,6 +70,7 @@ namespace HatNewUI.ViewModel
             try
             {
                 _service.DeletePhrase(SelectedPack.Id, SelectedItem.Phrase);
+                SelectedPack.Phrases.Remove(SelectedItem);
                 return true;
             }
             catch (Exception ex)
