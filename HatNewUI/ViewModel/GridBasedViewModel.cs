@@ -176,6 +176,7 @@ namespace HatNewUI.ViewModel
 
             if (presenter == null) return;
 
+            selectedRow.IsEnabled = true;
             StartEditingColumns(columnIndex, presenter);
         }
 

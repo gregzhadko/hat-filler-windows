@@ -4,8 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:local="clr-namespace:HatNewUI"
-    xmlns:metro="clr-namespace:MahApps;assembly=MahApps.Metro"
     xmlns:viewModel="clr-namespace:HatNewUI.ViewModel"
     d1p1:Ignorable="d">
     <Application.Resources>
@@ -17,6 +15,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/controls.combobox.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/colors.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/accents/amber.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/fonts.xaml" />
 
                 <ResourceDictionary Source="/Views/Colors.xaml" />
                 <ResourceDictionary Source="/Views/ButtonStyle.xaml" />
