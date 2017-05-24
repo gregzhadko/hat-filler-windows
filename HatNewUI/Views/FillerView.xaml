@@ -37,6 +37,7 @@
             <ComboBox
                 MinWidth="200"
                 Margin="5,6,5,4"
+                AutomationProperties.AutomationId="PackCombobox"
                 DisplayMemberPath="WholeName"
                 IsSynchronizedWithCurrentItem="True"
                 ItemsSource="{Binding Packs}"

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.4
+VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HatDesktop", "HatDesktop\HatDesktop.csproj", "{D18E0CF8-D6C2-48A8-A873-C0E6BCF99E89}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -18,6 +18,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "SpellChecker\Utilities.csproj", "{A2EECB4D-EFEB-4437-A9E4-AA0BC1F6F469}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HatNewUI", "HatNewUI\HatNewUI.csproj", "{47135B03-31EA-4618-9467-E7A8882AE14C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UITest", "UITest\UITest.csproj", "{686C356B-95F7-42B6-8278-663D20464C43}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{47135B03-31EA-4618-9467-E7A8882AE14C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{47135B03-31EA-4618-9467-E7A8882AE14C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{47135B03-31EA-4618-9467-E7A8882AE14C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{686C356B-95F7-42B6-8278-663D20464C43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{686C356B-95F7-42B6-8278-663D20464C43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{686C356B-95F7-42B6-8278-663D20464C43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{686C356B-95F7-42B6-8278-663D20464C43}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
