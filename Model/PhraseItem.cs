@@ -94,6 +94,10 @@ namespace Model
                     {
                         result.AppendLine("Please enter a Description");
                     }
+                    else if(Description.Length < 10)
+                    {
+                        result.AppendLine("Description is too small");
+                    }
                 }
 
                 return result.ToString();
