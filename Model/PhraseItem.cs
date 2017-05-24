@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using GalaSoft.MvvmLight;
 
 namespace Model
@@ -74,7 +73,7 @@ namespace Model
                     {
                         result.AppendLine("Please enter a phrase");
                     }
-                    else if (!Regex.IsMatch(Phrase, @"^[a-zA-Zа-яА-Я0-9]+$"))
+                    else if(!Phrase.All(c => Char.IsLetterOrDigit(c) || c == ' '))
                     {
                         result.AppendLine("Phrase should contain only Russian or Latin letters or numbers");
                     }

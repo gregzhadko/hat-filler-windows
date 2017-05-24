@@ -46,6 +46,11 @@ namespace HatNewUI.ViewModel
             try
             {
                 StringUtils.FormatPhrase(SelectedItem);
+                if (Items.Select(i => i.Phrase).Contains(SelectedItem.Phrase))
+                {
+                    NotificationHandler.Show("The word is already in the pack", "Warning");
+                    return;
+                }
                 _service.AddPhrase(SelectedPack.Id, SelectedItem);
                 SelectedItem.IsNew = false;
                 SelectedPack.Phrases.Add(SelectedItem);
@@ -67,6 +72,13 @@ namespace HatNewUI.ViewModel
             try
             {
                 StringUtils.FormatPhrase(SelectedItem);
+                var count = Items.Count(i => i.Phrase == SelectedItem.Phrase);
+                if (count > 1)
+                {
+                    NotificationHandler.Show("The word is already in the pack", "Warning");
+                    return;
+                }
+
                 _service.EditPhrase(SelectedPack.Id, BackupItem, SelectedItem, _selectedAuthor);
                 RaisePropertyChanged(nameof(PhraseCount));
             }
