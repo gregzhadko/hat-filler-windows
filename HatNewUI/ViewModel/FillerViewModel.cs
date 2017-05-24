@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using GalaSoft.MvvmLight.Command;
 using HatNewUI.Handlers;
 using Model;
+using System.Net;
+using System.IO;
 
 namespace HatNewUI.ViewModel
 {
@@ -48,6 +50,11 @@ namespace HatNewUI.ViewModel
                 _service.AddPhrase(SelectedPack.Id, SelectedItem);
                 SelectedItem.IsNew = false;
                 SelectedPack.Phrases.Add(SelectedItem);
+            }
+            catch (WebException ex)
+            {
+                var errorResponse = new StreamReader(ex.Response.GetResponseStream()).ReadToEnd();
+                NotificationHandler.Show(errorResponse, "Error");
             }
             catch (Exception ex)
             {
