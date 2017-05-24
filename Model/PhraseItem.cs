@@ -74,7 +74,7 @@ namespace Model
                     {
                         result.AppendLine("Please enter a phrase");
                     }
-                    else if (!Regex.IsMatch(Phrase, @"^[a-zA-Zа-яАЯ0-9]+$"))
+                    else if (!Regex.IsMatch(Phrase, @"^[a-zA-Zа-яА-Я0-9]+$"))
                     {
                         result.AppendLine("Phrase should contain only Russian or Latin letters or numbers");
                     }
