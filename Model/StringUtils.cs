@@ -100,19 +100,12 @@ namespace Model
 
         public static string FormatPhrase(string newPhrase) => newPhrase.Trim().ToLowerInvariant();
 
-        public static PhraseItem FormatPhrase(PhraseItem originalPhrase)
+        public static void FormatPhrase(PhraseItem phrase)
         {
-            var newPhrase = FormatPhrase(originalPhrase.Phrase);
-            var newDescription = FormatDescription(originalPhrase.Description);
-            if (!string.Equals(originalPhrase.Phrase, newPhrase, StringComparison.Ordinal) ||
-                !string.Equals(originalPhrase.Description, newDescription, StringComparison.Ordinal))
-            {
-                var phrase = (PhraseItem) originalPhrase.Clone();
-                phrase.Phrase = newPhrase;
-                phrase.Description = newDescription;
-                return phrase;
-            }
-            return originalPhrase;
+            var newPhrase = FormatPhrase(phrase.Phrase);
+            var newDescription = FormatDescription(phrase.Description);
+            phrase.Phrase = newPhrase;
+            phrase.Description = newDescription;
         }
     }
 }

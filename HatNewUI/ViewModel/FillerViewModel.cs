@@ -117,8 +117,9 @@ namespace HatNewUI.ViewModel
                 {
                     foreach (var phraseItem in Items)
                     {
-                        var newPhrase = StringUtils.FormatPhrase(phraseItem);
-                        _service.EditPhrase(SelectedPack.Id, phraseItem, newPhrase, _selectedAuthor);
+                        var oldPhrase = (PhraseItem)phraseItem.Clone();
+                        StringUtils.FormatPhrase(phraseItem);
+                        _service.EditPhrase(SelectedPack.Id, oldPhrase, phraseItem, _selectedAuthor);
                     }
                     UpdateSelectedPack();
                 });
