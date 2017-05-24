@@ -18,13 +18,18 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition />
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <StackPanel
             Grid.Row="0"
             Margin="5"
             Orientation="Horizontal">
+            <TextBlock
+                Margin="5,10"
+                Style="{StaticResource MetroTextBlock}"
+                Text="{Binding PhraseCount, StringFormat=WORDS NUMBER: {0}}" />
+
             <Label
                 Margin="5"
                 Content="SELECTED PACK:"
@@ -133,6 +138,11 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <Button Grid.Row="3" Content="Format All" Margin="5" HorizontalAlignment="Right" Command="{Binding FormatAllCommand}"></Button>
+        <Button
+            Grid.Row="3"
+            Margin="5"
+            HorizontalAlignment="Right"
+            Command="{Binding FormatAllCommand}"
+            Content="Format All" />
     </Grid>
 </UserControl>

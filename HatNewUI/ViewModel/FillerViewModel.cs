@@ -38,7 +38,6 @@ namespace HatNewUI.ViewModel
             var selectedPack = Packs.First(p => p.Id == packTask.Result.Id);
             selectedPack.Phrases = packTask.Result.Phrases;
             SelectedPack = selectedPack;
-
             _isInitializing = false;
         }
 
@@ -50,6 +49,7 @@ namespace HatNewUI.ViewModel
                 _service.AddPhrase(SelectedPack.Id, SelectedItem);
                 SelectedItem.IsNew = false;
                 SelectedPack.Phrases.Add(SelectedItem);
+                RaisePropertyChanged(nameof(PhraseCount));
             }
             catch (WebException ex)
             {
@@ -68,6 +68,7 @@ namespace HatNewUI.ViewModel
             {
                 StringUtils.FormatPhrase(SelectedItem);
                 _service.EditPhrase(SelectedPack.Id, BackupItem, SelectedItem, _selectedAuthor);
+                RaisePropertyChanged(nameof(PhraseCount));
             }
             catch (Exception ex)
             {
@@ -81,6 +82,7 @@ namespace HatNewUI.ViewModel
             {
                 _service.DeletePhrase(SelectedPack.Id, SelectedItem.Phrase);
                 SelectedPack.Phrases.Remove(SelectedItem);
+                RaisePropertyChanged(nameof(PhraseCount));
                 return true;
             }
             catch (Exception ex)
@@ -106,9 +108,12 @@ namespace HatNewUI.ViewModel
                     _selectedPack = _service.GetPackById(_selectedPack.Id);
                 }
                 LoadItems();
+                RaisePropertyChanged(nameof(PhraseCount));
                 Properties.Settings.Default.SelectedPackId = _selectedPack.Id;
             }
         }
+
+        public int PhraseCount => SelectedPack?.Phrases.Count ?? 0;
 
         public ObservableCollection<Pack> Packs
         {
