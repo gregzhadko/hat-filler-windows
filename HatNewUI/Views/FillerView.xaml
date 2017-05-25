@@ -49,6 +49,7 @@
                 Style="{StaticResource MetroLabel}" />
             <Label
                 Margin="5"
+                AutomationProperties.AutomationId="PackDescriptionLabel"
                 Content="{Binding SelectedPack.Description}"
                 Style="{StaticResource MetroLabel}" />
         </StackPanel>
@@ -59,6 +60,7 @@
             Grid.Row="2"
             Margin="5"
             helpers:AttachedProperties.InputDrivenGridDataContext="{Binding FillerViewModel, Source={StaticResource Locator}}"
+            AutomationProperties.AutomationId="PhraseDataGrid"
             Style="{StaticResource InputDataGrid}">
 
             <!--<i:Interaction.Triggers>

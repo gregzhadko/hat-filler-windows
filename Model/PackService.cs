@@ -53,15 +53,15 @@ namespace Model
             GetResponceFromServer($"reviewPackWord?id={packId}&word={phrase.Phrase}&author={reviewerName}&state={(int)state}", 8091);
         }
 
-        public IEnumerable<Pack> GetAllPacksInfo(int port = 8081)
+        public IEnumerable<Pack> GetAllPacksInfo()
         {
-            var packsInfo = GetPacksInfo(port);
+            var packsInfo = GetPacksInfo(8081);
             return packsInfo.Select(p => new Pack { Id = Convert.ToInt32(p["id"]), Name = p["name"].ToString() });
         }
 
         public async Task<IEnumerable<Pack>> GetAllPackInfoAsync(int port = 8081)
         {
-            var task = new Task<IEnumerable<Pack>>(() => GetAllPacksInfo(port));
+            var task = new Task<IEnumerable<Pack>>(() => GetAllPacksInfo());
             task.Start();
             return await task;
         }
