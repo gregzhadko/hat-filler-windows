@@ -20,6 +20,7 @@ using TestStack.White.UIItems.TreeItems;
 using TestStack.White.UIItems.WindowItems;
 using TestStack.White.UIItems.WPFUIItems;
 using TestStack.White.WindowsAPI;
+using Debug = System.Diagnostics.Debug;
 
 namespace UITest
 {
@@ -77,16 +78,15 @@ namespace UITest
             _packService.AddPhrase(TestPackId, phraseItem);
 
             SelectFirstPack();
-            Thread.Sleep(3000);
+            Thread.Sleep(2000);
             SelectLastPack();
-            Thread.Sleep(3000);
+            Thread.Sleep(2000);
 
-            var row = GetGrid().Rows.FirstOrDefault(r => r.Cells[0].Text == phraseItem.Phrase);
+            var rows = GetItemsFromListView(GetPhraseGrid());
+            var row = rows.FirstOrDefault(r => r.Cells[0].Text == phraseItem.Phrase);
             Assert.IsNotNull(row);
             Assert.IsTrue(row.Cells[1].Text == phraseItem.Complexity.ToString(CultureInfo.CurrentCulture));
             Assert.IsTrue(row.Cells[2].Text == phraseItem.Description);
-
-
 
             _packService.DeletePhrase(TestPackId, RandomString(15));
         }
@@ -100,22 +100,55 @@ namespace UITest
             var description = MainWindow.Get<Label>(SearchCriteria.ByAutomationId("PackDescriptionLabel")).Text;
 
             Assert.AreEqual(pack.Description, description);
+        }
 
+        private List<ListViewRow> GetItemsFromListView(ListView dataGrid)
+        {
+            var result = dataGrid.Rows;
+
+            if (dataGrid.ScrollBars.Vertical.Value < 0)
+            {
+                return result;
+            }
+
+            do
+            {
+                Debug.WriteLine($"Value: {dataGrid.ScrollBars.Vertical.Value}");
+                Debug.WriteLine($"Maximum Value: {dataGrid.ScrollBars.Vertical.MaximumValue}");
+                dataGrid.ScrollBars.Vertical.ScrollDown();
+                result.AddRange(dataGrid.Rows);
+            } while (dataGrid.ScrollBars.Vertical.Value < dataGrid.ScrollBars.Vertical.MaximumValue);
+
+            return result.Distinct().ToList();
+        }
+
+        private List<ListItem> GetItemsFromCombobox(ComboBox comboBox)
+        {
+            var result = comboBox.Items.ToList();
+
+            if (comboBox.ScrollBars.Vertical.Value < 0)
+            {
+                return result;
+            }
+
+            do
+            {
+                Debug.WriteLine($"Value: {comboBox.ScrollBars.Vertical.Value}");
+                Debug.WriteLine($"Maximum Value: {comboBox.ScrollBars.Vertical.MaximumValue}");
+                comboBox.ScrollBars.Vertical.ScrollDown();
+                result.AddRange(comboBox.Items);
+            } while (comboBox.ScrollBars.Vertical.Value < comboBox.ScrollBars.Vertical.MaximumValue);
+
+            return result.ToList().Distinct().ToList();
         }
 
 
         private void SelectLastPack()
         {
-            var packs = _packService.GetAllPacksInfo();
             var comboBox = MainWindow.Get<ComboBox>(SearchCriteria.ByAutomationId("PackCombobox"));
-            var items = comboBox.Items;
-            foreach (var pack in packs)
-            {
-                Keyboard.Instance.PressSpecialKey(KeyboardInput.SpecialKeys.DOWN);
-            }
-            Keyboard.Instance.PressSpecialKey(KeyboardInput.SpecialKeys.RETURN);
+            var items = GetItemsFromCombobox(comboBox);
+            items.Last().Click();
         }
-
 
         private void SelectFirstPack()
         {
@@ -125,9 +158,9 @@ namespace UITest
 
         private Window MainWindow { get; set; }
 
-        private ListView GetGrid() => MainWindow.Get<ListView>(SearchCriteria.ByAutomationId("PhraseDataGrid"));
+        private ListView GetPhraseGrid() => MainWindow.Get<ListView>(SearchCriteria.ByAutomationId("PhraseDataGrid"));
 
-        protected static string RandomString(int length, string prefix = "")
+        private static string RandomString(int length, string prefix = "")
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             var randomString = new string(Enumerable.Repeat(chars, length).Select(s => s[Random.Next(s.Length)]).ToArray());
