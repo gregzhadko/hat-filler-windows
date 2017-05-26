@@ -44,14 +44,15 @@
                 SelectedItem="{Binding SelectedPack, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                 Style="{DynamicResource VirtualisedMetroComboBox}" />
             <Label
-                Margin="0,5,0,5"
+                Margin="0,5,0,0"
                 Content="DESCRIPTION:"
                 Style="{StaticResource MetroLabel}" />
-            <Label
-                Margin="5"
-                AutomationProperties.AutomationId="PackDescriptionLabel"
-                Content="{Binding SelectedPack.Description}"
-                Style="{StaticResource MetroLabel}" />
+
+            <TextBlock
+                Margin="2,10"
+                Style="{StaticResource MetroTextBlock}"
+                Text="{Binding Description}" />
+
         </StackPanel>
         <StackPanel Grid.Row="1" Orientation="Horizontal" />
 

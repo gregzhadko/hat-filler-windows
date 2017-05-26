@@ -121,10 +121,12 @@ namespace HatNewUI.ViewModel
                 }
                 LoadItems();
                 RaisePropertyChanged(nameof(PhraseCount));
+                RaisePropertyChanged(nameof(Description));
                 Properties.Settings.Default.SelectedPackId = _selectedPack.Id;
             }
         }
 
+        public string Description => SelectedPack?.Description;
         public int PhraseCount => SelectedPack?.Phrases.Count ?? 0;
 
         public ObservableCollection<Pack> Packs
