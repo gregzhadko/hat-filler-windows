@@ -3,16 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
-using GalaSoft.MvvmLight;
 
 namespace Model
 {
-    public class PhraseItem : ObservableObject, IDataErrorInfo, ICloneable
+    public class PhraseItem : IDataErrorInfo, ICloneable
     {
-        private double _complexity;
-        private string _description;
-        private string _phrase;
-
         public Dictionary<string, int> Reviews
         {
             set
@@ -35,23 +30,11 @@ namespace Model
 
         public Reviewer[] ReviewerObjects { get; set; } = Reviewer.NewReviewers();
 
-        public double Complexity
-        {
-            get => _complexity;
-            set => Set(nameof(Complexity), ref _complexity, value);
-        }
+        public double Complexity { get; set; }
 
-        public string Description
-        {
-            get => _description;
-            set => Set(nameof(Description), ref _description, value);
-        }
+        public string Description { get; set; }
 
-        public string Phrase
-        {
-            get => _phrase;
-            set => Set(nameof(Phrase), ref _phrase, value);
-        }
+        public string Phrase { get; set; }
 
         public bool IsNew { get; set; } = false;
 
