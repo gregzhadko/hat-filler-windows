@@ -25,10 +25,7 @@
             Grid.Row="0"
             Margin="5"
             Orientation="Horizontal">
-            <TextBlock
-                Margin="5,10"
-                Style="{StaticResource MetroTextBlock}"
-                Text="{Binding PhraseCount, StringFormat=WORDS NUMBER: {0}}" />
+            <TextBlock Margin="5,10" Text="{Binding PhraseCount, StringFormat=WORDS NUMBER: {0}}" />
 
             <Label
                 Margin="5"
@@ -44,14 +41,15 @@
                 SelectedItem="{Binding SelectedPack, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                 Style="{DynamicResource VirtualisedMetroComboBox}" />
             <Label
-                Margin="0,5,0,0"
+                Margin="0,5,0,2"
                 Content="DESCRIPTION:"
                 Style="{StaticResource MetroLabel}" />
 
-            <TextBlock
-                Margin="2,10"
-                Style="{StaticResource MetroTextBlock}"
-                Text="{Binding Description}" />
+            <Label
+                Margin="0,5,0,0"
+                AutomationProperties.AutomationId="PackDescriptionLabel"
+                Content="{Binding Description}"
+                Style="{StaticResource MetroLabel}" />
 
         </StackPanel>
         <StackPanel Grid.Row="1" Orientation="Horizontal" />

@@ -37,6 +37,7 @@ namespace HatNewUI.ViewModel
             Packs = new ObservableCollection<Pack>(packsTask.Result.OrderBy(p => p.Id));
             var selectedPack = Packs.First(p => p.Id == packTask.Result.Id);
             selectedPack.Phrases = packTask.Result.Phrases;
+            selectedPack.Description = packTask.Result.Description;
             SelectedPack = selectedPack;
             _isInitializing = false;
         }
@@ -54,7 +55,7 @@ namespace HatNewUI.ViewModel
                 _service.AddPhrase(SelectedPack.Id, SelectedItem);
                 SelectedItem.IsNew = false;
                 SelectedPack.Phrases.Add(SelectedItem);
-                RaisePropertyChanged(nameof(PhraseCount));
+                RaisePropertyChanged(() => PhraseCount);
             }
             catch (WebException ex)
             {
@@ -80,7 +81,7 @@ namespace HatNewUI.ViewModel
                 }
 
                 _service.EditPhrase(SelectedPack.Id, BackupItem, SelectedItem, _selectedAuthor);
-                RaisePropertyChanged(nameof(PhraseCount));
+                RaisePropertyChanged(() => PhraseCount);
             }
             catch (Exception ex)
             {
@@ -94,7 +95,7 @@ namespace HatNewUI.ViewModel
             {
                 _service.DeletePhrase(SelectedPack.Id, SelectedItem.Phrase);
                 SelectedPack.Phrases.Remove(SelectedItem);
-                RaisePropertyChanged(nameof(PhraseCount));
+                RaisePropertyChanged(() => PhraseCount);
                 return true;
             }
             catch (Exception ex)
@@ -120,8 +121,8 @@ namespace HatNewUI.ViewModel
                     _selectedPack = _service.GetPackById(_selectedPack.Id);
                 }
                 LoadItems();
-                RaisePropertyChanged(nameof(PhraseCount));
-                RaisePropertyChanged(nameof(Description));
+                RaisePropertyChanged(() => PhraseCount);
+                RaisePropertyChanged(() => Description);
                 Properties.Settings.Default.SelectedPackId = _selectedPack.Id;
             }
         }
@@ -159,7 +160,7 @@ namespace HatNewUI.ViewModel
 
         protected override PhraseItem GetNewItem()
         {
-            return new PhraseItem() {IsNew = true, Complexity = 1};
+            return new PhraseItem {IsNew = true, Complexity = 1};
         }
     }
 }

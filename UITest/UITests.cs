@@ -26,11 +26,10 @@ namespace UITest
 {
     public class UITests
     {
-        protected static string OutputPath;
-        protected static string ExePath;
+        private static readonly string ExePath;
         protected const int StartupTimeOut = 1000;
         private const int TestPackId = 20;
-        protected Application App;
+        private Application App;
         private static readonly Random Random = new Random();
         private readonly IPackService _packService = new PackService();
 
@@ -42,8 +41,8 @@ namespace UITest
             var directoryInfo = new DirectoryInfo(path);
             var root = directoryInfo.Parent?.Parent?.Parent?.Parent?.FullName;
 
-            OutputPath = root + @"\HatNewUI\bin\Debug";
-            ExePath = OutputPath + @"\HatNewUI.exe";
+            var outputPath = root + @"\HatNewUI\bin\Debug";
+            ExePath = outputPath + @"\HatNewUI.exe";
         }
 
         /// <summary>
@@ -74,7 +73,7 @@ namespace UITest
         [Test]
         public void SelectPack20_CorrectPhraseLoading()
         {
-            var phraseItem = new PhraseItem() {Phrase = RandomString(15), Description = RandomString(50), Complexity = Random.Next(1, 5)};
+            var phraseItem = new PhraseItem {Phrase = RandomString(15), Description = RandomString(50), Complexity = Random.Next(1, 5)};
             _packService.AddPhrase(TestPackId, phraseItem);
 
             SelectFirstPack();
