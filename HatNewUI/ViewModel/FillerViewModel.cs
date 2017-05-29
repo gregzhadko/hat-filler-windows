@@ -46,7 +46,8 @@ namespace HatNewUI.ViewModel
             try
             {
                 StringUtils.FormatPhrase(SelectedItem);
-                if (Items.Select(i => i.Phrase).Contains(SelectedItem.Phrase))
+                var count = Items.Count(i => i.Phrase == SelectedItem.Phrase);
+                if (count > 1)
                 {
                     NotificationHandler.Show("The word is already in the pack", "Warning");
                     return;
