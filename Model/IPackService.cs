@@ -9,7 +9,7 @@ namespace Model
 
         void EditPack(int id, string name, string description);
 
-        IEnumerable<Pack> GetAllPacksInfo(int port);
+        IEnumerable<Pack> GetAllPacksInfo();
 
         void AddPhrase(int packId, PhraseItem phrase);
 

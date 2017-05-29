@@ -25,10 +25,7 @@
             Grid.Row="0"
             Margin="5"
             Orientation="Horizontal">
-            <TextBlock
-                Margin="5,10"
-                Style="{StaticResource MetroTextBlock}"
-                Text="{Binding PhraseCount, StringFormat=WORDS NUMBER: {0}}" />
+            <TextBlock Margin="5,10" Text="{Binding PhraseCount, StringFormat=WORDS NUMBER: {0}}" />
 
             <Label
                 Margin="5"
@@ -37,19 +34,23 @@
             <ComboBox
                 MinWidth="200"
                 Margin="5,6,5,4"
+                AutomationProperties.AutomationId="PackCombobox"
                 DisplayMemberPath="WholeName"
                 IsSynchronizedWithCurrentItem="True"
                 ItemsSource="{Binding Packs}"
                 SelectedItem="{Binding SelectedPack, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                 Style="{DynamicResource VirtualisedMetroComboBox}" />
             <Label
-                Margin="0,5,0,5"
+                Margin="0,5,0,2"
                 Content="DESCRIPTION:"
                 Style="{StaticResource MetroLabel}" />
+
             <Label
-                Margin="5"
-                Content="{Binding SelectedPack.Description}"
+                Margin="0,5,0,0"
+                AutomationProperties.AutomationId="PackDescriptionLabel"
+                Content="{Binding Description}"
                 Style="{StaticResource MetroLabel}" />
+
         </StackPanel>
         <StackPanel Grid.Row="1" Orientation="Horizontal" />
 
@@ -58,6 +59,7 @@
             Grid.Row="2"
             Margin="5"
             helpers:AttachedProperties.InputDrivenGridDataContext="{Binding FillerViewModel, Source={StaticResource Locator}}"
+            AutomationProperties.AutomationId="PhraseDataGrid"
             Style="{StaticResource InputDataGrid}">
 
             <!--<i:Interaction.Triggers>

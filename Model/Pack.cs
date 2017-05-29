@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Model
 {
-    public class Pack : ObservableObject
+    public class Pack
     {
         public int Id { get; set; }
         public string Language { get; set; }
