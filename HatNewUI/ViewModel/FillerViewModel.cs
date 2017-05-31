@@ -8,6 +8,7 @@ using HatNewUI.Handlers;
 using Model;
 using System.Net;
 using System.IO;
+using HatNewUI.Helpers;
 
 namespace HatNewUI.ViewModel
 {
@@ -20,7 +21,7 @@ namespace HatNewUI.ViewModel
         private bool _isInitializing;
 
         private readonly int _defaultPackId = Properties.Settings.Default.SelectedPackId;
-        private readonly string _selectedAuthor = Properties.Settings.Default.SelectedAuthor;
+        private string _selectedAuthor = Properties.Settings.Default.SelectedAuthor;
 
         protected override void Init(params object[] parameters)
         {
@@ -46,11 +47,9 @@ namespace HatNewUI.ViewModel
         {
             try
             {
-                StringUtils.FormatPhrase(SelectedItem);
-                var count = Items.Count(i => i.Phrase == SelectedItem.Phrase);
-                if (count > 1)
+                if (!PreparteSelectedItemToSave(out string error))
                 {
-                    NotificationHandler.Show("The word is already in the pack", "Warning");
+                    NotificationHandler.Show(error, "Warning");
                     return;
                 }
                 _service.AddPhrase(SelectedPack.Id, SelectedItem);
@@ -73,11 +72,9 @@ namespace HatNewUI.ViewModel
         {
             try
             {
-                StringUtils.FormatPhrase(SelectedItem);
-                var count = Items.Count(i => i.Phrase == SelectedItem.Phrase);
-                if (count > 1)
+                if(!PreparteSelectedItemToSave(out string error))
                 {
-                    NotificationHandler.Show("The word is already in the pack", "Warning");
+                    NotificationHandler.Show(error, "Warning");
                     return;
                 }
 
@@ -88,6 +85,21 @@ namespace HatNewUI.ViewModel
             {
                 NotificationHandler.Show(ex.Message, "Error");
             }
+        }
+
+        private bool PreparteSelectedItemToSave(out string error)
+        {
+            error = "";
+            SelectedItem.UpdateAuthor(SelectedAuthor);
+            StringUtils.FormatPhrase(SelectedItem);
+            var count = Items.Count(i => i.Phrase == SelectedItem.Phrase);
+            if (count > 1)
+            {
+                error = "The word is already in the pack";
+                return false;
+            }
+
+            return true;
         }
 
         protected override bool DeleteItem()
@@ -127,6 +139,18 @@ namespace HatNewUI.ViewModel
                 Properties.Settings.Default.SelectedPackId = _selectedPack.Id;
             }
         }
+
+        public string SelectedAuthor
+        {
+            get => _selectedAuthor;
+            set
+            {
+                Set(ref _selectedAuthor, value);
+                Properties.Settings.Default.SelectedAuthor = _selectedAuthor;
+            }
+        }
+
+        public ObservableCollection<string> Authors => Reviewer.DefaultReviewers.ToObservableCollection();
 
         public string Description => SelectedPack?.Description;
         public int PhraseCount => SelectedPack?.Phrases.Count ?? 0;

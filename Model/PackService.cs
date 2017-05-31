@@ -14,9 +14,8 @@ namespace Model
     {
         public void AddPhrase(int packId, PhraseItem phrase)
         {
-            //TODO: Fix author
             GetResponceFromServer(
-                $"addPackWordDescription?id={packId}&word={phrase.Phrase}&description={phrase.Description}&level={phrase.Complexity}&author={phrase.ReviewedBy ?? "zhadko"}", 8091);
+                $"addPackWordDescription?id={packId}&word={phrase.Phrase}&description={phrase.Description}&level={phrase.Complexity}&author={phrase.ReviewedBy}", 8091);
         }
 
         public void DeletePhrase(int packId, string phrase) => GetResponceFromServer($"removePackWord?id={packId}&word={phrase}", 8091);
