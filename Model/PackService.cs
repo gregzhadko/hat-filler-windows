@@ -18,7 +18,7 @@ namespace Model
                 $"addPackWordDescription?id={packId}&word={phrase.Phrase}&description={phrase.Description}&level={phrase.Complexity}&author={phrase.ReviewedBy}", 8091);
         }
 
-        public void DeletePhrase(int packId, string phrase) => GetResponceFromServer($"removePackWord?id={packId}&word={phrase}", 8091);
+        public void DeletePhrase(int packId, string phrase, string author) => GetResponceFromServer($"removePackWord?id={packId}&word={phrase}&author={author}", 8091);
 
         public void EditPack(int id, string name, string description)
         {
@@ -34,7 +34,7 @@ namespace Model
         {
             if (oldPhrase.Phrase != newPhrase.Phrase)
             {
-                DeletePhrase(packId, oldPhrase.Phrase);
+                DeletePhrase(packId, oldPhrase.Phrase, selectedAuthor);
             }
 
             if (!string.Equals(oldPhrase.Phrase, newPhrase.Phrase, StringComparison.Ordinal) ||

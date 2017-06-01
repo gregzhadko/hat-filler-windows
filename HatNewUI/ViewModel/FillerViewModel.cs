@@ -106,7 +106,7 @@ namespace HatNewUI.ViewModel
         {
             try
             {
-                _service.DeletePhrase(SelectedPack.Id, SelectedItem.Phrase);
+                _service.DeletePhrase(SelectedPack.Id, SelectedItem.Phrase, SelectedAuthor);
                 SelectedPack.Phrases.Remove(SelectedItem);
                 RaisePropertyChanged(() => PhraseCount);
                 return true;

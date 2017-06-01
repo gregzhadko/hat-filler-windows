@@ -13,7 +13,7 @@ namespace Model
 
         void AddPhrase(int packId, PhraseItem phrase);
 
-        void DeletePhrase(int packId, string phrase);
+        void DeletePhrase(int packId, string phrase, string author);
 
         List<Tuple<int, string>> GetPorts();
 

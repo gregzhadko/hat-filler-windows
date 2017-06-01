@@ -13,7 +13,7 @@ namespace HatDesktopTests.Model
         private readonly IPackService _packService = new PackService();
         private const string TestAuthor = "zhadko";
         private const int Port = 8081;
-        private const int Id = 15;
+        private const int Id = 20;
 
         [Test]
         public void GetPackInfoTest()
@@ -45,7 +45,7 @@ namespace HatDesktopTests.Model
         [Test]
         public void GetPacksIdsTest()
         {
-            IList<Pack> packs = _packService.GetAllPacksInfo(Port).ToList();
+            IList<Pack> packs = _packService.GetAllPacksInfo().ToList();
             CollectionAssert.Contains(packs.Select(p => p.Id), 1);
             CollectionAssert.Contains(packs.Select(p => p.Id), 10);
             CollectionAssert.Contains(packs.Select(p => p.Id), 12);
@@ -60,7 +60,7 @@ namespace HatDesktopTests.Model
             var newPack = _packService.GetPackById(Id);
             Assert.That(newPack.Phrases.Any(p => p.Phrase == phrase.Phrase));
 
-            _packService.DeletePhrase(Id, phrase.Phrase);
+            _packService.DeletePhrase(Id, phrase.Phrase, TestAuthor);
         }
 
         [Test]
@@ -69,7 +69,7 @@ namespace HatDesktopTests.Model
             var pack = _packService.GetPackById(Id);
             var phrase = GenerateNewPhrase();
             _packService.AddPhrase(Id, phrase);
-            _packService.DeletePhrase(Id, phrase.Phrase);
+            _packService.DeletePhrase(Id, phrase.Phrase, TestAuthor);
             var newPack = _packService.GetPackById(Id);
             Assert.That(pack.Phrases.Count, Is.EqualTo(newPack.Phrases.Count));
         }
@@ -83,7 +83,7 @@ namespace HatDesktopTests.Model
             var newPack = _packService.GetPackById(Id);
             Assert.That(newPack.Phrases.Any(p => p.Phrase == phrase.Phrase && p.Description == phrase.Description));
 
-            _packService.DeletePhrase(Id, phrase.Phrase);
+            _packService.DeletePhrase(Id, phrase.Phrase, TestAuthor);
         }
 
         [Test]
@@ -92,7 +92,7 @@ namespace HatDesktopTests.Model
             var pack = _packService.GetPackById(Id);
             var phrase = GenerateNewPhrase();
             _packService.AddPhrase(Id, phrase);
-            _packService.DeletePhrase(Id, phrase.Phrase);
+            _packService.DeletePhrase(Id, phrase.Phrase, TestAuthor);
             var newPack = _packService.GetPackById(Id);
             Assert.That(pack.Phrases.Count, Is.EqualTo(newPack.Phrases.Count));
         }
@@ -115,7 +115,7 @@ namespace HatDesktopTests.Model
             Assert.That(pack.Phrases.Any(p => p.Phrase == newPhrase.Phrase && p.Description == newPhrase.Description));
             Assert.That(pack.Phrases.Select(p => p.Description), Is.Not.Contains(oldPhrase.Description));
 
-            _packService.DeletePhrase(Id, newPhrase.Phrase);
+            _packService.DeletePhrase(Id, newPhrase.Phrase, TestAuthor);
         }
 
         [Test]
@@ -137,7 +137,7 @@ namespace HatDesktopTests.Model
             Assert.That(pack.Phrases.Select(p => p.Phrase), Is.Not.Contains(oldPhrase.Phrase));
             Assert.That(pack.Phrases.Select(p => p.Description), Is.Not.Contains(oldPhrase.Description));
 
-            _packService.DeletePhrase(Id, newPhrase.Phrase);
+            _packService.DeletePhrase(Id, newPhrase.Phrase, TestAuthor);
         }
 
         private static PhraseItem GenerateNewPhrase()

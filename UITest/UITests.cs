@@ -32,6 +32,7 @@ namespace UITest
         private Application App;
         private static readonly Random Random = new Random();
         private readonly IPackService _packService = new PackService();
+        private readonly string _testAuthor = "zhadko";
 
         static UITests()
         {
@@ -87,7 +88,7 @@ namespace UITest
             Assert.IsTrue(row.Cells[1].Text == phraseItem.Complexity.ToString(CultureInfo.CurrentCulture));
             Assert.IsTrue(row.Cells[2].Text == phraseItem.Description);
 
-            _packService.DeletePhrase(TestPackId, RandomString(15));
+            _packService.DeletePhrase(TestPackId, RandomString(15), _testAuthor);
         }
 
         [Test]
