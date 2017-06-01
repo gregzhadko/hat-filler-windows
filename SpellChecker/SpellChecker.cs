@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,23 +22,25 @@ namespace SpellChecker
             Console.ForegroundColor = ConsoleColor.Green;
             _service = new PackService();
             Console.OutputEncoding = Encoding.UTF8;
-            Console.WriteLine("Загружаю паки...");
+            Console.WriteLine("Р—Р°РіСЂСѓР¶Р°СЋ РїР°РєРё...");
             LoadPacks();
-            Console.WriteLine("Загрузка паков завершена");
+            Console.WriteLine("Р—Р°РіСЂСѓР·РєР° РїР°РєРѕРІ Р·Р°РІРµСЂС€РµРЅР°");
 
             var yandexSpellCheck = new YandexSpeller();
 
-            using (var hunSpell = new Hunspell("ru_RU_ie.aff", "ru_RU_ie.dic"))
+            using (var hunSpellEng = new Hunspell(@"Dictionaries\English (American).aff", @"Dictionaries\English (American).dic"))
+            using (var hunSpell = new Hunspell(@"Dictionaries\Russian.aff", @"Dictionaries\Russian.dic"))
             {
                 InitCustomDictionary(hunSpell);
 
-                foreach (var pack in _packs)
+                //Skip test pack with id 20
+                foreach (var pack in _packs.Where(p => p.Id != 20))
                 {
-                    Console.WriteLine($"Смотрю пак {pack.Name}");
+                    Console.WriteLine($"РЎРјРѕС‚СЂСЋ РїР°Рє {pack.Name}");
                     foreach (var phrase in pack.Phrases)
                     {
-                        SpellPhrase(pack, phrase.Phrase, hunSpell, yandexSpellCheck);
-                        SpellPhrase(pack, phrase.Description, hunSpell, yandexSpellCheck);
+                        SpellPhrase(pack, phrase.Phrase, hunSpell, hunSpellEng, yandexSpellCheck);
+                        SpellPhrase(pack, phrase.Description, hunSpell, hunSpellEng, yandexSpellCheck);
                     }
                 }
             }
@@ -54,16 +56,16 @@ namespace SpellChecker
             }
         }
 
-        private void SpellPhrase(Pack pack, string phrase, Hunspell hunSpell, IYandexSpeller speller)
+        private void SpellPhrase(Pack pack, string phrase, Hunspell hunSpell, Hunspell hunSpellEng, IYandexSpeller speller)
         {
             var words = GetWords(phrase);
             foreach (var word in Enumerable.Select<string, string>(words, w => w.ToLowerInvariant()))
             {
-                if (hunSpell.Spell(word) || ExistsInSkipped(word, phrase, pack.Id))
+                if (hunSpell.Spell(word) || hunSpellEng.Spell(word) || ExistsInSkipped(word, phrase, pack.Id))
                 {
                     continue;
                 }
-                if (YandexSpellCheck(speller, word))
+                if (!YandexSpellCheckPass(speller, word))
                 {
                     ShowSpellErrorMessages(pack, phrase, word);
                     var key = Console.ReadKey();
@@ -80,7 +82,7 @@ namespace SpellChecker
                             SaveNewSkipWord(word, phrase, pack.Id);
                             break;
                     }
-                    Console.WriteLine("Работаем Дальше!");
+                    Console.WriteLine("Р Р°Р±РѕС‚Р°РµРј Р”Р°Р»СЊС€Рµ!");
                 }
                 else
                 {
@@ -89,27 +91,27 @@ namespace SpellChecker
             }
         }
 
-        private bool YandexSpellCheck(IYandexSpeller speller, string word)
+        private bool YandexSpellCheckPass(IYandexSpeller speller, string word)
         {
-            return speller.CheckText(word, Lang.Ru | Lang.En, Options.IgnoreCapitalization, TextFormat.Plain).Errors.Any();
+            return !speller.CheckText(word, Lang.Ru | Lang.En, Options.IgnoreCapitalization, TextFormat.Plain).Errors.Any();
         }
 
         private void ShowSpellErrorMessages(Pack pack, string phrase, string word)
         {
             var color = Console.ForegroundColor;
-            Console.Write($"{DateTime.Now:hh:mm:ss}: Ошибка в слове ");
+            Console.Write($"{DateTime.Now:hh:mm:ss}: РћС€РёР±РєР° РІ СЃР»РѕРІРµ ");
             Console.ForegroundColor = ConsoleColor.Red;
             Console.Write(word);
             Console.ForegroundColor = color;
-            Console.Write(" из пака ");
+            Console.Write(" РёР· РїР°РєР° ");
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write(pack.Name);
             Console.ForegroundColor = color;
-            Console.Write(" Полная фраза: ");
+            Console.Write(" РџРѕР»РЅР°СЏ С„СЂР°Р·Р°: ");
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write(phrase);
             Console.ForegroundColor = color;
-            Console.WriteLine(" Добавим слово в словарь или пропустим в конкретном случае? (d - dictionary, s - skip)");
+            Console.WriteLine(" Р”РѕР±Р°РІРёРј СЃР»РѕРІРѕ РІ СЃР»РѕРІР°СЂСЊ РёР»Рё РїСЂРѕРїСѓСЃС‚РёРј РІ РєРѕРЅРєСЂРµС‚РЅРѕРј СЃР»СѓС‡Р°Рµ? (d - dictionary, s - skip)");
             Console.ForegroundColor = ConsoleColor.Red;
             Console.Write(word);
             Console.WriteLine();
@@ -128,7 +130,7 @@ namespace SpellChecker
             hunSpell.Add(word);
             File.AppendAllLines(@"..\..\CustomDictionary.txt", new[] {word});
             File.AppendAllLines(@"CustomDictionary.txt", new[] {word});
-            Console.WriteLine($"\nСлово {word} было добавлено в персональный словарь");
+            Console.WriteLine($"\nРЎР»РѕРІРѕ {word} Р±С‹Р»Рѕ РґРѕР±Р°РІР»РµРЅРѕ РІ РїРµСЂСЃРѕРЅР°Р»СЊРЅС‹Р№ СЃР»РѕРІР°СЂСЊ");
         }
 
         private void SaveNewSkipWord(string word, string wholeWord, int packId)
@@ -136,15 +138,15 @@ namespace SpellChecker
             var stringToSave = $"{word}|{packId}|{wholeWord}";
             File.AppendAllLines(@"..\..\SkipDictionary.txt", new[] {stringToSave});
             File.AppendAllLines(@"SkipDictionary.txt", new[] {stringToSave});
-            Console.WriteLine($"\nСлово {word} было добавлено в словарь пропущенных слов");
+            Console.WriteLine($"\nРЎР»РѕРІРѕ {word} Р±С‹Р»Рѕ РґРѕР±Р°РІР»РµРЅРѕ РІ СЃР»РѕРІР°СЂСЊ РїСЂРѕРїСѓС‰РµРЅРЅС‹С… СЃР»РѕРІ");
         }
 
         private void LoadPacks()
         {
-            var packs = _service.GetAllPacksInfo(8081);
+            var packs = _service.GetAllPacksInfo();
             foreach (var pack in packs)
             {
-                Console.WriteLine($"Загрузка пака {pack.Name}");
+                Console.WriteLine($"Р—Р°РіСЂСѓР·РєР° РїР°РєР° {pack.Name}");
                 _packs.Add(_service.GetPackById(pack.Id));
             }
         }
