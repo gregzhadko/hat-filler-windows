@@ -126,5 +126,22 @@ namespace Model
             
         }
 
+        public List<PhraseEditInfo> GetPackEditingInfo(Dictionary<int, string> packDictionary)
+        {
+            var responce = GetResponceFromServer("packEditingInfo", 8091);
+            var jArray = JArray.Parse(responce);
+
+            var result = new List<PhraseEditInfo>();
+            foreach(var obj in jArray)
+            {
+                var info = obj.ToObject<PhraseEditInfo>();
+                info.PackName = packDictionary[info.Pack];
+                var dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+                info.Date = dtDateTime.AddSeconds(info.Timestamp).ToLocalTime();
+                result.Add(info);
+            }
+
+            return result;
+        }
     }
 }

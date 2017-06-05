@@ -20,5 +20,7 @@ namespace Model
         void EditPhrase(int packId, PhraseItem oldPhrase, PhraseItem newPhrase, string selectedAuthor);
 
         void ReviewPhrase(int packId, PhraseItem phrase, string reviewerName, State state);
+
+        List<PhraseEditInfo> GetPackEditingInfo(Dictionary<int, string> packDictionary);
     }
 }
