@@ -29,7 +29,28 @@ namespace SpellChecker
             Console.WriteLine("Ревью за последние сутки");
             ShowAllInfo(groupedByUser, DateTime.Now.AddDays(-1));
 
+            ShowNothigStat(infoList, groupedByUser);
+
             Console.ReadKey();
+        }
+
+        private static void ShowNothigStat(List<PhraseEditInfo> infoList, List<IGrouping<string, PhraseEditInfo>> groupedByUser)
+        {
+            DateTime startDate = infoList.Min(i => i.Date);
+            Console.WriteLine($"Дней ватокатства начиная с {startDate.ToString("dd-MMMM-yyyy")} ({Math.Round((DateTime.Now - startDate).TotalDays, MidpointRounding.ToEven)} дней):");
+            var dates = new List<DateTime>();
+            for (var day = startDate; day.Date <= DateTime.Now; day = day.AddDays(1))
+            {
+                dates.Add(day);
+            }
+
+            foreach (var info in groupedByUser)
+            {
+                var uniqueDates = info.Select(i => new DateTime(i.Date.Year, i.Date.Month, i.Date.Day)).Distinct().ToList();
+                var count = dates.Count - uniqueDates.Count;
+
+                Console.Write($"{info.Key}: {count}\n");
+            }
         }
 
         private static void ShowAllInfo(IEnumerable<IGrouping<string, PhraseEditInfo>> groupedByUser, DateTime startDate = default(DateTime))
