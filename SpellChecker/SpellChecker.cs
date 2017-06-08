@@ -59,7 +59,7 @@ namespace SpellChecker
         private void SpellPhrase(Pack pack, string phrase, Hunspell hunSpell, Hunspell hunSpellEng, IYandexSpeller speller)
         {
             var words = GetWords(phrase);
-            foreach (var word in Enumerable.Select<string, string>(words, w => w.ToLowerInvariant()))
+            foreach (var word in Enumerable.Select(words, w => w.ToLowerInvariant().Replace('ё', 'е')))
             {
                 if (hunSpell.Spell(word) || hunSpellEng.Spell(word) || ExistsInSkipped(word, phrase, pack.Id))
                 {

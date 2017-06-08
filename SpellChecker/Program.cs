@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace SpellChecker
 {
@@ -6,6 +10,11 @@ namespace SpellChecker
     {
         public static void Main(string[] args)
         {
+            //var lines = File.ReadAllLines(@"C:\Repo\Hat\HatDesktop\SpellChecker\CustomDictionary.txt");
+            //var uniqueLines = lines.Distinct().ToList();
+            //File.WriteAllLines(@"C:\Repo\Hat\HatDesktop\SpellChecker\CustomDictionary.txt", uniqueLines);
+
+
             var spellChecker = new SpellChecker();
             spellChecker.Run();
 
