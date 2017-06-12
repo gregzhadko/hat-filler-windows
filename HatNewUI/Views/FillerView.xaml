@@ -8,8 +8,8 @@
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:local="clr-namespace:HatNewUI.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    d:DesignHeight="300"
-    d:DesignWidth="600"
+    d:DesignHeight="500"
+    d:DesignWidth="900"
     Background="White"
     DataContext="{Binding FillerViewModel, Source={StaticResource Locator}}"
     mc:Ignorable="d">
@@ -105,7 +105,7 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
                 <DataGridTextColumn
-                    Width="*"
+                    Width="3*"
                     Binding="{Binding Description, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                     EditingElementStyle="{StaticResource ValidatedTextBoxStyle}"
                     Header="DESCRIPTION">
@@ -115,6 +115,27 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
+                <DataGridTextColumn
+                    Width="Auto"
+                    Binding="{Binding ReviewerObjects[0].ReviewState, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                    Header="FOMIN"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Width="Auto"
+                    Binding="{Binding ReviewerObjects[1].ReviewState, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                    Header="TATARINTSEV"
+                    
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Width="Auto"
+                    Binding="{Binding ReviewerObjects[2].ReviewState, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                    Header="SIVYKH"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Width="Auto"
+                    Binding="{Binding ReviewerObjects[3].ReviewState, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                    Header="ZHADKO"
+                    IsReadOnly="True" />
                 <DataGridTemplateColumn MinWidth="130">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
