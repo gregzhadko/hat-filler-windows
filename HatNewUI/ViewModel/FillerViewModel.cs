@@ -8,6 +8,8 @@ using HatNewUI.Handlers;
 using Model;
 using System.Net;
 using System.IO;
+using System.Windows;
+using GalaSoft.MvvmLight.Messaging;
 using HatNewUI.Helpers;
 
 namespace HatNewUI.ViewModel
@@ -47,11 +49,9 @@ namespace HatNewUI.ViewModel
         {
             try
             {
-                StringUtils.FormatPhrase(SelectedItem);
-                if (Items.Select(i => i.Phrase).Skip(1).Contains(SelectedItem.Phrase))
+                if (!PreparteSelectedItemToSave(out string error))
                 {
-                    NotificationHandler.Show("The word is already in the pack", "Warning");
-                    return;
+                    NotificationHandler.Show(error, "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
                 _service.AddPhrase(SelectedPack.Id, SelectedItem);
                 SelectedItem.IsNew = false;
@@ -73,12 +73,9 @@ namespace HatNewUI.ViewModel
         {
             try
             {
-                StringUtils.FormatPhrase(SelectedItem);
-                var count = Items.Count(i => i.Phrase == SelectedItem.Phrase);
-                if (count > 1)
+                if (!PreparteSelectedItemToSave(out string error))
                 {
-                    NotificationHandler.Show(messageText: "The word is already in the pack", caption: "Warning");
-                    return;
+                    NotificationHandler.Show(error, "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
 
                 _service.EditPhrase(SelectedPack.Id, BackupItem, SelectedItem, _selectedAuthor);

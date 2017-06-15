@@ -187,7 +187,7 @@ namespace UITest
             _packService.AddPhrase(TestPackId, phrase);
         }
 
-        private List<ListViewRow> GetItemsFromListView(ListView dataGrid)
+        private static IEnumerable<ListViewRow> GetItemsFromListView(ListView dataGrid)
         {
             var result = dataGrid.Rows;
 
