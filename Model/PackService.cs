@@ -14,12 +14,11 @@ namespace Model
     {
         public void AddPhrase(int packId, PhraseItem phrase)
         {
-            //TODO: Fix author
             GetResponceFromServer(
-                $"addPackWordDescription?id={packId}&word={phrase.Phrase}&description={phrase.Description}&level={phrase.Complexity}&author={phrase.ReviewedBy ?? "zhadko"}", 8091);
+                $"addPackWordDescription?id={packId}&word={phrase.Phrase}&description={phrase.Description}&level={phrase.Complexity}&author={phrase.ReviewedBy}", 8091);
         }
 
-        public void DeletePhrase(int packId, string phrase) => GetResponceFromServer($"removePackWord?id={packId}&word={phrase}", 8091);
+        public void DeletePhrase(int packId, string phrase, string author) => GetResponceFromServer($"removePackWord?id={packId}&word={phrase}&author={author}", 8091);
 
         public void EditPack(int id, string name, string description)
         {
@@ -35,7 +34,7 @@ namespace Model
         {
             if (oldPhrase.Phrase != newPhrase.Phrase)
             {
-                DeletePhrase(packId, oldPhrase.Phrase);
+                DeletePhrase(packId, oldPhrase.Phrase, selectedAuthor);
             }
 
             if (!string.Equals(oldPhrase.Phrase, newPhrase.Phrase, StringComparison.Ordinal) ||
@@ -138,5 +137,22 @@ namespace Model
 
         }
 
+        public List<PhraseEditInfo> GetPackEditingInfo(Dictionary<int, string> packDictionary)
+        {
+            var responce = GetResponceFromServer("packEditingInfo", 8091);
+            var jArray = JArray.Parse(responce);
+
+            var result = new List<PhraseEditInfo>();
+            foreach(var obj in jArray)
+            {
+                var info = obj.ToObject<PhraseEditInfo>();
+                info.PackName = packDictionary[info.Pack];
+                var dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+                info.Date = dtDateTime.AddSeconds(info.Timestamp).ToLocalTime();
+                result.Add(info);
+            }
+
+            return result;
+        }
     }
 }

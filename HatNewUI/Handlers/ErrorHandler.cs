@@ -12,7 +12,6 @@ namespace HatNewUI.Handlers
 
         static ErrorHandler()
         {
-            //TODO: Get this from resources.
             DefaultCaption = "Error";
             DefaultErrorMessage = "An exception was caught";
         }

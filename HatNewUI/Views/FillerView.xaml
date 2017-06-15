@@ -8,13 +8,14 @@
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:local="clr-namespace:HatNewUI.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    d:DesignHeight="300"
-    d:DesignWidth="600"
+    d:DesignHeight="500"
+    d:DesignWidth="900"
     Background="White"
     DataContext="{Binding FillerViewModel, Source={StaticResource Locator}}"
     mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
+
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition />
@@ -25,6 +26,24 @@
             Grid.Row="0"
             Margin="5"
             Orientation="Horizontal">
+            <Label
+                Margin="5"
+                Content="SELECTED AUTHOR:"
+                Style="{StaticResource MetroLabel}" />
+            <ComboBox
+                MinWidth="200"
+                Margin="5,6,5,4"
+                AutomationProperties.AutomationId="AuthorsCombobox"
+                IsSynchronizedWithCurrentItem="True"
+                ItemsSource="{Binding Authors}"
+                SelectedItem="{Binding SelectedAuthor, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                Style="{DynamicResource VirtualisedMetroComboBox}" />
+        </StackPanel>
+
+        <StackPanel
+            Grid.Row="1"
+            Margin="5"
+            Orientation="Horizontal">
             <TextBlock Margin="5,10" Text="{Binding PhraseCount, StringFormat=WORDS NUMBER: {0}}" />
 
             <Label
@@ -33,7 +52,7 @@
                 Style="{StaticResource MetroLabel}" />
             <ComboBox
                 MinWidth="200"
-                Margin="5,6,5,4"
+                Margin="13,6,5,4"
                 AutomationProperties.AutomationId="PackCombobox"
                 DisplayMemberPath="WholeName"
                 IsSynchronizedWithCurrentItem="True"
@@ -52,7 +71,6 @@
                 Style="{StaticResource MetroLabel}" />
 
         </StackPanel>
-        <StackPanel Grid.Row="1" Orientation="Horizontal" />
 
         <DataGrid
             Name="UsersDataGrid"
@@ -87,7 +105,7 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
                 <DataGridTextColumn
-                    Width="*"
+                    Width="3*"
                     Binding="{Binding Description, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                     EditingElementStyle="{StaticResource ValidatedTextBoxStyle}"
                     Header="DESCRIPTION">
@@ -97,6 +115,27 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
+                <DataGridTextColumn
+                    Width="Auto"
+                    Binding="{Binding ReviewerObjects[0].ReviewState, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                    Header="FOMIN"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Width="Auto"
+                    Binding="{Binding ReviewerObjects[1].ReviewState, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                    Header="TATARINTSEV"
+                    
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Width="Auto"
+                    Binding="{Binding ReviewerObjects[2].ReviewState, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                    Header="SIVYKH"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Width="Auto"
+                    Binding="{Binding ReviewerObjects[3].ReviewState, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                    Header="ZHADKO"
+                    IsReadOnly="True" />
                 <DataGridTemplateColumn MinWidth="130">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>

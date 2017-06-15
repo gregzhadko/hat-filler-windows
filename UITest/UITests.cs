@@ -30,7 +30,7 @@ namespace UITest
         private static readonly string ExePath;
         private static readonly Random Random = new Random();
         private readonly IPackService _packService = new PackService();
-        private Application App;
+        private readonly string _testAuthor = "zhadko";
 
         static UITests()
         {
@@ -56,6 +56,8 @@ namespace UITest
             Thread.Sleep(1000);
             MainWindow = App.GetWindow(SearchCriteria.ByText("HAT DESKTOP"), InitializeOption.NoCache);
         }
+
+        public Application App { get; set; }
 
         [TearDown]
         public void TearDown()
@@ -177,7 +179,7 @@ namespace UITest
 
         private void DeletePhrase(PhraseItem phrase)
         {
-            _packService.DeletePhrase(TestPackId, phrase.Phrase);
+            _packService.DeletePhrase(TestPackId, phrase.Phrase, _testAuthor);
         }
 
         private void AddPhrase(PhraseItem phrase)
