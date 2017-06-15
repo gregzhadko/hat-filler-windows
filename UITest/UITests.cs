@@ -5,9 +5,8 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
+using System.Windows;
 using Model;
 using NUnit.Framework;
 using TestStack.White;
@@ -26,12 +25,12 @@ namespace UITest
 {
     public class UITests
     {
-        private static readonly string ExePath;
         protected const int StartupTimeOut = 1000;
         private const int TestPackId = 20;
-        private Application App;
+        private static readonly string ExePath;
         private static readonly Random Random = new Random();
         private readonly IPackService _packService = new PackService();
+        private Application App;
 
         static UITests()
         {
@@ -44,6 +43,8 @@ namespace UITest
             var outputPath = root + @"\HatNewUI\bin\Debug";
             ExePath = outputPath + @"\HatNewUI.exe";
         }
+
+        private Window MainWindow { get; set; }
 
         /// <summary>
         ///     Method executed before the tests start
@@ -73,21 +74,31 @@ namespace UITest
         [Test]
         public void SelectPack20_CorrectPhraseLoading()
         {
-            var phraseItem = new PhraseItem {Phrase = RandomString(15), Description = RandomString(50), Complexity = Random.Next(1, 5)};
+            var phraseItem = GeneratePhrase();
             _packService.AddPhrase(TestPackId, phraseItem);
 
             SelectFirstPack();
-            Thread.Sleep(2000);
+            Thread.Sleep(1000);
             SelectLastPack();
-            Thread.Sleep(2000);
+            Thread.Sleep(1000);
 
+            AssertPhraseExistInGrid(phraseItem);
+
+            DeletePhrase(phraseItem);
+        }
+
+        private void AssertPhraseExistInGrid(PhraseItem phraseItem)
+        {
             var rows = GetItemsFromListView(GetPhraseGrid());
             var row = rows.FirstOrDefault(r => r.Cells[0].Text == phraseItem.Phrase);
             Assert.IsNotNull(row);
             Assert.IsTrue(row.Cells[1].Text == phraseItem.Complexity.ToString(CultureInfo.CurrentCulture));
             Assert.IsTrue(row.Cells[2].Text == phraseItem.Description);
+        }
 
-            _packService.DeletePhrase(TestPackId, RandomString(15));
+        private static PhraseItem GeneratePhrase()
+        {
+            return new PhraseItem {Phrase = RandomString(15), Description = RandomString(50), Complexity = Random.Next(1, 5)};
         }
 
         [Test]
@@ -99,6 +110,79 @@ namespace UITest
             var description = MainWindow.Get<Label>(SearchCriteria.ByAutomationId("PackDescriptionLabel")).Text;
 
             Assert.AreEqual(pack.Description, description);
+        }
+
+        [Test]
+        public void RefreshPack_CreatedPhraseAppeared()
+        {
+            SelectLastPack();
+            var phrase = GeneratePhrase();
+            AddPhrase(phrase);
+
+            MainWindow.Get<Button>(SearchCriteria.ByAutomationId("RefreshButton"));
+            Thread.Sleep(1000);
+
+            AssertPhraseExistInGrid(phrase);
+
+            DeletePhrase(phrase);
+        }
+
+        [Test]
+        public void AddNewPhrase_SuccessAdded()
+        {
+            SelectLastPack();
+            var phrase = new PhraseItem();
+            ClickNewItem();
+            Keyboard.Instance.Enter(phrase.Phrase);
+            Keyboard.Instance.PressSpecialKey(KeyboardInput.SpecialKeys.TAB);
+            Keyboard.Instance.PressSpecialKey(KeyboardInput.SpecialKeys.TAB);
+            Keyboard.Instance.Enter(phrase.Description);
+            ClickButton("SavePhraseButton");
+            AssertPhraseExistInGrid(phrase);
+
+            DeletePhrase(phrase);
+        }
+
+        [Test]
+        public void AddDuplicatedPhrase_PhraseWasNotAdded()
+        {
+            var phrase = new PhraseItem();
+            AddPhrase(phrase);
+            SelectFirstPack();
+            Thread.Sleep(1000);
+            SelectLastPack();
+            Thread.Sleep(1000);
+            ClickNewItem();
+            Keyboard.Instance.Enter(phrase.Phrase);
+            Keyboard.Instance.PressSpecialKey(KeyboardInput.SpecialKeys.TAB);
+            Keyboard.Instance.PressSpecialKey(KeyboardInput.SpecialKeys.TAB);
+            Keyboard.Instance.Enter(phrase.Description);
+            ClickButton("SavePhraseButton");
+
+            var warningWindow = MainWindow.Get<Window>(SearchCriteria.ByText("Warning"));
+
+            Assert.IsNotNull(warningWindow);
+
+            var rows = GetItemsFromListView(GetPhraseGrid());
+            var row = rows.FirstOrDefault(r => r.Cells[0].Text == phrase.Phrase);
+            Assert.IsNull(row);
+
+            DeletePhrase(phrase);
+        }
+
+        private void ClickButton(string buttonAutomationId)
+        {
+            MainWindow.Get<Button>(SearchCriteria.ByAutomationId(buttonAutomationId)).Click();
+        }
+
+        private void DeletePhrase(PhraseItem phrase)
+        {
+            _packService.DeletePhrase(TestPackId, phrase.Phrase);
+        }
+
+        private void AddPhrase(PhraseItem phrase)
+        {
+            _packService.AddPhrase(TestPackId, phrase);
         }
 
         private List<ListViewRow> GetItemsFromListView(ListView dataGrid)
@@ -141,7 +225,6 @@ namespace UITest
             return result.ToList().Distinct().ToList();
         }
 
-
         private void SelectLastPack()
         {
             var comboBox = MainWindow.Get<ComboBox>(SearchCriteria.ByAutomationId("PackCombobox"));
@@ -155,15 +238,29 @@ namespace UITest
             MainWindow.Get<ComboBox>(SearchCriteria.ByAutomationId("PackCombobox")).Select(pack.WholeName);
         }
 
-        private Window MainWindow { get; set; }
-
-        private ListView GetPhraseGrid() => MainWindow.Get<ListView>(SearchCriteria.ByAutomationId("PhraseDataGrid"));
+        private ListView GetPhraseGrid()
+        {
+            return MainWindow.Get<ListView>(SearchCriteria.ByAutomationId("PhraseDataGrid"));
+        }
 
         private static string RandomString(int length, string prefix = "")
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             var randomString = new string(Enumerable.Repeat(chars, length).Select(s => s[Random.Next(s.Length)]).ToArray());
             return prefix + randomString;
+        }
+
+        private void ClickNewItem()
+        {
+            //This doesn't work. The app can't find New Item button at all
+            //MainWindow.Get<Button>(SearchCriteria.ByAutomationId("NewItemButton")).Click();
+
+            var point = MainWindow.Get<Label>(SearchCriteria.ByText("PHRASE")).Location;
+            //DrawMouse(point, new Point(point.X + 10, point.Y + 40), 500);
+            Mouse.Instance.Click(new Point(point.X + 10, point.Y + 40));
+            MainWindow.WaitWhileBusy();
+
+            //TODO: try to find a best way to find "New Item" button
         }
     }
 }

@@ -47,7 +47,7 @@ namespace HatNewUI.ViewModel
             try
             {
                 StringUtils.FormatPhrase(SelectedItem);
-                if (Items.Select(i => i.Phrase).Contains(SelectedItem.Phrase))
+                if (Items.Select(i => i.Phrase).Skip(1).Contains(SelectedItem.Phrase))
                 {
                     NotificationHandler.Show("The word is already in the pack", "Warning");
                     return;
@@ -76,7 +76,7 @@ namespace HatNewUI.ViewModel
                 var count = Items.Count(i => i.Phrase == SelectedItem.Phrase);
                 if (count > 1)
                 {
-                    NotificationHandler.Show("The word is already in the pack", "Warning");
+                    NotificationHandler.Show(messageText: "The word is already in the pack", caption: "Warning");
                     return;
                 }
 

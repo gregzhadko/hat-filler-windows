@@ -123,12 +123,14 @@
                                 <Button
                                     Margin="2"
                                     Padding="10,2"
+                                    AutomationProperties.AutomationId="SavePhraseButton"
                                     Command="{Binding DataContext.Add, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
                                     Content="Save" />
 
                                 <Button
                                     Margin="2"
                                     Padding="10,2"
+                                    AutomationProperties.AutomationId="CancelSavePhraseButton"
                                     Command="{Binding DataContext.Cancel, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
                                     Content="Cancel" />
                             </StackPanel>

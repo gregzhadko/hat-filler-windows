@@ -662,6 +662,7 @@
                                                     Padding="10,2"
                                                     HorizontalAlignment="Left"
                                                     VerticalAlignment="Top"
+                                                    AutomationProperties.AutomationId="NewItemButton"
                                                     Command="{Binding DataContext.Add, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
                                                     CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
                                                     Content="New Item"

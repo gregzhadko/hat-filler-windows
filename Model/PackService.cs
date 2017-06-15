@@ -111,20 +111,31 @@ namespace Model
 
         private static string GetResponceFromServer(string requestUriString, int port)
         {
-            var request = WebRequest.Create($"http://{Settings.Default.ServerAddress}:{port}/" + requestUriString);
-
-            using (var response = (HttpWebResponse)request.GetResponse())
-            using (var dataStream = response.GetResponseStream())
+            try
             {
-                if (dataStream == null || dataStream == Stream.Null)
-                {
-                    throw new WebException("Stream is null");
-                }
 
-                var reader = new StreamReader(dataStream);
-                return reader.ReadToEnd();
+
+
+                var request = WebRequest.Create($"http://{Settings.Default.ServerAddress}:{port}/" + requestUriString);
+
+                using (var response = (HttpWebResponse) request.GetResponse())
+                using (var dataStream = response.GetResponseStream())
+                {
+                    if (dataStream == null || dataStream == Stream.Null)
+                    {
+                        throw new WebException("Stream is null");
+                    }
+
+                    var reader = new StreamReader(dataStream);
+                    return reader.ReadToEnd();
+                }
             }
-            
+            catch (WebException ex)
+            {
+                var responce = ex.Response.GetResponseStream();
+                throw;
+            }
+
         }
 
     }
