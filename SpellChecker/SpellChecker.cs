@@ -13,19 +13,17 @@ namespace SpellChecker
 {
     public class SpellChecker
     {
-        private PackService _service;
-        private readonly List<Pack> _packs = new List<Pack>();
+        
+        private readonly List<Pack> _packs;
         private readonly List<string> _skippedPhrases = File.ReadAllLines("SkipDictionary.txt").ToList();
+
+        public SpellChecker(List<Pack> packs)
+        {
+            _packs = packs;
+        }
 
         public void Run()
         {
-            Console.ForegroundColor = ConsoleColor.Green;
-            _service = new PackService();
-            Console.OutputEncoding = Encoding.UTF8;
-            Console.WriteLine("Загружаю паки...");
-            LoadPacks();
-            Console.WriteLine("Загрузка паков завершена");
-
             var yandexSpellCheck = new YandexSpeller();
 
             using (var hunSpellEng = new Hunspell(@"Dictionaries\English (American).aff", @"Dictionaries\English (American).dic"))
@@ -139,16 +137,6 @@ namespace SpellChecker
             File.AppendAllLines(@"..\..\SkipDictionary.txt", new[] {stringToSave});
             File.AppendAllLines(@"SkipDictionary.txt", new[] {stringToSave});
             Console.WriteLine($"\nСлово {word} было добавлено в словарь пропущенных слов");
-        }
-
-        private void LoadPacks()
-        {
-            var packs = _service.GetAllPacksInfo();
-            foreach (var pack in packs)
-            {
-                Console.WriteLine($"Загрузка пака {pack.Name}");
-                _packs.Add(_service.GetPackById(pack.Id));
-            }
         }
 
         private string[] GetWords(string input)
