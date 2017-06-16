@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using Model;
 using NHunspell;
@@ -139,7 +138,7 @@ namespace SpellChecker
             Console.WriteLine($"\nСлово {word} было добавлено в словарь пропущенных слов");
         }
 
-        private string[] GetWords(string input)
+        private IEnumerable<string> GetWords(string input)
         {
             var matches = Regex.Matches(input, @"\b[\w']*\b");
 
@@ -147,7 +146,7 @@ namespace SpellChecker
                 where !string.IsNullOrEmpty(m.Value)
                 select TrimSuffix(m.Value);
 
-            return words.ToArray<string>();
+            return words.ToArray();
         }
 
         private string TrimSuffix(string word)

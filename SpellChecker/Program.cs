@@ -32,9 +32,6 @@ namespace SpellChecker
             var editorFinder = new EditorFinder();
             editorFinder.Run(packs);
 
-            var editingInfo = new PackEditingInfoRepresentation();
-            editingInfo.Run();
-
             Console.ReadKey();
         }
 
