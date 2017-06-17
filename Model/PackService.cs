@@ -60,7 +60,7 @@ namespace Model
 
         public async Task<IEnumerable<Pack>> GetAllPackInfoAsync(int port = 8081)
         {
-            var task = new Task<IEnumerable<Pack>>(() => GetAllPacksInfo());
+            var task = new Task<IEnumerable<Pack>>(GetAllPacksInfo);
             task.Start();
             return await task;
         }
@@ -110,31 +110,19 @@ namespace Model
 
         private static string GetResponceFromServer(string requestUriString, int port)
         {
-            try
+            var request = WebRequest.Create($"http://{Settings.Default.ServerAddress}:{port}/" + requestUriString);
+
+            using (var response = (HttpWebResponse) request.GetResponse())
+            using (var dataStream = response.GetResponseStream())
             {
-
-
-
-                var request = WebRequest.Create($"http://{Settings.Default.ServerAddress}:{port}/" + requestUriString);
-
-                using (var response = (HttpWebResponse) request.GetResponse())
-                using (var dataStream = response.GetResponseStream())
+                if (dataStream == null || dataStream == Stream.Null)
                 {
-                    if (dataStream == null || dataStream == Stream.Null)
-                    {
-                        throw new WebException("Stream is null");
-                    }
-
-                    var reader = new StreamReader(dataStream);
-                    return reader.ReadToEnd();
+                    throw new WebException("Stream is null");
                 }
-            }
-            catch (WebException ex)
-            {
-                var responce = ex.Response.GetResponseStream();
-                throw;
-            }
 
+                var reader = new StreamReader(dataStream);
+                return reader.ReadToEnd();
+            }
         }
 
         public List<PhraseEditInfo> GetPackEditingInfo(Dictionary<int, string> packDictionary)

@@ -86,6 +86,7 @@ namespace HatNewUI.ViewModel
 
         protected override void CreateBackupItem()
         {
+            //TODO: Делать deep copy через статью описанную на хабре
             BackupItem = (T) SelectedItem.Clone(); //DeepCopy();
         }
 
@@ -105,6 +106,7 @@ namespace HatNewUI.ViewModel
 
         protected override void SelectedItemChanged()
         {
+
         }
     }
 
@@ -376,6 +378,7 @@ namespace HatNewUI.ViewModel
         protected abstract void ClearBackupItem();
         protected abstract void RestoreBackedUpItem();
         protected abstract void SelectedItemChanged();
+        protected abstract void PreAcceptChanges();
 
         protected virtual bool CanStartEdit()
         {
@@ -388,6 +391,7 @@ namespace HatNewUI.ViewModel
 
         private void AcceptChanges()
         {
+            PreAcceptChanges();
             if (!CheckItemValid())
             {
                 return;

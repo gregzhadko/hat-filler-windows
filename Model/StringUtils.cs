@@ -88,17 +88,23 @@ namespace Model
         }
 
         public static string FormatDescription(string description)
-            =>
-                description.Trim()
-                    .ReplaceFirstCharToUpper()
-                    .ReplaceHyphenWithDash()
-                    .RemoveSquareBrackets()
-                    .ReplaceQuotes()
-                    .RemoveMultipleSpaces()
-                    .Trim()
-                    .AddDot();
+        {
+            if (String.IsNullOrEmpty(description))
+            {
+                return description;
+            }
 
-        public static string FormatPhrase(string newPhrase) => newPhrase.Trim().ToLowerInvariant();
+            return description.Trim()
+                .ReplaceFirstCharToUpper()
+                .ReplaceHyphenWithDash()
+                .RemoveSquareBrackets()
+                .ReplaceQuotes()
+                .RemoveMultipleSpaces()
+                .Trim()
+                .AddDot();
+        }
+
+        public static string FormatPhrase(string newPhrase) => newPhrase?.Trim().ToLowerInvariant();
 
         public static void FormatPhrase(PhraseItem phrase)
         {

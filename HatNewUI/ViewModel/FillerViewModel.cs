@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight.Command;
@@ -49,10 +50,6 @@ namespace HatNewUI.ViewModel
         {
             try
             {
-                if (!PreparteSelectedItemToSave(out string error))
-                {
-                    NotificationHandler.Show(error, "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
                 _service.AddPhrase(SelectedPack.Id, SelectedItem);
                 SelectedItem.IsNew = false;
                 SelectedPack.Phrases.Add(SelectedItem);
@@ -62,6 +59,7 @@ namespace HatNewUI.ViewModel
             {
                 var errorResponse = new StreamReader(ex.Response.GetResponseStream()).ReadToEnd();
                 NotificationHandler.Show(errorResponse, "Error");
+                RollbackNewItem();
             }
             catch (Exception ex)
             {
@@ -73,13 +71,13 @@ namespace HatNewUI.ViewModel
         {
             try
             {
-                if (!PreparteSelectedItemToSave(out string error))
-                {
-                    NotificationHandler.Show(error, "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
-
                 _service.EditPhrase(SelectedPack.Id, BackupItem, SelectedItem, _selectedAuthor);
-                RaisePropertyChanged(() => PhraseCount);
+            }
+            catch (WebException ex)
+            {
+                var errorResponse = new StreamReader(ex.Response.GetResponseStream()).ReadToEnd();
+                NotificationHandler.Show(errorResponse, "Error");
+                RollbackEditingItemAfterEdit();
             }
             catch (Exception ex)
             {
@@ -87,19 +85,35 @@ namespace HatNewUI.ViewModel
             }
         }
 
-        private bool PreparteSelectedItemToSave(out string error)
+        protected virtual void RollbackEditingItemAfterEdit()
         {
-            error = "";
-            SelectedItem.UpdateAuthor(SelectedAuthor);
-            StringUtils.FormatPhrase(SelectedItem);
+            _service.AddPhrase(SelectedPack.Id, BackupItem);
+            var index = SelectedPack.Phrases.IndexOf(SelectedItem);
+            SelectedPack.Phrases[index] = BackupItem;
+            DataGrid.CancelEdit();
+        }
+
+        protected override bool CheckItemValid()
+        {
+            if (!base.CheckItemValid())
+            {
+                return false;
+            }
+
             var count = Items.Count(i => i.Phrase == SelectedItem.Phrase);
             if (count > 1)
             {
-                error = "The word is already in the pack";
+                NotificationHandler.Show("The item is in the pack already", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
             return true;
+        }
+
+        protected override void PreAcceptChanges()
+        {
+            SelectedItem.UpdateAuthor(SelectedAuthor);
+            StringUtils.FormatPhrase(SelectedItem);
         }
 
         protected override bool DeleteItem()
@@ -121,6 +135,7 @@ namespace HatNewUI.ViewModel
         protected override void LoadItems()
         {
             Items = new ObservableCollection<PhraseItem>(SelectedPack.Phrases);
+            DataGrid.Items.Refresh();
         }
 
         public Pack SelectedPack
