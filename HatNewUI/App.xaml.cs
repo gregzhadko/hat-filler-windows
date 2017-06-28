@@ -50,8 +50,7 @@ namespace HatNewUI
         private static T CreateView<T>() where T : IDataContextHolder, new()
         {
             var view = new T();
-            var model = view.DataContext as BaseViewModel;
-            if (model != null)
+            if (view.DataContext is BaseViewModel model)
             {
                 model.VisualTree = view;
             }
@@ -179,8 +178,7 @@ namespace HatNewUI
 
             RealMainWindow.OverheadContent.Content = newContent;
 
-            if (closeData.Content.ViewModel.CallBack != null)
-                closeData.Content.ViewModel.CallBack(closeData.Content.Result);
+            closeData.Content.ViewModel.CallBack?.Invoke(closeData.Content.Result);
         }
 
         public void CloseWindow(NotificationMessage<WindowShutdownData> closeData)

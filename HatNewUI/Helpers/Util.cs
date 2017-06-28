@@ -14,8 +14,7 @@ namespace HatNewUI.Helpers
     {
         public static T? TryParseObjectToEnumNullable<T>(object value) where T : struct
         {
-            T retval;
-            var parsingCompleted = Enum.TryParse((value ?? "").ToString(), out retval);
+            var parsingCompleted = Enum.TryParse((value ?? "").ToString(), out T retval);
 
             return parsingCompleted ? retval : (T?)null;
         }
