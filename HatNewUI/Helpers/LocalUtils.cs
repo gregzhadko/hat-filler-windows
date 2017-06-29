@@ -138,8 +138,7 @@ namespace HatNewUI.Helpers
             for (var i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
             {
                 var child = VisualTreeHelper.GetChild(depObj, i);
-                var childT = child as T;
-                if (childT != null) yield return childT;
+                if (child is T childT) yield return childT;
 
                 foreach (var childOfChild in FindVisualChildren<T>(child)) yield return childOfChild;
             }

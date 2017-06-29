@@ -14,11 +14,11 @@ namespace Model
     {
         public void AddPhrase(int packId, PhraseItem phrase)
         {
-            GetResponceFromServer(
+            GetResponce(
                 $"addPackWordDescription?id={packId}&word={phrase.Phrase}&description={phrase.Description}&level={phrase.Complexity}&author={phrase.ReviewedBy}", 8091);
         }
 
-        public void DeletePhrase(int packId, string phrase, string author) => GetResponceFromServer($"removePackWord?id={packId}&word={phrase}&author={author}", 8091);
+        public void DeletePhrase(int packId, string phrase, string author) => GetResponce($"removePackWord?id={packId}&word={phrase}&author={author}", 8091);
 
         public void EditPack(int id, string name, string description)
         {
@@ -27,7 +27,7 @@ namespace Model
                 return;
             }
 
-            GetResponceFromServer($"updatePackInfo?id={id}&name={name}&description={description}", 8091);
+            GetResponce($"updatePackInfo?id={id}&name={name}&description={description}", 8091);
         }
 
         public void EditPhrase(int packId, PhraseItem oldPhrase, PhraseItem newPhrase, string selectedAuthor)
@@ -41,7 +41,7 @@ namespace Model
                 Math.Abs(oldPhrase.Complexity - newPhrase.Complexity) > 0.01 ||
                 !string.Equals(oldPhrase.Description, newPhrase.Description, StringComparison.Ordinal))
             {
-                GetResponceFromServer(
+                GetResponce(
                     $"addPackWordDescription?id={packId}&word={newPhrase.Phrase}&description={newPhrase.Description}&level={newPhrase.Complexity}&author={selectedAuthor}",
                     8091);
             }
@@ -49,7 +49,7 @@ namespace Model
 
         public void ReviewPhrase(int packId, PhraseItem phrase, string reviewerName, State state)
         {
-            GetResponceFromServer($"reviewPackWord?id={packId}&word={phrase.Phrase}&author={reviewerName}&state={(int)state}", 8091);
+            GetResponce($"reviewPackWord?id={packId}&word={phrase.Phrase}&author={reviewerName}&state={(int)state}", 8091);
         }
 
         public IEnumerable<Pack> GetAllPacksInfo()
@@ -72,7 +72,7 @@ namespace Model
                 return null;
             }
 
-            var response = GetResponceFromServer($"getPack?id={id}", 8081);
+            var response = GetResponce($"getPack?id={id}", 8081);
 
             var pack = JsonConvert.DeserializeObject<Pack>(response);
             if (pack.Phrases == null)
@@ -97,7 +97,7 @@ namespace Model
 
         private static IEnumerable<JToken> GetPacksInfo(int port)
         {
-            var response = GetResponceFromServer("getPacks", port);
+            var response = GetResponce("getPacks", port);
             var jObject = JObject.Parse(response)["packs"];
             var packs = jObject.Select(i => i["pack"]);
             return packs;
@@ -108,7 +108,7 @@ namespace Model
             return GetPacksInfo(8081).Select(p => Convert.ToInt32(p["id"])).ToArray();
         }
 
-        private static string GetResponceFromServer(string requestUriString, int port)
+        private static string GetResponce(string requestUriString, int port)
         {
             var request = WebRequest.Create($"http://{Settings.Default.ServerAddress}:{port}/" + requestUriString);
 
@@ -127,7 +127,7 @@ namespace Model
 
         public List<PhraseEditInfo> GetPackEditingInfo(Dictionary<int, string> packDictionary)
         {
-            var responce = GetResponceFromServer("packEditingInfo", 8091);
+            var responce = GetResponce("packEditingInfo", 8091);
             var jArray = JArray.Parse(responce);
 
             var result = new List<PhraseEditInfo>();
