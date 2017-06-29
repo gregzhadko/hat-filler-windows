@@ -24,9 +24,40 @@ namespace SpellChecker
             var spellChecker = new SpellChecker(packs);
             spellChecker.Run();
 
-            //ReviewAllPacks(packs);
+            ReviewAllPacks(packs);
+
+            //SetupDiffictulty(packs);
 
             Console.ReadKey();
+        }
+
+        private static void SetupDiffictulty(List<Pack> packs)
+        {
+            var id = 13;
+            var lines = File.ReadAllLines("d:\\test.txt");
+            var phrases = packs.First(p => p.Id == id).Phrases;
+
+
+            foreach (var line in lines)
+            {
+                Console.WriteLine($"Мучу  {line}");
+                var words = line.Split(' ');
+                var oldPhrase = phrases.First(p => p.Phrase == words[0]);
+                var newPhrase = (PhraseItem)oldPhrase.Clone();
+                newPhrase.Complexity = Convert.ToDouble(words[1]);
+                if (newPhrase.Complexity > 2)
+                {
+                    newPhrase.Complexity = 2;
+                }
+
+                _service.EditPhrase(id, oldPhrase, newPhrase, "zhadko");
+            }
+
+            
+            Console.WriteLine("Закончил мутить");
+
+
+
         }
 
         private static void ReviewAllPacks(List<Pack> packs)
@@ -34,7 +65,7 @@ namespace SpellChecker
             var authors = Reviewer.NewReviewers().Select(r => r.Author).ToList();
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-            foreach (var pack in packs.Where(p => p.Id == 13 || p.Id == 9 || p.Id == 10 || p.Id == 11))
+            foreach (var pack in packs.Where(p => p.Id == 13))
             {
                 Console.WriteLine($"Смотрю пак {pack.Name}");
                 foreach (var phrase in pack.Phrases)
