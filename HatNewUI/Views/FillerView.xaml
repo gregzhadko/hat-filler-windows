@@ -80,11 +80,11 @@
             AutomationProperties.AutomationId="PhraseDataGrid"
             Style="{StaticResource InputDataGrid}">
 
-            <!--<i:Interaction.Triggers>
-            <i:EventTrigger EventName="PreviewMouseDoubleClick">
-                <helpers:EventBinding Command="{Binding DataContext.Users.MouseDoubleClicked, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" PassEventArgsToCommand="True" />
-            </i:EventTrigger>
-        </i:Interaction.Triggers>-->
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="PreviewMouseDoubleClick">
+                    <helpers:EventBinding Command="{Binding DataContext.MouseDoubleClicked, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" PassEventArgsToCommand="True" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
 
             <DataGrid.Columns>
                 <DataGridTextColumn
@@ -124,7 +124,6 @@
                     Width="Auto"
                     Binding="{Binding ReviewerObjects[1].ReviewState, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                     Header="TATARINTSEV"
-                    
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     Width="Auto"
