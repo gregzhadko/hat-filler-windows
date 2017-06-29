@@ -115,6 +115,43 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
+
+                <DataGridTemplateColumn MinWidth="130" Header="REVIEW">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+
+                                <Button
+                                    Margin="2"
+                                    Padding="10,2"
+                                    Command="{Binding DataContext.RecommendToDelete, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+                                    CommandParameter="{Binding }"
+                                    Content="Delete" />
+
+                                <Button
+                                    Margin="2"
+                                    Padding="10,2"
+                                    Command="{Binding DataContext.RecommendToEdit, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+                                    CommandParameter="{Binding }"
+                                    Content="Edit" />
+                                <Button
+                                    Margin="2"
+                                    Padding="10,2"
+                                    Command="{Binding DataContext.AcceptCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+                                    CommandParameter="{Binding }"
+                                    Content="Accept" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                            </StackPanel>
+                        </DataTemplate>
+
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+
                 <DataGridTextColumn
                     Width="Auto"
                     Binding="{Binding ReviewerObjects[0].ReviewState, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
@@ -135,6 +172,7 @@
                     Binding="{Binding ReviewerObjects[3].ReviewState, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                     Header="ZHADKO"
                     IsReadOnly="True" />
+
                 <DataGridTemplateColumn MinWidth="130">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -175,7 +213,6 @@
                         </DataTemplate>
 
                     </DataGridTemplateColumn.CellEditingTemplate>
-
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>

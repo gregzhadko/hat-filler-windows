@@ -193,6 +193,45 @@ namespace HatNewUI.ViewModel
             }
         }
 
+        public RelayCommand<PhraseItem> AcceptCommand
+        {
+            get
+            {
+                return new RelayCommand<PhraseItem>(phrase => UpdateReviewState(phrase, State.Accept), phrase => true);
+            }
+        }
+
+        public RelayCommand<PhraseItem> RecommendToEdit
+        {
+            get
+            {
+                return new RelayCommand<PhraseItem>(phrase => UpdateReviewState(phrase, State.Edit), phrase => true);
+            }
+        }
+
+        public RelayCommand<PhraseItem> RecommendToDelete
+        {
+            get
+            {
+                return new RelayCommand<PhraseItem>(phrase => UpdateReviewState(phrase, State.Delete), phrase => true);
+            }
+        }
+
+        private void UpdateReviewState(PhraseItem phrase, State reviewState)
+        {
+            phrase.ReviewerObjects.First(r => r.Author == SelectedAuthor).ReviewState = reviewState;
+            _service.ReviewPhrase(SelectedPack.Id, phrase, SelectedAuthor, reviewState);
+        }
+
+        private RelayCommand<PhraseItem> GetReviewCommand(State reviewState)
+        {
+            return new RelayCommand<PhraseItem>(phrase =>
+            {
+                phrase.ReviewerObjects.First(r => r.Author == SelectedAuthor).ReviewState = reviewState;
+                _service.ReviewPhrase(SelectedPack.Id, phrase, SelectedAuthor, reviewState);
+            }, phrase => true);
+        }
+
         private void UpdateSelectedPack()
         {
             SelectedPack = SelectedPack;
