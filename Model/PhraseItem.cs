@@ -56,7 +56,7 @@ namespace Model
                     {
                         result.AppendLine("Please enter a phrase");
                     }
-                    else if(!Phrase.All(c => Char.IsLetterOrDigit(c) || c == ' '))
+                    else if(!Phrase.All(c => Char.IsLetterOrDigit(c) || c == ' ' || c == '-'))
                     {
                         result.AppendLine("Phrase should contain only Russian or Latin letters or numbers");
                     }
