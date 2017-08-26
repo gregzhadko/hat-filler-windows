@@ -14,11 +14,11 @@ namespace Model
     {
         public void AddPhrase(int packId, PhraseItem phrase)
         {
-            GetResponce(
-                $"addPackWordDescription?id={packId}&word={phrase.Phrase}&description={phrase.Description}&level={phrase.Complexity}&author={phrase.ReviewedBy}", 8091);
+            GetResponse(
+                $"addPackWordDescription?id={packId}&word={phrase.Phrase}&description={phrase.Description.ReplaceSemicolons()}&level={phrase.Complexity}&author={phrase.ReviewedBy}", 8091);
         }
 
-        public void DeletePhrase(int packId, string phrase, string author) => GetResponce($"removePackWord?id={packId}&word={phrase}&author={author}", 8091);
+        public void DeletePhrase(int packId, string phrase, string author) => GetResponse($"removePackWord?id={packId}&word={phrase}&author={author}", 8091);
 
         public void EditPack(int id, string name, string description)
         {
@@ -27,7 +27,7 @@ namespace Model
                 return;
             }
 
-            GetResponce($"updatePackInfo?id={id}&name={name}&description={description}", 8091);
+            GetResponse($"updatePackInfo?id={id}&name={name}&description={description.ReplaceSemicolons()}", 8091);
         }
 
         public void EditPhrase(int packId, PhraseItem oldPhrase, PhraseItem newPhrase, string selectedAuthor)
@@ -41,15 +41,15 @@ namespace Model
                 Math.Abs(oldPhrase.Complexity - newPhrase.Complexity) > 0.01 ||
                 !string.Equals(oldPhrase.Description, newPhrase.Description, StringComparison.Ordinal))
             {
-                GetResponce(
-                    $"addPackWordDescription?id={packId}&word={newPhrase.Phrase}&description={newPhrase.Description}&level={newPhrase.Complexity}&author={selectedAuthor}",
+                GetResponse(
+                    $"addPackWordDescription?id={packId}&word={newPhrase.Phrase}&description={newPhrase.Description.ReplaceSemicolons()}&level={newPhrase.Complexity}&author={selectedAuthor}",
                     8091);
             }
         }
 
         public void ReviewPhrase(int packId, PhraseItem phrase, string reviewerName, State state)
         {
-            GetResponce($"reviewPackWord?id={packId}&word={phrase.Phrase}&author={reviewerName}&state={(int)state}", 8091);
+            GetResponse($"reviewPackWord?id={packId}&word={phrase.Phrase}&author={reviewerName}&state={(int)state}", 8091);
         }
 
         public IEnumerable<Pack> GetAllPacksInfo()
@@ -58,11 +58,11 @@ namespace Model
             return packsInfo.Select(p => new Pack { Id = Convert.ToInt32(p["id"]), Name = p["name"].ToString() });
         }
 
-        public async Task<IEnumerable<Pack>> GetAllPackInfoAsync(int port = 8081)
+        public Task<IEnumerable<Pack>> GetAllPackInfoAsync(int port = 8081)
         {
             var task = new Task<IEnumerable<Pack>>(GetAllPacksInfo);
             task.Start();
-            return await task;
+            return task;
         }
 
         public Pack GetPackById(int id)
@@ -72,7 +72,7 @@ namespace Model
                 return null;
             }
 
-            var response = GetResponce($"getPack?id={id}", 8081);
+            var response = GetResponse($"getPack?id={id}", 8081);
 
             var pack = JsonConvert.DeserializeObject<Pack>(response);
             if (pack.Phrases == null)
@@ -83,11 +83,11 @@ namespace Model
             return pack;
         }
 
-        public async Task<Pack> GetPackByIdAsync(int id)
+        public Task<Pack> GetPackByIdAsync(int id)
         {
             var task = new Task<Pack>(() => GetPackById(id));
             task.Start();
-            return await task;
+            return task;
         }
 
         public List<Tuple<int, string>> GetPorts() => new List<Tuple<int, string>>
@@ -97,7 +97,7 @@ namespace Model
 
         private static IEnumerable<JToken> GetPacksInfo(int port)
         {
-            var response = GetResponce("getPacks", port);
+            var response = GetResponse("getPacks", port);
             var jObject = JObject.Parse(response)["packs"];
             var packs = jObject.Select(i => i["pack"]);
             return packs;
@@ -108,7 +108,7 @@ namespace Model
             return GetPacksInfo(8081).Select(p => Convert.ToInt32(p["id"])).ToArray();
         }
 
-        private static string GetResponce(string requestUriString, int port)
+        private static string GetResponse(string requestUriString, int port)
         {
             var request = WebRequest.Create($"http://{Settings.Default.ServerAddress}:{port}/" + requestUriString);
 
@@ -127,15 +127,15 @@ namespace Model
 
         public List<PhraseEditInfo> GetPackEditingInfo(Dictionary<int, string> packDictionary)
         {
-            var responce = GetResponce("packEditingInfo", 8091);
-            var jArray = JArray.Parse(responce);
+            var response = GetResponse("packEditingInfo", 8091);
+            var jArray = JArray.Parse(response);
 
             var result = new List<PhraseEditInfo>();
             foreach(var obj in jArray)
             {
                 var info = obj.ToObject<PhraseEditInfo>();
                 info.PackName = packDictionary[info.Pack];
-                var dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+                var dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
                 info.Date = dtDateTime.AddSeconds(info.Timestamp).ToLocalTime();
                 result.Add(info);
             }

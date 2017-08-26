@@ -66,6 +66,11 @@ namespace Model
             return Regex.Replace(s, @"\[[^\]]+\]\s*", "");
         }
 
+        public static string ReplaceSemicolons(this string s)
+        {
+            return s.Replace(";", "%3B");
+        }
+
         public static string RemoveMultipleSpaces(this string s)
         {
             if (String.IsNullOrEmpty(s))
