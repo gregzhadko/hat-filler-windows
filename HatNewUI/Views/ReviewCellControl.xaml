@@ -1,0 +1,31 @@
+﻿<UserControl x:Class="HatNewUI.Views.ReviewCellControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:HatNewUI.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="40" d:DesignWidth="300">
+    <StackPanel Orientation="Horizontal">
+
+        <Button
+            Margin="2"
+            Padding="10,2"
+            Command="{Binding DataContext.RecommendToDelete, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:FillerView}}}"
+            CommandParameter="{Binding}"
+            Content="Delete" />
+
+        <Button
+            Margin="2"
+            Padding="10,2"
+            Command="{Binding DataContext.RecommendToEdit, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:FillerView}}}"
+            CommandParameter="{Binding}"
+            Content="Edit" />
+        <Button
+            Margin="2"
+            Padding="10,2"
+            Command="{Binding DataContext.AcceptCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:FillerView}}}"
+            CommandParameter="{Binding}"
+            Content="Accept" />
+    </StackPanel>
+</UserControl>

@@ -73,6 +73,9 @@
     <Compile Include="Views\FillerView.xaml.cs">
       <DependentUpon>FillerView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ReviewCellControl.xaml.cs">
+      <DependentUpon>ReviewCellControl.xaml</DependentUpon>
+    </Compile>
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -128,6 +131,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\FillerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ReviewCellControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

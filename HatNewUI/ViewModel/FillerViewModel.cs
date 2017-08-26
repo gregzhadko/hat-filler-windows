@@ -197,7 +197,11 @@ namespace HatNewUI.ViewModel
         {
             get
             {
-                return new RelayCommand<PhraseItem>(phrase => UpdateReviewState(phrase, State.Accept), phrase => true);
+                return new RelayCommand<PhraseItem>(phrase => UpdateReviewState(phrase, State.Accept), phrase =>
+                {
+                    var p = phrase;
+                    return true;
+                });
             }
         }
 
